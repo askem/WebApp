@@ -4,7 +4,7 @@ import { addTodo, toggleTodo } from 'actions/testActions';
 
 export const TodoList = connect(
 	function mapStateToProps(state) {
-		return { todos: state.get('data') };
+		return { todos: state.getIn(['data', 'todos']) };
 	},
 	function mapDispatchToProps(dispatch) {
 		return {
