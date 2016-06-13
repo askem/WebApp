@@ -23,6 +23,9 @@ const SamplingsList = (props) => {
 	return <div>
 		<h2>Campaign {props.researchID}: {props.research.title}</h2>
 		<h3>Surveys</h3>
+		<div style={{paddingTop: 8, paddingBottom: 8}}>
+			<button className="btn btn-default">Add Survey</button>
+		</div>
 		<table className="table table-hover">
 			<thead>
 				<tr>

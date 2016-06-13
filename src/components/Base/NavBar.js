@@ -5,19 +5,20 @@ const NavBar = (props) => {
 	let userIdentifier;
     if (props.loggedIn) {
         let userLink = null;
+		const userURL = `https://askem.com/${props.username}`;
         if (props.profileImageMediaID && props.username) {
             userLink = (
 				<span>
-	                <a href={`https://askem.com/${props.username}`} target="_blank">
+	                <a target="_blank">
 	                    <img className="logged-in-profile-image" src={blobURL(props.profileImageMediaID, 'small')} />
 	                    @{props.username}
 	                </a> | </span>
 			);
         }
         userIdentifier = <span>
-            <img style={{display: 'none'}} border="0" height="0" width="0" src="//fbm.mysocialpixel.com/track/{amount}/1392807273" alt="" />
+            {/*<img style={{display: 'none'}} border="0" height="0" width="0" src="//fbm.mysocialpixel.com/track/{amount}/1392807273" alt="" />*/}
             {userLink}
-            <a id="logout-link" onClick={props.onLogout}>sign out</a>
+            <a onClick={props.onLogout}>sign out</a>
         </span>
     } else {
         userIdentifier = <button className="btn btn-white login" onClick={props.onLogin}>Sign in</button>;
