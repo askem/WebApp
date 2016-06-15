@@ -10,6 +10,7 @@ import DashboardFrame from 'components/base/DashboardFrame';
 import ResearchOverviewContainer from 'containers/ResearchContainer';
 import SamplingsListContainer from 'containers/SamplingsListContainer';
 import SampleMixContainer from 'containers/SampleMixContainer';
+import ResearchResultsContainer from 'containers/ResearchResultsContainer';
 import { combineReducers } from 'redux-immutable';
 import dashReducer from 'reducers/dashboardReducer';
 import routing from 'reducers/routingReducer';
@@ -76,6 +77,7 @@ render(
 			<Route component={DashboardFrame}>
 				<Route path="/" component={TodoList} />
 				<Route path="/campaigns/:researchID" component={ResearchOverviewContainer} />
+				<Route path="/campaigns/:researchID/results" component={ResearchResultsContainer} />
 				<Route path="/campaigns/:researchID/samplings" component={SamplingsListContainer} />
 				<Route path="/campaigns/:researchID/samplings/:samplingID/samplemix" component={SampleMixContainer} />
 			</Route>

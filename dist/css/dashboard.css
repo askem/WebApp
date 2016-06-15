@@ -5,6 +5,55 @@ body {
   margin: 0;
 }
 
+h1,h2,h3,h4 {
+	font-family: 'Bebas Neue';
+}
+
+
+/*  Segmented results */
+
+.results-main {
+
+}
+
+.segmented-results .kpis {
+	display: flex;
+	justify-content: space-between;;
+	flex-wrap: wrap;
+
+	width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.kpi-result {
+	flex-basis: 33%;
+	margin-bottom: 15px;
+	color: #6C859A;
+}
+
+.kpi-number {
+	width: 130px;
+	height: 130px;
+	border-radius: 65px;
+	border: 7px solid #6C859A;
+	margin: auto;
+	font-family: 'Bebas Neue';
+	font-size: 55px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 120px;
+}
+
+.kpi-title {
+	text-align: center;
+	font-family: 'Bebas Neue';
+	font-size: 20px;
+}
+
+/*  /Segmented results */
+
+
 .askem-header .container {
 	width: 100%;
 	margin-left: -20px;
