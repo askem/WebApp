@@ -3,6 +3,7 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
+  background-color: #e9ebee;
 }
 
 h1,h2,h3,h4 {
@@ -93,13 +94,14 @@ h1,h2,h3,h4 {
 /*  /Segmented results */
 
 
+.askem-header {
+	background: #c56895;
+	margin-bottom: 0;
+}
 .askem-header .container {
 	width: 100%;
 	margin-left: -20px;
 	margin-right: -20px;
-}
-.askem-header {
-	margin-bottom: 0;
 }
 .askem-header .row .user-area .logout-button, .askem-header .row .user-area .login-button {
 	width: 250px;
@@ -131,14 +133,57 @@ h1,h2,h3,h4 {
 }
 
 .dashboard-sidebar {
-	background: #bababa;
-	width: 200px;
+	background: #4e5665;
+	color: white;
+	width: 230px;
 	-ms-flex: 0 100px;
 	-webkit-box-flex:  0;
 	-moz-box-flex:  0;
 	-ms-box-flex:  0;
 	box-flex:  0;
 }
+
+.dashboard-sidebar header {
+	border-bottom: 1px solid rgba(255,255,255,.06);
+	height: 60px;
+	justify-content: space-around;
+	overflow: hidden;
+	padding-left: 20px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	font-size: 14px;
+}
+.dashboard-sidebar header:hover {
+	background-color: rgba(255,255,255,.1);
+}
+.dashboard-sidebar header img {
+	width: 40px;
+	height: 40px;
+}
+
+.dashboard-sidebar .sidebar-item {
+	height: 34px;
+	padding-top: 7px;
+	width: 100%;
+	font-size: 13px;
+	padding-left: 20px;
+	display: block;
+	color: white;
+	vertical-align: middle;
+}
+.dashboard-sidebar .sidebar-item:hover {
+	background-color: rgba(255,255,255,.1);
+	text-decoration: none;
+}
+.dashboard-sidebar .sidebar-item:visited, .sidebar-item:active, .sidebar-item:focus{
+	text-decoration: none;
+}
+
+.dashboard-sidebar .sidebar-item.selected {
+	 background-color: #39414e;
+	 font-weight: bold;
+ }
 
 .dashboard-main {
 	-ms-flex: 1;

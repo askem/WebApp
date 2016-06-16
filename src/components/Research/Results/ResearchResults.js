@@ -37,7 +37,6 @@ class ResearchResults extends React.Component {
 		this.setState({consumptionGroups});
 	}
 	render() {
-		console.log(this.state);
 		if (!this.props.research) {
 			return <h2>Research Campaign #{this.props.researchID} does not exist</h2>
 		}
