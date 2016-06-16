@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaFilePdfO, FaFileExcelO } from 'react-icons/lib/fa';
 
 const round = (number, decimals) => {
 	return +(Math.round(number + "e+" + decimals) + "e-" + decimals);
@@ -19,17 +20,21 @@ const KPIResult = (props) => {
 			color = COLOR_RED;
 		}
 	}
-	let brandLiftTitle = round(brandLift, 1);
+	let brandLiftNumber = round(brandLift, 1);
 	if (brandLift > 0) {
-		brandLiftTitle = `+${brandLiftTitle}`;
+		brandLiftNumber = `+${brandLiftNumber}`;
 	}
 
+	const breakdown = `E: ${round(props.kpi.exposed, 1)}% C: ${round(props.kpi.control, 1)}%`;
 	return <div className="kpi-result">
 		<div className="kpi-number" style={{borderColor: color}}>
-			{brandLiftTitle}
+			{brandLiftNumber}
 		</div>
 		<div className="kpi-title">
 			{props.kpi.title}
+		</div>
+		<div className="kpi-breakdown">
+			{breakdown}
 		</div>
 	</div>
 }
@@ -52,7 +57,8 @@ class SegmentedResults extends React.Component {
 				genderLabel = 'Male Responders';
 				break;
 		}
-		let resultsLabel = `Within ${genderLabel}`;
+		let ageLabel = '18-65+';
+		let resultsLabel = `Within ${genderLabel} aged ${ageLabel}`;
 		return resultsLabel;
 	}
 	render() {
@@ -72,9 +78,27 @@ class SegmentedResults extends React.Component {
 			<div className="kpis">
 				{kpis.map(k => <KPIResult key={`kpi-${k.kpiID}`} kpi={k} confidenceInterval={confidenceInterval} />)}
 			</div>
-			<h3 className="results-label">
-				{this.resultsText()}
-			</h3>
+
+			<div className="results-footer">
+				<div className="results-footer-text">
+					<h3 className="results-label">
+						{this.resultsText()}
+					</h3>
+					<div>
+						<strong>Exposed Group</strong> 263
+					</div>
+					<div>
+						<strong>Control Group</strong> 250
+					</div>
+					<div>
+						<strong>Confidence Interval</strong> ±4%
+					</div>
+				</div>
+				<div className="results-footer-download">
+					<FaFilePdfO size={40} color="#F15B40"/>
+					<FaFileExcelO size={40} color="#3DBB95"/>
+				</div>
+			</div>
 		</div>
 	}
 }
