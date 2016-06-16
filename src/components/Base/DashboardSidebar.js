@@ -15,12 +15,13 @@ class DashboardSidebar extends React.Component {
 	}
 	render() {
 		const pathArray = this.props.location.pathname.split('/');
-		const selected = pathArray[pathArray.length - 1];
+		let selected = pathArray[pathArray.length - 1];
+		if (selected === 'samplemix') { selected = 'samplings'; }
 		const researchID = this.props.params.researchID;
 
 		return <nav className="dashboard-sidebar">
 			<header>
-				<img src="" />
+				<img src="/images/temp/campaign.jpg" />
 				<div>Alcon 2016-06</div>
 				<div><FaAngleDown /></div>
 			</header>

@@ -1,4 +1,6 @@
 import React from 'react';
+import { Breadcrumb } from 'react-bootstrap';
+import GoHome from 'react-icons/lib/go/home';
 
 const PlayPauseButton = (props) => {
 	const className = "btn btn-default btn-sm";
@@ -21,8 +23,21 @@ const SamplingsList = (props) => {
 		return <h2>Research Campaign #{props.researchID} does not exist</h2>
 	}
 	return <div>
-		<h2>Campaign {props.researchID}: {props.research.title}</h2>
-		<h3>Surveys</h3>
+		<Breadcrumb>
+			<Breadcrumb.Item>
+				<GoHome size={26} />
+			</Breadcrumb.Item>
+			<Breadcrumb.Item>
+				<img src="/images/temp/brand.jpg" />
+			</Breadcrumb.Item>
+			<Breadcrumb.Item>
+				<img src="/images/temp/campaign.jpg" />
+			</Breadcrumb.Item>
+			<Breadcrumb.Item active={true}>
+				Surveys
+			</Breadcrumb.Item>
+		</Breadcrumb>
+		<h1>Surveys</h1>
 		<div style={{paddingTop: 8, paddingBottom: 8}}>
 			<button className="btn btn-default">Add Survey</button>
 		</div>

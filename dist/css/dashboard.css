@@ -10,6 +10,20 @@ h1,h2,h3,h4 {
 	font-family: 'Bebas Neue';
 }
 
+.spinner-loading {
+	width: 800px;
+	text-align: center;
+}
+.spinner.three-bounce > div {
+	background-color: #9665AA;
+	width: 40px;
+	height: 40px;
+}
+
+.breadcrumb img {
+	width: 30px;
+	height: 30px;
+}
 
 /*  Segmented results */
 
@@ -53,6 +67,7 @@ h1,h2,h3,h4 {
 	flex-basis: 33%;
 	margin-bottom: 15px;
 	color: #6C859A;
+	animation-duration: 0.8s;
 }
 
 .kpi-number {
@@ -79,8 +94,10 @@ h1,h2,h3,h4 {
 }
 
 .results-footer {
+	margin-top: 20px;
 	display: flex;
 	justify-content: space-between;
+	animation-duration: 1.2s;
 }
 
 .results-footer h3 {
@@ -195,7 +212,10 @@ h1,h2,h3,h4 {
 	padding: 8px;
 }
 
-
+.sample-mix-container {
+	width: 600px;
+	
+}
 
 
 /* ----------------------------------

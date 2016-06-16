@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaFilePdfO, FaFileExcelO } from 'react-icons/lib/fa';
+import Spinner from 'react-spinkit';
 
 const round = (number, decimals) => {
 	return +(Math.round(number + "e+" + decimals) + "e-" + decimals);
@@ -26,7 +27,7 @@ const KPIResult = (props) => {
 	}
 
 	const breakdown = `E: ${round(props.kpi.exposed, 1)}% C: ${round(props.kpi.control, 1)}%`;
-	return <div className="kpi-result">
+	return <div className="kpi-result animated zoomIn">
 		<div className="kpi-number" style={{borderColor: color}}>
 			{brandLiftNumber}
 		</div>
@@ -62,6 +63,11 @@ class SegmentedResults extends React.Component {
 		return resultsLabel;
 	}
 	render() {
+		if (this.props.loading) {
+			return <div className="spinner-loading ">
+				<Spinner spinnerName='three-bounce' noFadeIn />
+				</div>;
+		}
 		if (!this.props.research) {
 			return <h2>Research Campaign #{this.props.researchID} does not exist</h2>
 		}
@@ -79,11 +85,11 @@ class SegmentedResults extends React.Component {
 				{kpis.map(k => <KPIResult key={`kpi-${k.kpiID}`} kpi={k} confidenceInterval={confidenceInterval} />)}
 			</div>
 
-			<div className="results-footer">
+			<div className="results-footer animated fadeIn">
 				<div className="results-footer-text">
-					<h3 className="results-label">
+					<div className="results-label">
 						{this.resultsText()}
-					</h3>
+					</div>
 					<div>
 						<strong>Exposed Group</strong> 263
 					</div>
@@ -95,8 +101,8 @@ class SegmentedResults extends React.Component {
 					</div>
 				</div>
 				<div className="results-footer-download">
-					<FaFilePdfO size={40} color="#F15B40"/>
-					<FaFileExcelO size={40} color="#3DBB95"/>
+					<FaFilePdfO size={40} color="#F15B40" />
+					<FaFileExcelO size={40} color="#3DBB95" />
 				</div>
 			</div>
 		</div>
