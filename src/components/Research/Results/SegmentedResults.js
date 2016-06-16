@@ -38,26 +38,45 @@ KPIResult.propTypes = {
 	kpi: React.PropTypes.object.isRequired
 }
 
-const SegmentedResults = (props) => {
-	if (!props.research) {
-		return <h2>Research Campaign #{props.researchID} does not exist</h2>
+class SegmentedResults extends React.Component {
+	resultsText() {
+		let genderLabel;
+		switch (this.props.gender) {
+			case 'all':
+				genderLabel = 'Female and Male Responders';
+				break;
+			case 'female':
+				genderLabel = 'Female Responders';
+				break;
+			case 'male':
+				genderLabel = 'Male Responders';
+				break;
+		}
+		let resultsLabel = `Within ${genderLabel}`;
+		return resultsLabel;
 	}
-
-	const confidenceInterval = 4.0;
-	const kpis = [
-		{ kpiID: 'brandAwareness', title: 'Brand Awareness', exposed: 34.2, control: 31.6},
-		{ kpiID: 'brandPreference', title: 'Brand Preference', exposed: 74.2, control: 61.6},
-		{ kpiID: 'shoppingIntent', title: 'Shopping Intent', exposed: 40.8, control: 30},
-		{ kpiID: 'Message Recall', title: 'Message Recall', exposed: 24.2, control: 41.6},
-		{ kpiID: 'campaignRecall', title: 'Campaign Recall', exposed: 54.2, control: 55.6},
-		{ kpiID: 'brandRecall', title: 'Brand Recall', exposed: 64.2, control: 63.1}
-	]
-
-	return <div className="segmented-results">
-		<div className="kpis">
-			{kpis.map(k => <KPIResult key={`kpi-${k.kpiID}`} kpi={k} confidenceInterval={confidenceInterval} />)}
+	render() {
+		if (!this.props.research) {
+			return <h2>Research Campaign #{this.props.researchID} does not exist</h2>
+		}
+		const confidenceInterval = 4.0;
+		const kpis = [
+			{ kpiID: 'brandAwareness', title: 'Brand Awareness', exposed: 34.2, control: 31.6},
+			{ kpiID: 'brandPreference', title: 'Brand Preference', exposed: 74.2, control: 61.6},
+			{ kpiID: 'shoppingIntent', title: 'Shopping Intent', exposed: 40.8, control: 30},
+			{ kpiID: 'Message Recall', title: 'Message Recall', exposed: 24.2, control: 41.6},
+			{ kpiID: 'campaignRecall', title: 'Campaign Recall', exposed: 54.2, control: 55.6},
+			{ kpiID: 'brandRecall', title: 'Brand Recall', exposed: 64.2, control: 63.1}
+		]
+		return <div className="segmented-results">
+			<div className="kpis">
+				{kpis.map(k => <KPIResult key={`kpi-${k.kpiID}`} kpi={k} confidenceInterval={confidenceInterval} />)}
+			</div>
+			<h3 className="results-label">
+				{this.resultsText()}
+			</h3>
 		</div>
-	</div>
+	}
 }
 
 SegmentedResults.propTypes = {

@@ -1,26 +1,36 @@
 import React from 'react';
+import GenderSelector from 'components/Common/GenderSelector';
 
-const ResultsSegmentations = (props) => {
-	if (!props.research) {
-		return <h2>Research Campaign #{props.researchID} does not exist</h2>
+class ResultsSegmentations extends React.Component {
+	render() {
+		return <div>
+			<div>
+				<h3>
+					Age
+				</h3>
+				13-65+
+			</div>
+			<div>
+				<h3>
+					Gender
+				</h3>
+				<GenderSelector gender={this.props.gender} onChange={this.props.onSelectGender} />
+			</div>
+			<div>
+				<h3>
+					Consumption
+				</h3>
+				All
+			</div>
+		</div>
 	}
-	return <div>
-		<div>
-			Age: 13-65+
-		</div>
-		<div>
-			Gender: F/M/All
-		</div>
-		<div>
-			Audiences: All
-		</div>
-	</div>
 }
 
 ResultsSegmentations.propTypes = {
 	researchID: React.PropTypes.string.isRequired,
 	research: React.PropTypes.object,
-	onSegmentationsChange: React.PropTypes.func
+	onSegmentationsChange: React.PropTypes.func,
+	onSelectGender: React.PropTypes.func.isRequired
 }
 
 export default ResultsSegmentations;

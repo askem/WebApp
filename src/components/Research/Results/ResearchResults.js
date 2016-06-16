@@ -2,23 +2,36 @@ import React from 'react';
 import ResultsSegmentations from 'components/Research/Results/ResultsSegmentations';
 import SegmentedResults from 'components/Research/Results/SegmentedResults';
 
-const ResearchResults = (props) => {
-	if (!props.research) {
-		return <h2>Research Campaign #{props.researchID} does not exist</h2>
+class ResearchResults extends React.Component {
+	constructor(props) {
+    	super(props);
+    	this.state = {
+			gender: 'all'
+		};
+		this.onSelectGender = this.onSelectGender.bind(this);
 	}
-	return <div>
-		<h1>Results</h1>
-		campaign #{props.researchID}:  <b>{props.research.title}</b>
+	onSelectGender(gender) {
+		this.setState({gender});
+	}
+	render() {
+		if (!this.props.research) {
+			return <h2>Research Campaign #{this.props.researchID} does not exist</h2>
+		}
+		return <div>
+			<h1>Results</h1>
 
-		<div className="results-segmentations">
-			<ResultsSegmentations {...props} />
+			<div className="results-with-segments">
+				<div className="results-segmentations">
+					<ResultsSegmentations {...this.props} {...this.state} onSelectGender={this.onSelectGender} />
+				</div>
+
+				<div className="results-main">
+					<SegmentedResults {...this.props} {...this.state} />
+				</div>
+			</div>
+
 		</div>
-
-		<div className="results-main">
-			<SegmentedResults {...props} />
-		</div>
-
-	</div>
+	}
 }
 
 ResearchResults.propTypes = {
