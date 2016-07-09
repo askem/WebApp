@@ -4,6 +4,6 @@ const CONSUMTPION_GROUPS = [
 	{id: 'monthly', title: 'Monthly Consumers'},
 	{id: 'new', title: 'New Consumers'},
 	{id: 'non', title: 'Non-Consumers'}
-]
+];
 
 export default CONSUMTPION_GROUPS;

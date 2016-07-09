@@ -214,9 +214,12 @@ h1,h2,h3,h4 {
 
 .sample-mix-container {
 	width: 600px;
-	
+	display: flex;
 }
 
+.sample-mix-pills {
+	background-color: white;
+}
 
 /* ----------------------------------
  * Fluid Container

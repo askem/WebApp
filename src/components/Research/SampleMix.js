@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDataGrid from 'react-data-grid';
-import { FaFilePdfO, FaFileExcelO } from 'react-icons/lib/fa';
-import { Breadcrumb } from 'react-bootstrap';
+import { FaFilePdfO, FaFileExcelO, FaTable, FaAreaChart } from 'react-icons/lib/fa';
+import { Breadcrumb, Tab, Row, Col, Nav, NavItem } from 'react-bootstrap';
 import GoHome from 'react-icons/lib/go/home';
+import { Bar } from 'react-chartjs';
+import AGE_GROUPS from 'constants/AGE_GROUPS';
 
 require('react-data-grid/themes/react-data-grid.css');
 
@@ -34,6 +36,34 @@ const SampleMix = (props) => {
 	];
 	const rowGetter = (i) => rows[i];
 
+	const labels = AGE_GROUPS.map(g => g.id);
+	const chartData = {
+	    labels,
+	    datasets: [
+	        {
+	            label: "Female",
+	            backgroundColor: "#f15a40",
+	            // borderColor: "rgba(255,99,132,1)",
+	            // borderWidth: 1,
+	            // hoverBackgroundColor: "rgba(255,99,132,0.4)",
+	            // hoverBorderColor: "rgba(255,99,132,1)",
+	            data: [55, 35, 20, 10, 7, 3],
+	        },
+			{
+	            label: "Male",
+	            backgroundColor: "#005a96",
+	            // borderColor: "rgba(255,99,132,1)",
+	            // borderWidth: 1,
+	            // hoverBackgroundColor: "rgba(255,99,132,0.4)",
+	            // hoverBorderColor: "rgba(255,99,132,1)",
+	            data: [56, 31, 18, 10, 5, 0],
+	        }
+	    ]
+	};
+	const chartOptions = {
+		scales: { display: false }
+	};
+
 	return <div>
 		<Breadcrumb>
 			<Breadcrumb.Item>
@@ -54,22 +84,45 @@ const SampleMix = (props) => {
 		</Breadcrumb>
 		<h1>Sample Mix</h1>
 
-		<div className="sample-mix-container">
-			<ReactDataGrid columns={columns} rowGetter={rowGetter}
-				rowsCount={rows.length} rowHeight={35}
-				minHeight={35 * (rows.length + 1)} />
-			<div style={{textAlign: 'right'}}>
-				<FaFilePdfO size={40} color="#F15B40"/>
-				<FaFileExcelO size={40} color="#3DBB95"/>
+		<Tab.Container id="left-tabs-example" defaultActiveKey="first">
+			<div className="sample-mix-container" >
+				<div style={{width: 120}}>
+					<Nav bsStyle="sample-mix-pills" stacked>
+						<NavItem eventKey="first">
+							<FaAreaChart size={40} color="#9665aa" />
+						</NavItem>
+						<NavItem eventKey="second">
+							<FaTable size={40} color="#9665aa "/>
+						</NavItem>
+					</Nav>
+				</div>
+				<div style={{width: 480}}>
+					<Tab.Content animation>
+						<Tab.Pane eventKey="first">
+							<Bar data={chartData} options={chartOptions} />
+						</Tab.Pane>
+						<Tab.Pane eventKey="second">
+							<ReactDataGrid columns={columns} rowGetter={rowGetter}
+  				rowsCount={rows.length} rowHeight={35} minWidth={480}
+  				minHeight={35 * (rows.length + 1)} />
+						</Tab.Pane>
+					</Tab.Content>
+				</div>
 			</div>
-			<div>
-				{isApproved ? 'Approved 2 days ago ' : ''}
-				<button className="btn btn-default"
-				onClick={clickHandler}>
-					{isApproved ? 'OK' : 'Approve'}
-				</button>
-			</div>
+		</Tab.Container>
+
+		<div style={{width: 600, textAlign: 'right', paddingTop: 10}}>
+			<FaFilePdfO size={40} color="#F15B40"/>
+			<FaFileExcelO size={40} color="#3DBB95"/>
 		</div>
+		<div>
+			{isApproved ? 'Approved 2 days ago ' : ''}
+			<button className="btn btn-default"
+			onClick={clickHandler}>
+				{isApproved ? 'OK' : 'Approve'}
+			</button>
+		</div>
+
 	</div>
 }
 

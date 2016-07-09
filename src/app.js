@@ -32,7 +32,7 @@ const initialState = Immutable.fromJS({
 			1073: { title: 'Alcon 2016-06', samplings:[0, 1] }
 		},
 		samplings: {
-			0: { samplingID: 0, surveyID: 79, surveyType: 'ADCE', status: 'Running', approvedSampleMix: 1464710210668 },
+			0: { samplingID: 0, surveyID: 79, surveyType: 'DCE', status: 'Running', approvedSampleMix: 1464710210668 },
 			1: { samplingID: 1, surveyID: 83, surveyType: 'Custom', status: 'Draft', approvedSampleMix: null }
 		},
 		sampleMixes: {
