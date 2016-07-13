@@ -22,8 +22,6 @@ const SampleMixContainer = connect(
 	function mapDispatchToProps(dispatch) {
 		return {
 			onApprove: samplingID => dispatch(approveSampleMix(samplingID))
-			// addTodo: text => dispatch(addTodo(text)),
-			// toggleTodo: id => dispatch(toggleTodo(id))
 		};
 	}
 )(SampleMix);

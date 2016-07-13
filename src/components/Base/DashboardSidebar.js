@@ -5,7 +5,8 @@ const items = [
 	{id: 'brief', title: 'Brief'},
 	{id: 'tagging', title: 'Tagging'},
 	{id: 'audiences', title: 'Audiences'},
-	{id: 'samplings', title: 'Surveys'},
+	{id: 'samplings', title: 'Samples'},
+	{id: 'survey', title: 'Survey'},
 	{id: 'results', title: 'Results'}
 ]
 

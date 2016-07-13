@@ -115,9 +115,9 @@ const SampleMix = (props) => {
 			<FaFilePdfO size={40} color="#F15B40"/>
 			<FaFileExcelO size={40} color="#3DBB95"/>
 		</div>
-		<div>
+		<div style={{width: 600, textAlign: 'center', paddingTop: 20}}>
 			{isApproved ? 'Approved 2 days ago ' : ''}
-			<button className="btn btn-default"
+			<button className="btn btn-default btn-lg"
 			onClick={clickHandler}>
 				{isApproved ? 'OK' : 'Approve'}
 			</button>
