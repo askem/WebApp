@@ -7,7 +7,7 @@ import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import Immutable from 'immutable';
 import { TodoList } from 'containers/DashboardContainer';
 import DashboardFrame from 'components/base/DashboardFrame';
-import ResearchOverviewContainer from 'containers/ResearchContainer';
+import ResearchOverviewContainer from 'containers/ResearchOverviewContainer';
 import SamplingsListContainer from 'containers/SamplingsListContainer';
 import SampleMixContainer from 'containers/SampleMixContainer';
 import BriefContainer from 'containers/BriefContainer';
@@ -16,29 +16,10 @@ import { combineReducers } from 'redux-immutable';
 import dashReducer from 'reducers/dashboardReducer';
 import routing from 'reducers/routingReducer';
 
+import mockData from 'data/mockData';
+
 const initialState = Immutable.fromJS({
-	data: {
-		todos: [
-			{ id: 0, isDone: true,  text: 'make components' },
-			{ id: 1, isDone: false, text: 'design actions' },
-			{ id: 2, isDone: false, text: 'implement reducer' },
-			{ id: 3, isDone: false, text: 'connect components' }
-		],
-
-		selectedResearchCampaign: 0,
-
-
-		researchCampaigns: {
-			1073: { title: 'Alcon 2016-06', samplings:[0, 1] }
-		},
-		samplings: {
-			0: { samplingID: 0, surveyID: 79, surveyType: 'DCE', status: 'Running', approvedSampleMix: 1464710210668 },
-			1: { samplingID: 1, surveyID: 83, surveyType: 'Custom', status: 'Draft', approvedSampleMix: null }
-		},
-		sampleMixes: {
-			1464710210668: {}
-		}
-	}
+	data: mockData
 });
 
 const rootReducer = combineReducers({

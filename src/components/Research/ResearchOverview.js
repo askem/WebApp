@@ -6,6 +6,11 @@ const ResearchOverview = (props) => {
 	}
 	return <div>
 		campaign #{props.researchID}:  <b>{props.research.title}</b>
+
+		<div>
+			<div>Spend</div>
+			<div>{`${props.businessResults.spentCurrency}${props.businessResults.spent}`}</div>
+		</div>
 	</div>
 }
 
