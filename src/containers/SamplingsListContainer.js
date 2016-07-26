@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import SamplingsList from 'components/Research/SamplingsList';
-// import { addTodo, toggleTodo } from 'actions/testActions';
 
 const SamplingsListContainer = connect(
 	function mapStateToProps(state, ownProps) {
@@ -21,8 +20,7 @@ const SamplingsListContainer = connect(
 	},
 	function mapDispatchToProps(dispatch) {
 		return {
-			// addTodo: text => dispatch(addTodo(text)),
-			// toggleTodo: id => dispatch(toggleTodo(id))
+
 		};
 	}
 )(SamplingsList);

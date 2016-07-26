@@ -1,27 +1,25 @@
 import { connect } from 'react-redux';
-import Brief from 'components/Research/Brief';
+import Brief from 'components/Research/Brief/Brief';
+import * as actions from 'actions/briefActions';
 
 const BriefContainer = connect(
 	function mapStateToProps(state, ownProps) {
 		const researchID = ownProps.params.researchID;
 		let research = state.getIn(['data', 'researchCampaigns', researchID]);
+		if (research) { research = research.toJS(); }
+		let model = state.get('model');
+		if (model) { model = model.toJS(); }
 
-		// let samplings;
-		// if (research) {
-		// 	research = research.toJS();
-		// 	const samplingsIDs = research.samplings.map(s => s.toString());
-		// 	samplings = state.getIn(['data', 'samplings']).filter((v, k) => samplingsIDs.includes(k))
-		// 	.toList().toJS();
-		// }
 		return {
+			model,
 			research,
 			researchID
 		};
 	},
 	function mapDispatchToProps(dispatch) {
 		return {
-			// addTodo: text => dispatch(addTodo(text)),
-			// toggleTodo: id => dispatch(toggleTodo(id))
+			setResearchKPIs: (researchID, kpis) => dispatch(actions.setResearchKPIs(researchID, kpis)),
+			toggleResearchKPI: (researchID, kpi, allKPIs) => dispatch(actions.toggleResearchKPI(researchID, kpi, allKPIs)),
 		};
 	}
 )(Brief);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Breadcrumb } from 'react-bootstrap';
 import GoHome from 'react-icons/lib/go/home';
+import KPISelector from 'components/Research/Brief/KPISelector'
 
 class Brief extends React.Component {
 	constructor(props) {
@@ -24,6 +25,12 @@ class Brief extends React.Component {
 					</Breadcrumb.Item>
 				</Breadcrumb>
 				<h1>Brief</h1>
+
+				<KPISelector model={this.props.model}
+					researchID={this.props.researchID}
+					selected={new Set(this.props.research.kpis)}
+					toggleResearchKPI={this.props.toggleResearchKPI} />
+
 			</div>);
 	}
 }

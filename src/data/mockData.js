@@ -2,7 +2,13 @@ const mockData = {
 	selectedResearchCampaign: 0,
 
 	researchCampaigns: {
-		1073: { title: 'Alcon 2016-06', samplings:[0, 1] }
+		1073: {
+			title: 'Alcon 2016-06',
+			modelID: 'dce',
+			modelVersion: '0.1',
+			kpis: ['exposure_targeting', 'intent_purchase'],
+			samplings:[0, 1]
+		}
 	},
 	samplings: {
 		0: { samplingID: 0, surveyID: 79, surveyType: 'DCE', status: 'Running', approvedSampleMix: 1464710210668 },

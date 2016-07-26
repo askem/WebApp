@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import ResearchOverview from 'components/Research/ResearchOverview';
-// import { addTodo, toggleTodo } from 'actions/testActions';
 
 const ResearchOverviewContainer = connect(
 	function mapStateToProps(state, ownProps) {
@@ -10,7 +9,7 @@ const ResearchOverviewContainer = connect(
 		let results = state.getIn(['data', 'resultsByResearch', researchID]);
 		if (results) {
 			results = results.toJS();
-			// Currently - only 1 sampling per research
+			// ASSUMPTION :: Currently - only 1 sampling per research
 			if (results.length === 1) {
 				results = results[0];
 			}
@@ -26,8 +25,7 @@ const ResearchOverviewContainer = connect(
 	},
 	function mapDispatchToProps(dispatch) {
 		return {
-			// addTodo: text => dispatch(addTodo(text)),
-			// toggleTodo: id => dispatch(toggleTodo(id))
+
 		};
 	}
 )(ResearchOverview);
