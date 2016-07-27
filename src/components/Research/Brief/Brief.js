@@ -27,15 +27,15 @@ class Brief extends React.Component {
 				</Breadcrumb>
 				<h1>Brief</h1>
 
-				{/*<ModelInputsWizard model={this.props.model}
+				<ModelInputsWizard model={this.props.model}
 					modelData={this.props.modelData}
 					researchID={this.props.researchID}
-					research={this.props.research} />*/}
+					research={this.props.research} />
 
-				<KPISelector model={this.props.model}
+				{/*<KPISelector model={this.props.model}
 					researchID={this.props.researchID}
 					selected={new Set(this.props.research.kpis)}
-					toggleResearchKPI={this.props.toggleResearchKPI} />
+					toggleResearchKPI={this.props.toggleResearchKPI} />*/}
 
 			</div>);
 	}

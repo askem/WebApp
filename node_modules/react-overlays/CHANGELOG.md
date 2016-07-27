@@ -1,3 +1,29 @@
+## [v0.6.5]
+> 2016-07-13
+
+- **Bugfix:** Make `target` on `<Portal>` work like `container` ([#102])
+
+[v0.6.5]: https://github.com/react-bootstrap/react-overlays/compare/v0.6.4...v0.6.5
+[#102]: https://github.com/react-bootstrap/react-overlays/pull/102
+
+
+## [v0.6.4]
+> 2016-07-11
+
+- **Feature:** Add `disabled` prop to `<RootCloseWrapper>` ([#93])
+- **Feature:** Add `event` prop to `<RootCloseWrapper>` to control mouse event that triggers root close behavior ([#95])
+- **Bugfix:** Fix restoring focus on closing `<Modal>` ([#82])
+- **Bugfix:** Do not pass unknown props to children ([#99])
+- **Chore:** Upgrade to Babel 6 ([#100])
+
+[v0.6.4]: https://github.com/react-bootstrap/react-overlays/compare/v0.6.3...v0.6.4
+[#82]: https://github.com/react-bootstrap/react-overlays/pull/82
+[#93]: https://github.com/react-bootstrap/react-overlays/pull/93
+[#95]: https://github.com/react-bootstrap/react-overlays/pull/95
+[#99]: https://github.com/react-bootstrap/react-overlays/pull/99
+[#100]: https://github.com/react-bootstrap/react-overlays/pull/100
+
+
 ## [v0.6.3]
 > 2016-04-07
 

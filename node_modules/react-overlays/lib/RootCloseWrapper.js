@@ -1,12 +1,10 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -16,17 +14,27 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _utilsAddEventListener = require('./utils/addEventListener');
+var _addEventListener = require('./utils/addEventListener');
 
-var _utilsAddEventListener2 = _interopRequireDefault(_utilsAddEventListener);
+var _addEventListener2 = _interopRequireDefault(_addEventListener);
 
-var _utilsCreateChainedFunction = require('./utils/createChainedFunction');
+var _createChainedFunction = require('./utils/createChainedFunction');
 
-var _utilsCreateChainedFunction2 = _interopRequireDefault(_utilsCreateChainedFunction);
+var _createChainedFunction2 = _interopRequireDefault(_createChainedFunction);
 
-var _utilsOwnerDocument = require('./utils/ownerDocument');
+var _ownerDocument = require('./utils/ownerDocument');
 
-var _utilsOwnerDocument2 = _interopRequireDefault(_utilsOwnerDocument);
+var _ownerDocument2 = _interopRequireDefault(_ownerDocument);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 // TODO: Consider using an ES6 symbol here, once we use babel-runtime.
 var CLICK_WAS_INSIDE = '__click_was_inside';
@@ -54,118 +62,145 @@ function getSuppressRootClose() {
   };
 }
 
-var RootCloseWrapper = (function (_React$Component) {
+var RootCloseWrapper = function (_React$Component) {
   _inherits(RootCloseWrapper, _React$Component);
 
   function RootCloseWrapper(props) {
     _classCallCheck(this, RootCloseWrapper);
 
-    _React$Component.call(this, props);
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RootCloseWrapper).call(this, props));
 
-    this.handleDocumentClick = this.handleDocumentClick.bind(this);
-    this.handleDocumentKeyUp = this.handleDocumentKeyUp.bind(this);
+    _this.handleDocumentMouse = _this.handleDocumentMouse.bind(_this);
+    _this.handleDocumentKeyUp = _this.handleDocumentKeyUp.bind(_this);
 
     var _getSuppressRootClose = getSuppressRootClose();
 
     var id = _getSuppressRootClose.id;
     var suppressRootClose = _getSuppressRootClose.suppressRootClose;
 
-    this._suppressRootId = id;
 
-    this._suppressRootCloseHandler = suppressRootClose;
+    _this._suppressRootId = id;
+
+    _this._suppressRootCloseHandler = suppressRootClose;
+    return _this;
   }
 
-  RootCloseWrapper.prototype.bindRootCloseHandlers = function bindRootCloseHandlers() {
-    var doc = _utilsOwnerDocument2['default'](this);
+  _createClass(RootCloseWrapper, [{
+    key: 'bindRootCloseHandlers',
+    value: function bindRootCloseHandlers() {
+      var doc = (0, _ownerDocument2.default)(this);
 
-    this._onDocumentClickListener = _utilsAddEventListener2['default'](doc, 'click', this.handleDocumentClick);
+      this._onDocumentMouseListener = (0, _addEventListener2.default)(doc, this.props.event, this.handleDocumentMouse);
 
-    this._onDocumentKeyupListener = _utilsAddEventListener2['default'](doc, 'keyup', this.handleDocumentKeyUp);
-  };
-
-  RootCloseWrapper.prototype.handleDocumentClick = function handleDocumentClick(e) {
-    // This is now the native event.
-    if (e[this._suppressRootId]) {
-      return;
+      this._onDocumentKeyupListener = (0, _addEventListener2.default)(doc, 'keyup', this.handleDocumentKeyUp);
     }
+  }, {
+    key: 'handleDocumentMouse',
+    value: function handleDocumentMouse(e) {
+      // This is now the native event.
+      if (e[this._suppressRootId]) {
+        return;
+      }
 
-    if (isModifiedEvent(e) || !isLeftClickEvent(e)) {
-      return;
+      if (this.props.disabled || isModifiedEvent(e) || !isLeftClickEvent(e)) {
+        return;
+      }
+
+      this.props.onRootClose && this.props.onRootClose();
     }
-
-    this.props.onRootClose();
-  };
-
-  RootCloseWrapper.prototype.handleDocumentKeyUp = function handleDocumentKeyUp(e) {
-    if (e.keyCode === 27) {
-      this.props.onRootClose();
+  }, {
+    key: 'handleDocumentKeyUp',
+    value: function handleDocumentKeyUp(e) {
+      if (e.keyCode === 27 && this.props.onRootClose) {
+        this.props.onRootClose();
+      }
     }
-  };
+  }, {
+    key: 'unbindRootCloseHandlers',
+    value: function unbindRootCloseHandlers() {
+      if (this._onDocumentMouseListener) {
+        this._onDocumentMouseListener.remove();
+      }
 
-  RootCloseWrapper.prototype.unbindRootCloseHandlers = function unbindRootCloseHandlers() {
-    if (this._onDocumentClickListener) {
-      this._onDocumentClickListener.remove();
+      if (this._onDocumentKeyupListener) {
+        this._onDocumentKeyupListener.remove();
+      }
     }
-
-    if (this._onDocumentKeyupListener) {
-      this._onDocumentKeyupListener.remove();
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.bindRootCloseHandlers();
     }
-  };
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props;
+      var event = _props.event;
+      var noWrap = _props.noWrap;
+      var children = _props.children;
 
-  RootCloseWrapper.prototype.componentDidMount = function componentDidMount() {
-    this.bindRootCloseHandlers();
-  };
+      var child = _react2.default.Children.only(children);
 
-  RootCloseWrapper.prototype.render = function render() {
-    var _props = this.props;
-    var noWrap = _props.noWrap;
-    var children = _props.children;
+      var handlerName = event == 'click' ? 'onClick' : 'onMouseDown';
 
-    var child = _react2['default'].Children.only(children);
+      if (noWrap) {
+        return _react2.default.cloneElement(child, _defineProperty({}, handlerName, (0, _createChainedFunction2.default)(this._suppressRootCloseHandler, child.props[handlerName])));
+      }
 
-    if (noWrap) {
-      return _react2['default'].cloneElement(child, {
-        onClick: _utilsCreateChainedFunction2['default'](this._suppressRootCloseHandler, child.props.onClick)
-      });
+      // Wrap the child in a new element, so the child won't have to handle
+      // potentially combining multiple onClick listeners.
+      return _react2.default.createElement(
+        'div',
+        _defineProperty({}, handlerName, this._suppressRootCloseHandler),
+        child
+      );
     }
-
-    // Wrap the child in a new element, so the child won't have to handle
-    // potentially combining multiple onClick listeners.
-    return _react2['default'].createElement(
-      'div',
-      { onClick: this._suppressRootCloseHandler },
-      child
-    );
-  };
-
-  RootCloseWrapper.prototype.getWrappedDOMNode = function getWrappedDOMNode() {
-    // We can't use a ref to identify the wrapped child, since we might be
-    // stealing the ref from the owner, but we know exactly the DOM structure
-    // that will be rendered, so we can just do this to get the child's DOM
-    // node for doing size calculations in OverlayMixin.
-    var node = _reactDom2['default'].findDOMNode(this);
-    return this.props.noWrap ? node : node.firstChild;
-  };
-
-  RootCloseWrapper.prototype.componentWillUnmount = function componentWillUnmount() {
-    this.unbindRootCloseHandlers();
-  };
+  }, {
+    key: 'getWrappedDOMNode',
+    value: function getWrappedDOMNode() {
+      // We can't use a ref to identify the wrapped child, since we might be
+      // stealing the ref from the owner, but we know exactly the DOM structure
+      // that will be rendered, so we can just do this to get the child's DOM
+      // node for doing size calculations in OverlayMixin.
+      var node = _reactDom2.default.findDOMNode(this);
+      return this.props.noWrap ? node : node.firstChild;
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.unbindRootCloseHandlers();
+    }
+  }]);
 
   return RootCloseWrapper;
-})(_react2['default'].Component);
+}(_react2.default.Component);
 
-exports['default'] = RootCloseWrapper;
+exports.default = RootCloseWrapper;
+
 
 RootCloseWrapper.displayName = 'RootCloseWrapper';
 
 RootCloseWrapper.propTypes = {
-  onRootClose: _react2['default'].PropTypes.func.isRequired,
+  onRootClose: _react2.default.PropTypes.func,
 
+  /**
+   * Disable the the RootCloseWrapper, preventing it from triggering
+   * `onRootClose`.
+   */
+  disabled: _react2.default.PropTypes.bool,
   /**
    * Passes the suppress click handler directly to the child component instead
    * of placing it on a wrapping div. Only use when you can be sure the child
    * properly handle the click event.
    */
-  noWrap: _react2['default'].PropTypes.bool
+  noWrap: _react2.default.PropTypes.bool,
+  /**
+   * Choose which document mouse event to bind to
+   */
+  event: _react2.default.PropTypes.oneOf(['click', 'mousedown'])
+};
+
+RootCloseWrapper.defaultProps = {
+  event: 'click'
 };
 module.exports = exports['default'];

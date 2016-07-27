@@ -13,7 +13,6 @@ class ModelInputsWizard extends React.Component {
 		const kpis = props.research.kpis;
 		const relevantQuestions = props.model.survey.questions.filter(
 			q => q.kpis === null || intersection(q.kpis, kpis).length > 0);
-		console.info(relevantQuestions);
 
 		const varRegex = /{{(.+?)}}/g;
 		const extractVariables = (s) => {
@@ -35,18 +34,13 @@ class ModelInputsWizard extends React.Component {
 				vars = vars.concat(paVars);
 			});
 			console.log(`for q ${q.questionID}: vars ${vars}`);
-			console.log(vars);
 			vars = vars.filter(v => !allVarNames.includes(v));
-			console.log(vars);
 			allVarNames = allVarNames.concat(vars);
 			if (vars.length > 0) {
 				//debugger;
 				vars = vars.map(v => {
-					console.info('v: ' + v);
-					console.info(props.model.variables);
 					return props.model.variables.find(va => va.id === v)
 				});
-				console.log(vars);
 				variablesPerQuestion[q.questionID] = vars;
 			}
 		})
