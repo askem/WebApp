@@ -66,7 +66,45 @@ const mockData = {
 				]
 			}
 		]
+	},
+
+	researchModelData: {
+		1073: {
+			"modelID": "dce",
+			"modelVersion": "0.1",
+			"locale": "he-IL",
+			"variableValues": [
+					{"id": "brandName", "value": ""},
+					{"id": "adverisedProductName", "value": ""},
+					{"id": "goldenFrame", "value":"{GUID}", "crop": "0,0,100,100"},
+					{"id": "atmosphereImages", "value":
+						[
+							{"value": "{GUID}", "crop": "0,0,100,100"},
+							{"value": "{GUID}", "crop": "0,0,100,100"}
+						]
+					}
+			],
+			"requiredKPIs": ["exposure_targeting_score", "recall_campaign"],
+
+			"survey": {
+
+			},
+			"analysisLogic": {
+				"KPIBinding":
+					[
+						{"kpiID": "exposure_targeting_score", "answersBingding":[42364554672, 42364554673]},
+						{"kpiID": "recall_campaign", "answersBingding":[]},
+						{"kpiID": "recall_brand", "answersBingding":[]},
+						{"kpiID": "recall_message", "answersBingding":[]},
+						{"kpiID": "awareness_brand", "answersBingding":[]},
+						{"kpiID": "awareness_presenter", "answersBingding":[]},
+						{"kpiID": "brand_preference", "answersBingding":[]},
+						{"kpiID": "purchase_intent", "answersBingding":[]},
+					]
+				}
+			}
 	}
+
 };
 
 export default mockData;

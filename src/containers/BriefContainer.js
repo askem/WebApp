@@ -9,9 +9,12 @@ const BriefContainer = connect(
 		if (research) { research = research.toJS(); }
 		let model = state.get('model');
 		if (model) { model = model.toJS(); }
+		let modelData = state.getIn(['data', 'researchModelData', researchID]);
+		if (modelData) { modelData = modelData.toJS(); }
 
 		return {
 			model,
+			modelData,
 			research,
 			researchID
 		};

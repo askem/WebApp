@@ -8,7 +8,8 @@ const dceModel =
 	"variables": [
 		{"id": "brand", "name": "Brand Name","description":"", "type": "string", "defaultValue": null, "required": true, "validations": {"length": 40}},
 		{"id": "categories", "name": "Categories", "description":"", "type": "category[]", "defaultValue": null, "required": true, "validations": {"min": 1}},
-		{"id": "competitors", "name": "Major Competitors", "description":"", "type": "string[]", "defaultValue": null, "required": true, "validations": {"length": 40, "min": 2, "max": 5}},
+		{"id": "category", "name": "Brand Category", "description":"", "type": "category", "defaultValue": null, "required": true},
+		{"id": "competitors", "name": "Major Competitors", "description":"", "type": "string[]", "defaultValue": null, "required": true, "validations": {"length": 40, "min": 2, "max": 4}},
 		{"id": "messages", "name": "Brand Messages", "description":"", "type": "string[]", "defaultValue": null, "required": false, "validations": {"length": 50, "min": 0, "max": 7}},
 		{"id": "brand_image", "name": "Brand Image", "description":"", "type": "image", "defaultValue": null, "required": true, "validations": {"minWidth": 400, "minHeight": 400}},
 		{"id": "add_brand_images", "name": "Additional Brand Images", "description":"", "type": "image[]", "defaultValue": null, "required": true, "validations": {"minWidth": 400, "minHeight": 400, "min": 1, "max": 3}},
@@ -72,10 +73,10 @@ const dceModel =
 	"survey": {
 		"questions": [
 			{
-				"kpis": null,
+				"kpis": ["exposure_targeting"],
 				"popupsArrangement": "circle",
 				"questionID": 1,
-				"textValue": "Do you like {{PLURAL(brand)}}?",
+				"textValue": "Do you like {{category}}?",
 				"possibleAnswers": [
 					{"possibleAnswerID": 101, "textValue": "yes"},
 					{"possibleAnswerID": 102, "textValue": "no"}
@@ -83,10 +84,10 @@ const dceModel =
 				"mediaID": "{{category_image}}"
 			},
 			{
-				"kpis": ["favourability", "awareness"],
+				"kpis": ["intent_purchase"],
 				"popupsArrangement": "circle",
 				"questionID": 2,
-				"textValue": "Which brands of {{category[0]}} do you buy?",
+				"textValue": "Which brands of {{category}} do you buy?",
 				"possibleAnswers": [
 					{"possibleAnswerID": 201, "textValue": "{{brand}}", "random": true},
 					{"possibleAnswerID": 202, "textValue": "{{competitors}}", "random": true},
@@ -96,7 +97,7 @@ const dceModel =
 				"mediaID": "{{category_image}}"
 			},
 			{
-				"kpi": ["awareness"],
+				"kpis": ["awareness"],
 				"popupsArrangement": "circle",
 				"questionID": 3,
 				"textValue": "Would you say that **{{messages}}**?",
@@ -112,7 +113,7 @@ const dceModel =
 			{
 				"ID": 0,
 				"questionIDs": [2],
-				"kpi": "awareness"
+				"kpis": ["awareness"]
 			}
 		]
 	},
