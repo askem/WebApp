@@ -23,6 +23,7 @@ const BriefContainer = connect(
 		return {
 			setResearchKPIs: (researchID, kpis) => dispatch(actions.setResearchKPIs(researchID, kpis)),
 			toggleResearchKPI: (researchID, kpi, allKPIs) => dispatch(actions.toggleResearchKPI(researchID, kpi, allKPIs)),
+			onModelVariableChange: (researchID, variableID, value) => dispatch(actions.setModelVariable(researchID, variableID, value)),
 		};
 	}
 )(Brief);

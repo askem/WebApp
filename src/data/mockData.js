@@ -74,13 +74,13 @@ const mockData = {
 			"modelVersion": "0.1",
 			"locale": "he-IL",
 			"variableValues": [
-					{"id": "brandName", "value": ""},
+					{"id": "category", "value": "Contact Lenses"},
 					{"id": "adverisedProductName", "value": ""},
-					{"id": "goldenFrame", "value":"{GUID}", "crop": "0,0,100,100"},
+					{"id": "goldenFrame", "value":{"mediaID": "{GUID}", "crop": "0,0,100,100"}},
 					{"id": "atmosphereImages", "value":
 						[
-							{"value": "{GUID}", "crop": "0,0,100,100"},
-							{"value": "{GUID}", "crop": "0,0,100,100"}
+							{"value": {"mediaID": "{GUID}", "crop": "0,0,100,100"}},
+							{"value": {"mediaID": "{GUID}", "crop": "0,0,100,100"}},
 						]
 					}
 			],

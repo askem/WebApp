@@ -19,5 +19,15 @@ const toggleResearchKPI = (researchID, kpi, allKPIs) => {
 	}
 }
 
+const setModelVariable = (researchID, variableID, value) => {
+	return {
+		type: 'SET_MODEL_VARIABLE',
+		payload: {
+			researchID,
+			variableID,
+			value
+		}
+	}
+}
 
-export { setResearchKPIs, toggleResearchKPI };
+export { setResearchKPIs, toggleResearchKPI, setModelVariable };

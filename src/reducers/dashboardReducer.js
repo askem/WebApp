@@ -1,4 +1,5 @@
 import { List, Map } from 'immutable';
+import Immutable from 'immutable';
 
 const initialState = Map({});
 
@@ -30,6 +31,20 @@ export default function(state=initialState, action) {
 				kpisToDelete.push(...dependendentKPIs.map(kpi => kpi.kpiID));
 				console.info('removing : ' + kpisToDelete);
 				return kpis.filterNot(kpi => kpisToDelete.includes(kpi));
+			}
+		});
+	case 'SET_MODEL_VARIABLE':
+		const varID = action.payload.variableID;
+		const newValue = Map({
+			id: varID,
+			value: Immutable.fromJS(action.payload.value)
+		});
+		return state.updateIn(['researchModelData', action.payload.researchID, 'variableValues'], values => {
+			const idx = values.findKey(v => v.get('id') === varID);
+			if (idx !== undefined) {
+				return values.set(idx, newValue);
+			} else {
+				return values.push(newValue);
 			}
 		});
     default:

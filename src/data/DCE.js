@@ -6,14 +6,14 @@ const dceModel =
 	"modelVersion": "0.1",
 	"modelDescription": "",
 	"variables": [
-		{"id": "brand", "name": "Brand Name","description":"", "type": "string", "defaultValue": null, "required": true, "validations": {"length": 40}},
-		{"id": "categories", "name": "Categories", "description":"", "type": "category[]", "defaultValue": null, "required": true, "validations": {"min": 1}},
-		{"id": "category", "name": "Brand Category", "description":"", "type": "category", "defaultValue": null, "required": true},
-		{"id": "competitors", "name": "Major Competitors", "description":"", "type": "string[]", "defaultValue": null, "required": true, "validations": {"length": 40, "min": 2, "max": 4}},
-		{"id": "messages", "name": "Brand Messages", "description":"", "type": "string[]", "defaultValue": null, "required": false, "validations": {"length": 50, "min": 0, "max": 7}},
-		{"id": "brand_image", "name": "Brand Image", "description":"", "type": "image", "defaultValue": null, "required": true, "validations": {"minWidth": 400, "minHeight": 400}},
-		{"id": "add_brand_images", "name": "Additional Brand Images", "description":"", "type": "image[]", "defaultValue": null, "required": true, "validations": {"minWidth": 400, "minHeight": 400, "min": 1, "max": 3}},
-		{"id": "category_image", "name": "Category Image", "description":"", "type": "image", "defaultValue": null, "required": true, "validations": {"minWidth": 400, "minHeight": 400}}
+		{"id": "brand", "name": "Brand Name","description":"", "type": "string", "defaultValue": null, "validations": {"length": 40}},
+		{"id": "categories", "name": "Categories", "description":"", "type": "category[]", "defaultValue": null, "validations": {"min": 1}},
+		{"id": "category", "name": "Brand Category", "description":"", "type": "category", "defaultValue": null},
+		{"id": "competitors", "name": "Major Competitors", "description":"", "type": "string[]", "hint": "Competitor #{{#}}", "defaultValue": null, "validations": {"length": 40, "min": 1, "max": 4}},
+		{"id": "messages", "name": "Brand Messages", "description":"", "type": "string[]", "defaultValue": null, "validations": {"length": 50, "min": 0, "max": 7}},
+		{"id": "brand_image", "name": "Brand Image", "description":"", "type": "image", "defaultValue": null, "validations": {"minWidth": 400, "minHeight": 400}},
+		{"id": "add_brand_images", "name": "Additional Brand Images", "description":"", "type": "image[]", "defaultValue": null, "validations": {"minWidth": 400, "minHeight": 400, "min": 1, "max": 3}},
+		{"id": "category_image", "name": "Category Image", "description":"", "type": "image", "defaultValue": null, "validations": {"minWidth": 400, "minHeight": 400}}
 	],
 	"KPIGroups": [
 		{"groupID": "exposure", "name": "Exposure", "description": ""},

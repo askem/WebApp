@@ -16,6 +16,9 @@ import dashReducer from 'reducers/dashboardReducer';
 import modelReducer from 'reducers/modelReducer';
 import routing from 'reducers/routingReducer';
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 import mockData from 'data/mockData';
 import dceModel from 'data/DCE';
 
@@ -49,7 +52,21 @@ const DummyComponent = () => (
 	<div style={{color:'red'}}></div>
 );
 
+const muiTheme = getMuiTheme({
+ 	palette: {
+		textColor: '#9665aa',
+ 	},
+ 	textField: {
+		floatingLabelColor: '#9665aa',
+		focusColor: '#9665aa'
+ 	},
+	floatingActionButton: {
+		color: '#9665aa'
+	}
+});
+
 render(
+	<MuiThemeProvider muiTheme={muiTheme}>
 	<Provider store={store}>
 		<Router history={history}>
 			<Route component={DashboardFrame}>
@@ -61,6 +78,7 @@ render(
 				<Route path="/campaigns/:researchID/samplings/:samplingID/samplemix" component={SampleMixContainer} />
 			</Route>
 		</Router>
-	</Provider>,
+	</Provider>
+	</MuiThemeProvider>,
 	document.getElementById('app')
 );

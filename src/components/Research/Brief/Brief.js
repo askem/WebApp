@@ -30,7 +30,8 @@ class Brief extends React.Component {
 				<ModelInputsWizard model={this.props.model}
 					modelData={this.props.modelData}
 					researchID={this.props.researchID}
-					research={this.props.research} />
+					research={this.props.research}
+					onModelVariableChange={this.props.onModelVariableChange} />
 
 				{/*<KPISelector model={this.props.model}
 					researchID={this.props.researchID}
@@ -46,7 +47,8 @@ Brief.propTypes = {
 	modelData: React.PropTypes.object.isRequired,
 	researchID: React.PropTypes.string.isRequired,
 	research: React.PropTypes.object.isRequired,
-	toggleResearchKPI: React.PropTypes.func.isRequired
+	toggleResearchKPI: React.PropTypes.func.isRequired,
+	onModelVariableChange: React.PropTypes.func.isRequired
 }
 
 export default Brief;
