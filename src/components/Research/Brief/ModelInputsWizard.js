@@ -29,15 +29,19 @@ TextVariable.defaultProps = {
 class TextArrayVariable extends React.Component {
 	constructor(props) {
 		super(props);
+		this.clearErrorMessage = this.clearErrorMessage.bind(this);
 		this.onChange = this.onChange.bind(this);
 		this.onAdd = this.onAdd.bind(this);
 		this.onDelete = this.onDelete.bind(this);
 		this.state = {errorMessage: ''};
 	}
+	clearErrorMessage() {
+		this.setState({errorMessage: ''})
+	}
 	onChange(idx, event) {
 		const newText = event.target.value;
 		if (newText.length > this.props.variable.validations.length) {
-			console.error('Change: Fails validation for %o', this.props.variable);
+			console.error('User errpr - Change: Fails validation for %o', this.props.variable);
 			this.setState({
 				errorMessage: `⚠️Maximum length should not exceed ${this.props.variable.validations.length}`
 			});
@@ -51,7 +55,7 @@ class TextArrayVariable extends React.Component {
 		let newVal = this.props.value.slice();
 		newVal.push('');
 		if (newVal.length > this.props.variable.validations.max) {
-			console.error('Add: Fails validation for %o', this.props.variable);
+			console.error('User errpr - Add: Fails validation for %o', this.props.variable);
 			this.setState({
 				errorMessage: `⚠️There can be only ${this.props.variable.validations.max} ${this.props.variable.name.toLowerCase()}`
 			});
@@ -63,7 +67,7 @@ class TextArrayVariable extends React.Component {
 		let newVal = this.props.value.slice();
 		newVal.splice(idx, 1);
 		if (newVal.length < this.props.variable.validations.min) {
-			console.error('Delete: Fails validation for %o', this.props.variable);
+			console.error('User errpr - Delete: Fails validation for %o', this.props.variable);
 			this.setState({
 				errorMessage: `⚠️There must be at least ${this.props.variable.validations.min} ${this.props.variable.name.toLowerCase()}`
 			});
@@ -95,6 +99,7 @@ class TextArrayVariable extends React.Component {
 	    		open={!!this.state.errorMessage}
 				message={this.state.errorMessage}
 				autoHideDuration={2000}
+				onRequestClose={this.clearErrorMessage}
 				/>
 		</div>
 	}

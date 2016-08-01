@@ -41,7 +41,25 @@ const mockData = {
 				"samplingID": 123123,
 				"kpis": [
 					{
-						"kpiID": "brand_preference",
+						"kpiID": "recall_campaign",
+						"MoE": 0.12,
+						"kpiValue": 0.12,
+						"samples":
+						[
+							{ "sampleName": "test", "kpiValue": 0.4912, "qualifyingResponders":637000},
+							{ "sampleName": "control", "kpiValue": 0.375, "qualifyingResponders":133},
+							{ "sampleName": "extra_sample", "kpiValue": 0.1, "qualifyingResponders":40}
+						],
+						"benchmarks":
+						[
+							{ "benchmarkName": "Brand", "kpiValue": 0.8, "qualifyingResponders":320},
+							{ "benchmarkName": "Category1", "kpiValue": 0.8, "qualifyingResponders":320},
+							{ "benchmarkName": "Category2", "kpiValue": 0.8, "qualifyingResponders":320},
+						],
+						"to": "Date(322133613)", "from": "Date(322133213)"
+					},
+					{
+						"kpiID": "intent_purchase",
 						"MoE": 0.12,
 						"kpiValue": 0.5,
 						"samples":
