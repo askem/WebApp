@@ -18,6 +18,10 @@ h1,h2,h3,h4 {
 }
 .brief-wizard .preview {
 	width: 450px;
+	padding-right: 20px;
+}
+.brief-wizard .preview .question {
+	padding-top: 0;
 }
 
 

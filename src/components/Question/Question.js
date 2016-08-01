@@ -13,7 +13,7 @@ class Question extends React.Component {
 	}
 	render() {
 		const q = this.props.question;
-		let continueButton = null;
+		//let continueButton = null;
 		// if (q.isMultiAnswerQuestion) {
 		// 	ASKEM.trackEvent('Survey', 'ViewMultiAQuestion', q.questionID) + ',20150625');
 		// 	const canContinue = this.canMultiAQContinue();
@@ -24,16 +24,14 @@ class Question extends React.Component {
 		// 			/>;
 		// }
 		// if (q.popupIndexes.size !== 1) { ASKEM.trackEvent('Survey', 'ViewMoreThanQuestion', q.questionID); }
-		return <div className="col-md-7 col-md-offset-2 question">
+		return <div className="question">
 			<div className="row">
-				<div className="col-md-4 col-md-push-8 content-wrapper">
-					<div className="media question-text selectable">
-						<div className="clearfix visible-md visible-lg"></div>
+				<div >
+					<div className="question-text">
 						<AskemUserText>{q.textValue}</AskemUserText>
-						{continueButton}
 					</div>
 				</div>
-				<QuestionMedia ref="questionMedia"
+				<QuestionMedia
 					question={q}
 					checks={this.state.checks}
 					checkAnswer={this.checkAnswer} uncheckAnswer={this.uncheckAnswer}

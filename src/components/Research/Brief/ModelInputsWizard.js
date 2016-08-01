@@ -8,6 +8,8 @@ import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FaClose from 'react-icons/lib/fa/close';
+import questionFromTemplate from 'utils/Askem/questionFromTemplate';
+import extractTemplateVars from 'utils/Askem/extractTemplateVars';
 
 class TextVariable extends React.Component {
 	constructor(props) {
@@ -41,7 +43,7 @@ class TextArrayVariable extends React.Component {
 	onChange(idx, event) {
 		const newText = event.target.value;
 		if (newText.length > this.props.variable.validations.length) {
-			console.error('User errpr - Change: Fails validation for %o', this.props.variable);
+			console.warn('User error - Change: Fails validation for %o', this.props.variable);
 			this.setState({
 				errorMessage: `⚠️Maximum length should not exceed ${this.props.variable.validations.length}`
 			});
@@ -55,7 +57,7 @@ class TextArrayVariable extends React.Component {
 		let newVal = this.props.value.slice();
 		newVal.push('');
 		if (newVal.length > this.props.variable.validations.max) {
-			console.error('User errpr - Add: Fails validation for %o', this.props.variable);
+			console.warn('User error - Add: Fails validation for %o', this.props.variable);
 			this.setState({
 				errorMessage: `⚠️There can be only ${this.props.variable.validations.max} ${this.props.variable.name.toLowerCase()}`
 			});
@@ -67,7 +69,7 @@ class TextArrayVariable extends React.Component {
 		let newVal = this.props.value.slice();
 		newVal.splice(idx, 1);
 		if (newVal.length < this.props.variable.validations.min) {
-			console.error('User errpr - Delete: Fails validation for %o', this.props.variable);
+			console.warn('User error - Delete: Fails validation for %o', this.props.variable);
 			this.setState({
 				errorMessage: `⚠️There must be at least ${this.props.variable.validations.min} ${this.props.variable.name.toLowerCase()}`
 			});
@@ -121,36 +123,29 @@ class ModelInputsWizard extends React.Component {
 		const relevantQuestions = props.model.survey.questions.filter(
 			q => q.kpis === null || intersection(q.kpis, kpis).length > 0);
 
-		const varRegex = /{{(.+?)}}/g;
-		const extractVariables = (s) => {
-			const matches = s.match(varRegex);
-			if (matches) {
-				return matches.map(s => s.slice(2, -2));
-			} else {
-				return [];
-			}
-		}
-
 		let variablesPerQuestion = {};
 		let allVarNames = [];
+		let allVars = [];
 		relevantQuestions.forEach(q => {
-			let vars = extractVariables(q.textValue);
-			vars = vars.concat(extractVariables(q.mediaID));
+			let qVars = extractTemplateVars(q.textValue);
+			qVars = qVars.concat(extractTemplateVars(q.mediaID));
 			q.possibleAnswers.forEach(pa => {
-				const paVars = extractVariables(pa.textValue);
-				vars = vars.concat(paVars);
+				const paVars = extractTemplateVars(pa.textValue);
+				qVars = qVars.concat(paVars);
 			});
-			vars = vars.filter(v => !allVarNames.includes(v));
-			allVarNames = allVarNames.concat(vars);
-			if (vars.length > 0) {
-				vars = vars.map(v => {
+			qVars = qVars.filter(v => !allVarNames.includes(v));
+			allVarNames = allVarNames.concat(qVars);
+			if (qVars.length > 0) {
+				qVars = qVars.map(v => {
 					return props.model.variables.find(va => va.id === v)
 				});
-				variablesPerQuestion[q.questionID] = vars;
+				allVars = allVars.concat(qVars);
+				variablesPerQuestion[q.questionID] = qVars;
 			}
 		})
 
 		this.variablesPerQuestion = variablesPerQuestion;
+		this.allVariables = allVars;
 		this.questions = relevantQuestions.filter(q => variablesPerQuestion[q.questionID] !== undefined);
 		this.state = {
 			questionIdx: 0
@@ -164,11 +159,8 @@ class ModelInputsWizard extends React.Component {
 	onValueChange(variable, value) {
 		this.props.onModelVariableChange(this.props.researchID, variable.id, value);
 	}
-	renderVariableInput(v) {
+	renderVariableInput(v, value) {
 		const key = `var_${v.id}`;
-		let value = this.props.modelData.variableValues.find(val => val.id === v.id);
-		if (value) { value = value.value; }
-
 		switch (v.type) {
 			case 'string':
 			case 'category':
@@ -185,13 +177,20 @@ class ModelInputsWizard extends React.Component {
 		if (this.state.questionIdx >= this.questions.length) {
 			return <div>Done</div>;
 		}
-		const q = this.questions[this.state.questionIdx];
-		const vars = this.variablesPerQuestion[q.questionID];
+		const qTemplate = this.questions[this.state.questionIdx];
+		const vars = this.variablesPerQuestion[qTemplate.questionID];
+		const valueFinder = v => {
+			let value = this.props.modelData.variableValues.find(val => val.id === v.id);
+			if (value) { value = value.value; }
+			return value;
+		};
+		const varValues = vars.map(valueFinder);
+		const q = questionFromTemplate(qTemplate, this.allVariables, this.allVariables.map(valueFinder));
 		return (
 			<div>
 				<div className="brief-wizard">
 					<div className="inputs">
-						{vars.map(v =>this.renderVariableInput(v))}
+						{vars.map((v, idx) => this.renderVariableInput(v, varValues[idx]))}
 					</div>
 					<div className="preview">
 						<Question question={q} />
