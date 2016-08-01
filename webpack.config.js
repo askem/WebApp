@@ -1,7 +1,12 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
-	entry: path.resolve(__dirname, 'src/app.js'),
+	entry: [
+		'webpack-dev-server/client?http://0.0.0.0:3000',
+		'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
+		path.resolve(__dirname, 'src/app.js'),
+	],
 
 	output: {
 		path: path.resolve(__dirname, 'dist'),
@@ -13,12 +18,18 @@ module.exports = {
 			{
 				test: /\.js$/,
 				exclude: /node_modules/,
-				loader: 'babel',
-				query: { presets: [ 'es2015', 'react' ] }
+				loaders: ['react-hot', 'babel?presets[]=es2015,presets[]=react'],
 			},
-			{ test: /\.css$/, loader: "style-loader!css-loader" }
+			{
+				test: /\.css$/,
+				loader: "style-loader!css-loader"
+			}
 		]
 	},
+
+	plugins: [
+		new webpack.HotModuleReplacementPlugin()
+	],
 
 	// http://moduscreate.com/es6-es2015-import-no-relative-path-webpack/
 	resolve: {
