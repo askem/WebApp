@@ -42,7 +42,7 @@ const mockData = {
 				"kpis": [
 					{
 						"kpiID": "recall_campaign",
-						"MoE": 0.12,
+						"MoE": 0.05,
 						"kpiValue": 0.12,
 						"samples":
 						[
@@ -59,9 +59,27 @@ const mockData = {
 						"to": "Date(322133613)", "from": "Date(322133213)"
 					},
 					{
+						"kpiID": "preference_brand",
+						"MoE": 0.04,
+						"kpiValue": -0.12,
+						"samples":
+						[
+							{ "sampleName": "test", "kpiValue": 0.09, "qualifyingResponders":637000},
+							{ "sampleName": "control", "kpiValue": 0.375, "qualifyingResponders":133},
+							{ "sampleName": "extra_sample", "kpiValue": 0.1, "qualifyingResponders":40}
+						],
+						"benchmarks":
+						[
+							{ "benchmarkName": "Brand", "kpiValue": 0.8, "qualifyingResponders":320},
+							{ "benchmarkName": "Category1", "kpiValue": 0.8, "qualifyingResponders":320},
+							{ "benchmarkName": "Category2", "kpiValue": 0.8, "qualifyingResponders":320},
+						],
+						"to": "Date(322133613)", "from": "Date(322133213)"
+					},
+					{
 						"kpiID": "intent_purchase",
-						"MoE": 0.12,
-						"kpiValue": 0.5,
+						"MoE": 0.04,
+						"kpiValue": 0.03,
 						"samples":
 						[
 							{ "sampleName": "test", "kpiValue": 0.8, "qualifyingResponders":320},
@@ -75,7 +93,25 @@ const mockData = {
 							{ "benchmarkName": "Category2", "kpiValue": 0.8, "qualifyingResponders":320},
 						],
 						"to": "Date(322133613)", "from": "Date(322133213)"
-					}
+					},
+					{
+						"kpiID": "recall_brand",
+						"MoE": 0.05,
+						"kpiValue": 0.03,
+						"samples":
+						[
+							{ "sampleName": "test", "kpiValue": 0.4912, "qualifyingResponders":637000},
+							{ "sampleName": "control", "kpiValue": 0.375, "qualifyingResponders":133},
+							{ "sampleName": "extra_sample", "kpiValue": 0.1, "qualifyingResponders":40}
+						],
+						"benchmarks":
+						[
+							{ "benchmarkName": "Brand", "kpiValue": 0.8, "qualifyingResponders":320},
+							{ "benchmarkName": "Category1", "kpiValue": 0.8, "qualifyingResponders":320},
+							{ "benchmarkName": "Category2", "kpiValue": 0.8, "qualifyingResponders":320},
+						],
+						"to": "Date(322133613)", "from": "Date(322133213)"
+					},
 				],
 				"samples": [
 					{ "sampleName": "test", "targetMoE":0.05, "MoE": 0.09, "sampleSize": 400, "qualifiedResponders": 397},

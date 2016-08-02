@@ -1,5 +1,6 @@
 import React from 'react';
 import KPIQuickView from 'components/Research/KPIQuickView';
+import TargetingInsights from 'components/Research/Results/TargetingInsights';
 
 const ResearchOverview = (props) => {
 	if (!props.research) {
@@ -8,20 +9,38 @@ const ResearchOverview = (props) => {
 	const kpis = props.results.kpis;
 
 	return <div>
-		campaign #{props.researchID}:  <b>{props.research.title}</b>
+		<h1>
+			{props.research.title}
+		</h1>
 
-		<div>
-			<div>Spend</div>
-			<div>{`${props.businessResults.spentCurrency}${props.businessResults.spent}`}</div>
+
+		<div className="dashboard-pane">
+			<div className="pane-item">
+				<span className="value">185k</span>
+				<span className="title">Exposed</span>
+			</div>
+			<div className="pane-item">
+				<span className="value">248</span>
+				<span className="title">Qualified Responders</span>
+			</div>
+			<div className="pane-item">
+				<span className="value">{`${props.businessResults.spentCurrency}${props.businessResults.spent}`}</span>
+				<span className="title">Spent</span>
+			</div>
 		</div>
 
-		<div style={{display: 'flex', width: '70%'}}>
+		<div className="dashboard-pane">
 			{kpis.map(kpi => {
 				const kpiID = kpi.kpiID;
 				const kpiDefinition = props.model.KPIs.find(k => k.kpiID === kpiID);
 				return <KPIQuickView key={`kpi-${kpiID}`} kpiResult={kpi} kpi={kpiDefinition} />
 			})}
 		</div>
+
+	<div className="dashboard-pane">
+		<TargetingInsights />
+	</div>
+
 
 	</div>
 }

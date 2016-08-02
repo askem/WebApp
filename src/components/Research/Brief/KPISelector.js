@@ -15,7 +15,7 @@ class KPISelector extends React.Component {
 			return <div key={group.groupID}>
 				<div style={{display: 'flex'}}>
 					<h4 style={{width: 300, margin: 0}}>{group.name}</h4>
-					<div style={{paddingTop: 7}}><FaQuestionCircle /></div>
+					<div style={{paddingTop: 3}}><FaQuestionCircle  style={{verticalAlign: 'top'}}/></div>
 				</div>
 				{kpis.map(k => {
 					const selected = this.props.selected;

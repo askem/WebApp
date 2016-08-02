@@ -18,9 +18,9 @@ const KPIQuickView = (props) => {
 		brandLiftNumber = `+${brandLiftNumber}`;
 	}
 	return <div className="kpi-result animated zoomIn">
-		<div className="kpi-number" style={{backgroundColor: color,
+		<div className="kpi-number" style={{backgroundColor: color, marginBotton: 8,
 			color: 'white', textShadow: '1px 1px black',
-			boxShadow: '0 8px rgba(61, 187, 149, 0.3), 0 0 1px black', border: 'none'}}>
+			boxShadow: '0 8px rgba(61, 187, 149, 0.3)', border: 'none'}}>
 			{brandLiftNumber}
 		</div>
 		<div className="kpi-title">
