@@ -34,7 +34,7 @@ class KPISelector extends React.Component {
 
 		);
 		return (
-			<div>
+			<div className="pane">
 				{groups}
 			</div>
 		);

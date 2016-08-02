@@ -149,16 +149,18 @@ ImageVariable.defaultProps = {
 const WizardProgressButtons = (props) => {
 	let goBackButton, goFwdButton;
 	if (props.canGoBack) {
-		goBackButton = <FlatButton onClick={props.goBack}>
+		goBackButton = <FlatButton style={{width: 30, minWidth: 30}} onClick={props.goBack}>
 			<FaArrowCircleOLeft size={30}/>
 		</FlatButton>
 	}
 	if (props.canGoFwd) {
-		goFwdButton = <FlatButton onClick={props.goFwd}>
+		goFwdButton = <FlatButton style={{width: 30, minWidth: 30}} onClick={props.goFwd}>
 			<FaArrowCircleORight size={30} />
 		</FlatButton>
 	}
-	return <div style={{width: '70%', textAlign: 'right'}}>
+	const style = Object.assign({}, {width: '90%', textAlign: 'right', marginRight: 'auto', marginLeft: 'auto'}, props.style);
+	console.info(style);
+	return <div style={style}>
 		{goBackButton}
 		{goFwdButton}
 	</div>
@@ -269,7 +271,11 @@ class ModelInputsWizard extends React.Component {
 			<div>
 				<div className="brief-wizard">
 					<div className="inputs">
-						{vars.map((v, idx) => this.renderVariableInput(v, varValues[idx]))}
+						<div className="pane" style={{width: '90%'}}>
+							{vars.map((v, idx) => this.renderVariableInput(v, varValues[idx]))}
+						</div>
+						<WizardProgressButtons style={{width: '90%'}} canGoBack={true} canGoFwd={questionIdx < this.questions.length - 1}
+							goFwd={this.goFwd} goBack={this.goBack} />
 					</div>
 					<div key={`q-${questionIdx}`}
 						className="preview animated fadeIn"
@@ -277,8 +283,7 @@ class ModelInputsWizard extends React.Component {
 						<Question question={q} />
 					</div>
 				</div>
-				<WizardProgressButtons canGoBack={true} canGoFwd={questionIdx < this.questions.length - 1}
-					goFwd={this.goFwd} goBack={this.goBack} />
+
 			</div>
 		);
 	}
