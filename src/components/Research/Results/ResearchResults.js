@@ -54,7 +54,7 @@ class ResearchResults extends React.Component {
 			return <h2>Research Campaign #{this.props.researchID} does not exist</h2>
 		}
 		return <div>
-			<Breadcrumb>
+			{/*<Breadcrumb>
 			<Breadcrumb.Item>
 				<GoHome size={26} />
 			</Breadcrumb.Item>
@@ -67,7 +67,7 @@ class ResearchResults extends React.Component {
 			<Breadcrumb.Item active={true}>
 				Results
 			</Breadcrumb.Item>
-		</Breadcrumb>
+		</Breadcrumb>*/}
 			<h1>Results</h1>
 
 			<div className="results-with-segments">

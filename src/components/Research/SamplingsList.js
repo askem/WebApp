@@ -23,7 +23,7 @@ const SamplingsList = (props) => {
 		return <h2>Research Campaign #{props.researchID} does not exist</h2>
 	}
 	return <div>
-		<Breadcrumb>
+		{/*<Breadcrumb>
 			<Breadcrumb.Item>
 				<GoHome size={26} />
 			</Breadcrumb.Item>
@@ -36,7 +36,7 @@ const SamplingsList = (props) => {
 			<Breadcrumb.Item active={true}>
 				Samples
 			</Breadcrumb.Item>
-		</Breadcrumb>
+		</Breadcrumb>*/}
 		<h1>Samples</h1>
 
 	{/*

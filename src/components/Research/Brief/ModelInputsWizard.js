@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import intersection from 'utils/array/intersection';
+import KPISelector from 'components/Research/Brief/KPISelector'
 import Question from 'components/Question/Question';
 import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
@@ -10,6 +11,9 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import FaClose from 'react-icons/lib/fa/close';
 import questionFromTemplate from 'utils/Askem/questionFromTemplate';
 import extractTemplateVars from 'utils/Askem/extractTemplateVars';
+import FaArrowCircleORight from 'react-icons/lib/fa/arrow-circle-o-right';
+import FaArrowCircleOLeft from 'react-icons/lib/fa/arrow-circle-o-left';
+
 
 class TextVariable extends React.Component {
 	constructor(props) {
@@ -110,13 +114,37 @@ TextArrayVariable.defaultProps = {
 	value: ['']
 };
 
+const WizardProgressButtons = (props) => {
+	let goBackButton, goFwdButton;
+	if (props.canGoBack) {
+		goBackButton = <FlatButton onClick={props.goBack}>
+			<FaArrowCircleOLeft size={30}/>
+		</FlatButton>
+	}
+	if (props.canGoFwd) {
+		goFwdButton = <FlatButton onClick={props.goFwd}>
+			<FaArrowCircleORight size={30} />
+		</FlatButton>
+	}
+	return <div style={{width: '70%', textAlign: 'right'}}>
+		{goBackButton}
+		{goFwdButton}
+	</div>
+}
+
 class ModelInputsWizard extends React.Component {
 	constructor(props) {
     	super(props);
-		this.moveFwd = this.moveFwd.bind(this);
+		this.goFwd = this.goFwd.bind(this);
+		this.goBack = this.goBack.bind(this);
 		this.renderVariableInput = this.renderVariableInput.bind(this);
 		this.onValueChange = this.onValueChange.bind(this);
 		this.initWizard(props);
+	}
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.research.kpis.join(',') !== this.props.research.kpis.join(',')) {
+			this.initWizard(nextProps);
+		}
 	}
 	initWizard(props) {
 		const kpis = props.research.kpis;
@@ -148,12 +176,21 @@ class ModelInputsWizard extends React.Component {
 		this.allVariables = allVars;
 		this.questions = relevantQuestions.filter(q => variablesPerQuestion[q.questionID] !== undefined);
 		this.state = {
-			questionIdx: 0
+			questionIdx: -1
 		};
 	}
-	moveFwd() {
+	goFwd() {
+		let questionIdx = this.state.questionIdx;
+		questionIdx++;
 		this.setState({
-			questionIdx: this.state.questionIdx + 1
+			questionIdx
+		})
+	}
+	goBack() {
+		let questionIdx = this.state.questionIdx;
+		questionIdx--;
+		this.setState({
+			questionIdx
 		})
 	}
 	onValueChange(variable, value) {
@@ -174,10 +211,17 @@ class ModelInputsWizard extends React.Component {
 		}
 	}
 	render() {
-		if (this.state.questionIdx >= this.questions.length) {
+		const questionIdx = this.state.questionIdx;
+		if (questionIdx < 0) {
+			return <div>
+				<KPISelector {...this.props} selected={new Set(this.props.research.kpis)} />
+				<WizardProgressButtons canGoFwd={true} goFwd={this.goFwd} />
+			</div>;
+		}
+		if (questionIdx >= this.questions.length) {
 			return <div>Done</div>;
 		}
-		const qTemplate = this.questions[this.state.questionIdx];
+		const qTemplate = this.questions[questionIdx];
 		const vars = this.variablesPerQuestion[qTemplate.questionID];
 		const valueFinder = v => {
 			let value = this.props.modelData.variableValues.find(val => val.id === v.id);
@@ -196,7 +240,8 @@ class ModelInputsWizard extends React.Component {
 						<Question question={q} />
 					</div>
 				</div>
-				<Button onClick={this.moveFwd}>Next</Button>
+				<WizardProgressButtons canGoBack={true} canGoFwd={questionIdx < this.questions.length - 1}
+					goFwd={this.goFwd} goBack={this.goBack} />
 			</div>
 		);
 	}

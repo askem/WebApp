@@ -65,7 +65,7 @@ const SampleMix = (props) => {
 	};
 
 	return <div>
-		<Breadcrumb>
+		{/*<Breadcrumb>
 			<Breadcrumb.Item>
 				<GoHome size={26} />
 			</Breadcrumb.Item>
@@ -81,7 +81,7 @@ const SampleMix = (props) => {
 			<Breadcrumb.Item active={true}>
 				Sample Mix
 			</Breadcrumb.Item>
-		</Breadcrumb>
+		</Breadcrumb>*/}
 		<h1>Sample Mix</h1>
 
 		<Tab.Container id="left-tabs-example" defaultActiveKey="first">

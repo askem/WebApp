@@ -92,15 +92,28 @@ const mockData = {
 			"modelVersion": "0.1",
 			"locale": "he-IL",
 			"variableValues": [
-					{"id": "category", "value": "Contact Lenses"},
-					{"id": "adverisedProductName", "value": ""},
-					{"id": "goldenFrame", "value":{"mediaID": "{GUID}", "crop": "0,0,100,100"}},
-					{"id": "atmosphereImages", "value":
-						[
-							{"value": {"mediaID": "{GUID}", "crop": "0,0,100,100"}},
-							{"value": {"mediaID": "{GUID}", "crop": "0,0,100,100"}},
-						]
-					}
+				{"id": "brandCategory", "value": "Orange Juice"},
+				{"id": "consumeVerb", "value": "drink"},
+				{"id": "consumptionCategories", "value": [
+					"Freshly squeezed only",
+					"Botteled fresh orange juice",
+					"Orange Soft drinks"
+				]},
+				{"id": "competitors", "value": [
+					"Second Ready",
+					"Florida's Favorite",
+					"Tropicazza",
+					"Simpsons"
+				]},
+				{"id": "brandName", "value": "Orange Only"},
+				{"id": "productName", "value": "Ornage Only 100%"},
+				{"id": "goldenFrame1", "value":{"mediaID": "{GUID}", "crop": "0,0,100,100"}},
+				{"id": "atmosphereImages", "value":
+					[
+						{"value": {"mediaID": "{GUID}", "crop": "0,0,100,100"}},
+						{"value": {"mediaID": "{GUID}", "crop": "0,0,100,100"}},
+					]
+				}
 			],
 			"requiredKPIs": ["exposure_targeting_score", "recall_campaign"],
 

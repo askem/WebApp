@@ -1,7 +1,6 @@
 import React from 'react';
 import { Breadcrumb } from 'react-bootstrap';
 import GoHome from 'react-icons/lib/go/home';
-import KPISelector from 'components/Research/Brief/KPISelector'
 import ModelInputsWizard from 'components/Research/Brief/ModelInputsWizard'
 
 class Brief extends React.Component {
@@ -11,7 +10,7 @@ class Brief extends React.Component {
 	render() {
 		return (
 			<div>
-				<Breadcrumb>
+				{/*<Breadcrumb>
 					<Breadcrumb.Item>
 						<GoHome size={26} />
 					</Breadcrumb.Item>
@@ -24,19 +23,15 @@ class Brief extends React.Component {
 					<Breadcrumb.Item active={true}>
 						Brief
 					</Breadcrumb.Item>
-				</Breadcrumb>
+				</Breadcrumb>*/}
 				<h1>Brief</h1>
 
 				<ModelInputsWizard model={this.props.model}
 					modelData={this.props.modelData}
 					researchID={this.props.researchID}
 					research={this.props.research}
-					onModelVariableChange={this.props.onModelVariableChange} />
-
-				{/*<KPISelector model={this.props.model}
-					researchID={this.props.researchID}
-					selected={new Set(this.props.research.kpis)}
-					toggleResearchKPI={this.props.toggleResearchKPI} />*/}
+					onModelVariableChange={this.props.onModelVariableChange}
+					toggleResearchKPI={this.props.toggleResearchKPI} />
 
 			</div>);
 	}

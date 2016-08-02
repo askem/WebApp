@@ -6,28 +6,32 @@ const questionFromTemplate = (questionTemplate, vars, varValues) => {
 	let possibleAnswersChanged = false;
 
 	vars.forEach((v, idx) => {
-		const value = varValues[idx];
+		let value = varValues[idx];
 		const varTemplateString = `{{${v.id}}}`;
 		switch (v.type) {
 			case 'string':
 			case 'category':
-				q.textValue = q.textValue.replace(varTemplateString, value || '');
+				value = value || '';
+				q.textValue = q.textValue.replace(varTemplateString, value);
 				q.possibleAnswers.forEach(pa => {
-					pa.textValue = pa.textValue.replace(varTemplateString, value || '');
+					pa.textValue = pa.textValue.replace(varTemplateString, value);
 				});
 				break;
 			case 'string[]':
+				value = value || [];
 				const paIdx = q.possibleAnswers.findIndex(pa => pa.textValue === varTemplateString);
-				const pa = q.possibleAnswers[paIdx];
-				possibleAnswersChanged = true;
-				q.possibleAnswers.splice(paIdx, 1);
-				if (value) {
-					const newPAs = value.map(text => {
-						let newPA = JSON.parse(JSON.stringify(pa));
-						newPA.textValue = text;
-						return newPA;
-					})
-					q.possibleAnswers.push(...newPAs);
+				if (paIdx > -1) {
+					const pa = q.possibleAnswers[paIdx];
+					possibleAnswersChanged = true;
+					q.possibleAnswers.splice(paIdx, 1);
+					if (value) {
+						const newPAs = value.map(text => {
+							let newPA = JSON.parse(JSON.stringify(pa));
+							newPA.textValue = text;
+							return newPA;
+						})
+						q.possibleAnswers.push(...newPAs);
+					}
 				}
 				break;
 			default:
