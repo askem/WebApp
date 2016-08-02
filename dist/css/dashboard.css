@@ -173,6 +173,14 @@ h1,h2,h3,h4 {
 	-moz-box-flex:  0;
 	-ms-box-flex:  0;
 	box-flex:  0;
+
+}
+.dashboard-sidebar a {
+	color: white;
+	text-decoration: none;
+}
+.dashboard-sidebar a:hover {
+	text-decoration: none;
 }
 
 .dashboard-sidebar header {
@@ -188,6 +196,7 @@ h1,h2,h3,h4 {
 }
 .dashboard-sidebar header:hover {
 	background-color: rgba(255,255,255,.1);
+	text-decoration: none;
 }
 .dashboard-sidebar header img {
 	width: 40px;

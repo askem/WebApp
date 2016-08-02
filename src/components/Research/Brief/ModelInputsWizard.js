@@ -6,11 +6,13 @@ import Question from 'components/Question/Question';
 import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FaClose from 'react-icons/lib/fa/close';
 import questionFromTemplate from 'utils/Askem/questionFromTemplate';
 import extractTemplateVars from 'utils/Askem/extractTemplateVars';
+import blobURL from 'utils/Askem/blobURL';
 import FaArrowCircleORight from 'react-icons/lib/fa/arrow-circle-o-right';
 import FaArrowCircleOLeft from 'react-icons/lib/fa/arrow-circle-o-left';
 
@@ -114,6 +116,36 @@ TextArrayVariable.defaultProps = {
 	value: ['']
 };
 
+class ImageVariable extends React.Component {
+	constructor(props) {
+		super(props);
+		this.onChange = this.onChange.bind(this);
+	}
+	onChange(event) {
+		//this.props.onValueChange(this.props.variable, event.target.value);
+	}
+	render() {
+		const hasValue = this.props.value && this.props.value.mediaID;
+		const imageURL = hasValue ? blobURL(this.props.value.mediaID) : '/images/emptyMediaID.png';
+		let button;
+		if (hasValue) {
+			button = <FlatButton><FaClose /></FlatButton>;
+		} else {
+			button = <RaisedButton>Upload</RaisedButton>;
+		}
+		return <div style={{paddingTop: 20}}>
+			<div style={{paddingBottom: 5, fontSize: 12, fontWeight: 'bold', color: 'rgba(150, 101, 170, 0.498039)'}}>
+				{this.props.variable.name}
+			</div>
+			<img style={{width: 100, height: 100}} src={imageURL} />
+			{button}
+		</div>;
+	}
+}
+ImageVariable.defaultProps = {
+	value: null
+};
+
 const WizardProgressButtons = (props) => {
 	let goBackButton, goFwdButton;
 	if (props.canGoBack) {
@@ -156,11 +188,12 @@ class ModelInputsWizard extends React.Component {
 		let allVars = [];
 		relevantQuestions.forEach(q => {
 			let qVars = extractTemplateVars(q.textValue);
-			qVars = qVars.concat(extractTemplateVars(q.mediaID));
 			q.possibleAnswers.forEach(pa => {
 				const paVars = extractTemplateVars(pa.textValue);
 				qVars = qVars.concat(paVars);
 			});
+			qVars = qVars.concat(extractTemplateVars(q._imageFileName));
+
 			qVars = qVars.filter(v => !allVarNames.includes(v));
 			allVarNames = allVarNames.concat(qVars);
 			if (qVars.length > 0) {
@@ -204,6 +237,8 @@ class ModelInputsWizard extends React.Component {
 				return <TextVariable key={key} variable={v} value={value} onValueChange={this.onValueChange} />;
 			case 'string[]':
 				return <TextArrayVariable key={key} variable={v} value={value} onValueChange={this.onValueChange} />;
+			case 'image':
+				return <ImageVariable key={key} variable={v} value={value} onValueChange={this.onValueChange} />
 			default:
 				return <div key={key}>
 					Unsupported type {v.type}
@@ -236,7 +271,9 @@ class ModelInputsWizard extends React.Component {
 					<div className="inputs">
 						{vars.map((v, idx) => this.renderVariableInput(v, varValues[idx]))}
 					</div>
-					<div className="preview">
+					<div key={`q-${questionIdx}`}
+						className="preview animated fadeIn"
+						style={{animationDuration: '4s'}}>
 						<Question question={q} />
 					</div>
 				</div>

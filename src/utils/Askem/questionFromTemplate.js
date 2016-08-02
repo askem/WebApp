@@ -1,5 +1,6 @@
 import AutoArrangement from 'utils/Askem/AutoArrangement';
 import extractTemplateVars from 'utils/Askem/extractTemplateVars';
+import blobURL from 'utils/Askem/blobURL';
 
 const questionFromTemplate = (questionTemplate, vars, varValues) => {
 	let q = JSON.parse(JSON.stringify(questionTemplate)); //Object.assign({}, questionTemplate);
@@ -34,8 +35,14 @@ const questionFromTemplate = (questionTemplate, vars, varValues) => {
 					}
 				}
 				break;
+			case 'image':
+				if (value && value.mediaID && q._imageFileName === varTemplateString) {
+					q.mediaID = value.mediaID;
+					q.questionImageURL = blobURL(value.mediaID);
+				}
+				break;
 			default:
-				//console.error(`Unsupported type ${v.type}`);
+				console.error(`Unsupported type ${v.type}`);
 		}
 	});
 	if (possibleAnswersChanged) {
@@ -43,7 +50,8 @@ const questionFromTemplate = (questionTemplate, vars, varValues) => {
 			pa.possibleAnswerID = q.questionID * 100 + paIdx;
 		})
 	}
-	q.popupLocations = AutoArrangement.calcLocations(q.possibleAnswers.length, AutoArrangement.POPUP_ARRANGEMENT_TYPE.CIRCLE);
+	const arrangement = q._popupsArrangement || AutoArrangement.POPUP_ARRANGEMENT_TYPE.CIRCLE;
+	q.popupLocations = AutoArrangement.calcLocations(q.possibleAnswers.length, arrangement);
 	q.questionImageURL = q.questionImageURL || '/images/emptyMediaID.png';
 	return q;
 }

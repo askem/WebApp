@@ -21,11 +21,13 @@ class DashboardSidebar extends React.Component {
 		const researchID = this.props.params.researchID;
 
 		return <nav className="dashboard-sidebar">
-			<header>
-				<img src="/images/temp/campaign.jpg" />
-				<div>Alcon 2016-06</div>
-				<div><FaAngleDown /></div>
-			</header>
+			<a href={`#/campaigns/${researchID}`}>
+				<header>
+					<img src="/images/temp/campaign.jpg" />
+					<div>Alcon 2016-06</div>
+					<div><FaAngleDown /></div>
+				</header>
+			</a>
 			<div>
 				{items.map(i => (
 					<a key={i.id} onClick={this.onSelectItem}

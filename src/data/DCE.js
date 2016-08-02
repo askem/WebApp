@@ -21,6 +21,7 @@ const dceModel =
 		{"id": "goldenFrame1", "name": "Category Image", "description":"", "type": "image", "defaultValue": null, "validations": {"minWidth": 1000, "minHeight": 1000}},
 		{"id": "goldenFrame2", "name": "Category Image", "description":"", "type": "image", "defaultValue": null, "validations": {"minWidth": 1000, "minHeight": 1000}},
 		{"id": "goldenFrame3", "name": "Category Image", "description":"", "type": "image", "defaultValue": null, "validations": {"minWidth": 1000, "minHeight": 1000}},
+		{"id": "productImage", "name": "Product Image", "description":"", "type": "image", "defaultValue": null, "validations": {"minWidth": 1000, "minHeight": 1000}},
 	],
 	"KPIGroups": [
 		{"groupID": "exposure", "name": "Exposure", "description": ""},
@@ -331,7 +332,7 @@ const dceModel =
                 "uiTypeID": 0
             }
         ],
-        "textValue": "Will you buy the {{productName}} next time you buy {{brandName}}?",
+        "textValue": "Will you buy the {{productName}} next time you buy {{brandCategory}}?",
         "maxAnswers": 1,
         "questionTypeID": 3,
         "_popupsArrangement": 3,
