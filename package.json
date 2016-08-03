@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --debug",
-	"dist": "NODE_ENV=production webpack -p --config webpack.production.config.js --optimize-minimize",
-	"start": "node devServer.js"
+    "dist": "NODE_ENV=production webpack -p --config webpack.production.config.js --optimize-minimize",
+    "start": "node devServer.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "react-data-grid": "^0.14.44",
     "react-dom": "^15.1.0",
     "react-icons": "^2.1.0",
+    "react-key-handler": "^0.2.0",
     "react-redux": "^4.4.5",
     "react-router": "^2.4.1",
     "react-router-redux": "^4.0.4",
