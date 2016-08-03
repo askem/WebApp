@@ -131,7 +131,7 @@ class ImageVariable extends React.Component {
 		if (hasValue) {
 			button = <FlatButton><FaClose /></FlatButton>;
 		} else {
-			button = <RaisedButton>Upload</RaisedButton>;
+			button = <RaisedButton style={{marginLeft: 15}}>Upload</RaisedButton>;
 		}
 		return <div style={{paddingTop: 20}}>
 			<div style={{paddingBottom: 5, fontSize: 12, fontWeight: 'bold', color: 'rgba(150, 101, 170, 0.498039)'}}>
@@ -158,8 +158,7 @@ const WizardProgressButtons = (props) => {
 			<FaArrowCircleORight size={30} />
 		</FlatButton>
 	}
-	const style = Object.assign({}, {width: '90%', textAlign: 'right', marginRight: 'auto', marginLeft: 'auto'}, props.style);
-	console.info(style);
+	const style = Object.assign({}, {width: '70%', textAlign: 'right', marginRight: 'auto', marginLeft: 'auto'}, props.style);
 	return <div style={style}>
 		{goBackButton}
 		{goFwdButton}

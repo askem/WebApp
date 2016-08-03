@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --debug",
+	"dist": "NODE_ENV=production webpack -p --config webpack.production.config.js --optimize-minimize",
 	"start": "node devServer.js"
   },
   "repository": {
