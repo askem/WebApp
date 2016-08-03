@@ -5,16 +5,19 @@ const initialState = Map({});
 
 export default function(state=initialState, action) {
 	switch(action.type) {
+	case 'SET_MODEL':
+		return state.set('model', Map(action.payload));
 	case 'SET_RESEARCH_KPIS':
 		return state.setIn(['researchCampaigns', action.payload.researchID, 'kpis'], List(action.payload.kpis));
 	case 'TOGGLE_RESEARCH_KPI':
 		const k = action.payload.kpi;
+		const allKPIs = state.getIn(['model', 'KPIs']).toJS();
 		return state.updateIn(['researchCampaigns', action.payload.researchID, 'kpis'], kpis => {
 			const idx = kpis.keyOf(k);
 			if (idx === undefined) {
 				// Adding
 				let kpisToAdd = [k];
-				const modelKPI = action.payload.allKPIs.find(mk => mk.kpiID === k);
+				const modelKPI = allKPIs.find(mk => mk.kpiID === k);
 				if (modelKPI.dependencies) {
 					modelKPI.dependencies.forEach(d => {
 						if (!kpis.includes(d)) {
@@ -22,14 +25,12 @@ export default function(state=initialState, action) {
 						}
 					})
 				}
-				console.info('adding : ' + kpisToAdd);
 				return kpis.push(...kpisToAdd);
 			} else {
 				// Removing
 				let kpisToDelete = [k];
-				const dependendentKPIs = action.payload.allKPIs.filter(mk => mk.dependencies && mk.dependencies.includes(k));
+				const dependendentKPIs = allKPIs.filter(mk => mk.dependencies && mk.dependencies.includes(k));
 				kpisToDelete.push(...dependendentKPIs.map(kpi => kpi.kpiID));
-				console.info('removing : ' + kpisToDelete);
 				return kpis.filterNot(kpi => kpisToDelete.includes(kpi));
 			}
 		});

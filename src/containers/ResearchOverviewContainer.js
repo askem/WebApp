@@ -16,7 +16,7 @@ const ResearchOverviewContainer = connect(
 		}
 		let businessResults = state.getIn(['data', 'businessDashboardsByResearch', researchID]);
 		if (businessResults) { businessResults = businessResults.toJS(); }
-		let model = state.get('model');
+		let model = state.getIn(['data', 'model']);
 		if (model) { model = model.toJS(); }
 		return {
 			research,

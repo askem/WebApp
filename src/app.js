@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, browserHistory, hashHistory } from 'react-router';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
@@ -12,9 +12,9 @@ import SampleMixContainer from 'containers/SampleMixContainer';
 import BriefContainer from 'containers/BriefContainer';
 import ResearchResultsContainer from 'containers/ResearchResultsContainer';
 import { combineReducers } from 'redux-immutable';
-import dashReducer from 'reducers/dashboardReducer';
-import modelReducer from 'reducers/modelReducer';
+import dataReducer from 'reducers/dataReducer';
 import routing from 'reducers/routingReducer';
+import logger from 'middleware/logger';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -22,21 +22,26 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import mockData from 'data/mockData';
 import dceModel from 'data/DCE';
 
+mockData.model = dceModel;
 const initialState = Immutable.fromJS({
-	data: mockData,
-	model: dceModel
+	data: mockData
 });
 
 const rootReducer = combineReducers({
-	data: dashReducer,
-	model: modelReducer,
+	data: dataReducer,
 	routing
 });
 
 const store = createStore(
 	rootReducer,
 	initialState,
-	window.devToolsExtension && window.devToolsExtension()
+	compose(
+		applyMiddleware(
+			logger
+		),
+		window.devToolsExtension ? window.devToolsExtension() : f => f
+	)
+
 );
 
 //store.dispatch({type: 'SET_MODEL', payload: dceModel});

@@ -7,7 +7,7 @@ const BriefContainer = connect(
 		const researchID = ownProps.params.researchID;
 		let research = state.getIn(['data', 'researchCampaigns', researchID]);
 		if (research) { research = research.toJS(); }
-		let model = state.get('model');
+		let model = state.getIn(['data', 'model']);
 		if (model) { model = model.toJS(); }
 		let modelData = state.getIn(['data', 'researchModelData', researchID]);
 		if (modelData) { modelData = modelData.toJS(); }
@@ -22,7 +22,7 @@ const BriefContainer = connect(
 	function mapDispatchToProps(dispatch) {
 		return {
 			setResearchKPIs: (researchID, kpis) => dispatch(actions.setResearchKPIs(researchID, kpis)),
-			toggleResearchKPI: (researchID, kpi, allKPIs) => dispatch(actions.toggleResearchKPI(researchID, kpi, allKPIs)),
+			toggleResearchKPI: (researchID, kpi) => dispatch(actions.toggleResearchKPI(researchID, kpi)),
 			onModelVariableChange: (researchID, variableID, value) => dispatch(actions.setModelVariable(researchID, variableID, value)),
 		};
 	}

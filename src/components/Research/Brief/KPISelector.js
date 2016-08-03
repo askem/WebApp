@@ -7,7 +7,7 @@ class KPISelector extends React.Component {
     	super(props);
 	}
 	onClick(kpi) {
-		this.props.toggleResearchKPI(this.props.researchID, kpi, this.props.model.KPIs);
+		this.props.toggleResearchKPI(this.props.researchID, kpi);
 	}
 	render() {
 		const groups = this.props.model.KPIGroups.map(group => {

@@ -8,13 +8,12 @@ const setResearchKPIs = (researchID, kpis) => {
 	}
 }
 
-const toggleResearchKPI = (researchID, kpi, allKPIs) => {
+const toggleResearchKPI = (researchID, kpi) => {
 	return {
 		type: 'TOGGLE_RESEARCH_KPI',
 		payload: {
 			researchID,
-			kpi,
-			allKPIs
+			kpi
 		}
 	}
 }
