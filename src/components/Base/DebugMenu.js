@@ -3,6 +3,8 @@ import Dialog from 'material-ui/Dialog';
 import Divider from 'material-ui/Divider';
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
+
 
 const getTeamUser = () => localStorage._teamUser;
 const setTeamUser = (user) => { localStorage._teamUser = user; };
@@ -22,21 +24,38 @@ class DebugMenu extends React.Component {
 		super(props, context);
 		this.sendInfo = this.sendInfo.bind(this);
 		this.chooseUser = this.chooseUser.bind(this);
+		this.clearMessage = this.clearMessage.bind(this);
 
 		this.state = {
-			user: getTeamUser()
+			user: getTeamUser(),
+			message: ''
 		};
 	}
 	sendInfo() {
 		const actions = JSON.stringify(window.actionsLog);
 		const reduxState = JSON.stringify(this.context.store.getState().get('data').toJSON());
+		let postData = new FormData();
+		postData.append('teamUser', this.state.user);
+		postData.append('actions', actions);
+		postData.append('store', reduxState);
+		fetch('/integrations/slackstore.php', {
+			method: 'POST',
+			body: postData
+		}).then(result => {
+			this.setState({message: 'Debug info submitted'});
+		}).catch(error => {
+			this.setState({message: `Error submitting: ${error}`});
+			console.error(error);
+		});
 	}
 	chooseUser(user) {
 		setTeamUser(user);
 		this.setState({user});
 	}
+	clearMessage() {
+		this.setState({message: ''});
+	}
 	render() {
-		console.info('user', this.state.user);
 		if (!this.state.user) {
 			return <Dialog title="Who Are You?" modal={false} open={true}>
 				<UserChooser onChoose={this.chooseUser} />
@@ -51,6 +70,12 @@ class DebugMenu extends React.Component {
 			  	<div style={{width: '100%', textAlign: 'right'}}>
 			  		Press ? to dismiss
 				</div>
+				<Snackbar
+		    		open={!!this.state.message}
+					message={this.state.message}
+					autoHideDuration={2000}
+					onRequestClose={this.clearMessage}
+					/>
 	        </Dialog>
 		);
 	}
