@@ -23,6 +23,12 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import mockData from 'data/mockData';
 import dceModel from 'data/DCE';
 
+// Needed for onTouchTap - for material-ui
+// http://stackoverflow.com/a/34015469/988941
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
+
 mockData.model = dceModel;
 const initialState = Immutable.fromJS({
 	data: mockData
