@@ -26,7 +26,7 @@
     "react": "^15.1.0",
     "react-bootstrap": "^0.29.4",
     "react-chartjs": "github:jhudson8/react-chartjs#chartjs-v2",
-    "react-data-grid": "^0.14.44",
+    "react-data-grid": "^0.14.46",
     "react-dom": "^15.1.0",
     "react-icons": "^2.1.0",
     "react-key-handler": "^0.2.0",

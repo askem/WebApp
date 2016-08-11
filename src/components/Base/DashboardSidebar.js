@@ -3,6 +3,7 @@ import FaAngleDown from 'react-icons/lib/fa/angle-down';
 
 const items = [
 	{id: 'brief', title: 'Brief'},
+	{id: 'media', title: 'Media Plan'},
 	{id: 'tagging', title: 'Tagging'},
 	{id: 'audiences', title: 'Audiences'},
 	{id: 'samplings', title: 'Samples'},

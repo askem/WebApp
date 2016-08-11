@@ -18,6 +18,35 @@ const mockData = {
 		1464710210668: {}
 	},
 
+	mediaPlans: {
+		1073: {
+			channels: [
+				{
+					"channelName": "fbvideoweb",
+					"description": "Facebook Video prerolled for OrangeOnly website vistors",
+					"taggingMethod": "fbvideo",
+					"estimatedReach": 20000,
+					"estimatedUniques": 15000,
+					"budget": "$700",
+					"technicalContact": "technical@example.com",
+					"businessContact": "business@example.com",
+					"isTargeting": true
+				},
+				{
+					"channelName": "fbvideofemale",
+					"description": "Facebook Video prerolled for OrangeOnly - female only 29+ IL",
+					"taggingMethod": "fbvideo",
+					"estimatedReach": 18000,
+					"estimatedUniques": 14000,
+					"budget": "$650.00",
+					"technicalContact": "technical@example.com",
+					"businessContact": "business@example.com",
+					"isTargeting": false
+				}
+			]
+		}
+	},
+
 	businessDashboardsByResearch: {
 		1073: {
 			"totalRFAs": 100,
