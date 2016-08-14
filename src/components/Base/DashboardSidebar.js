@@ -13,7 +13,6 @@ const items = [
 
 class DashboardSidebar extends React.Component {
 	onSelectItem(item) {
-		console.log(item);
 	}
 	render() {
 		const pathArray = this.props.location.pathname.split('/');

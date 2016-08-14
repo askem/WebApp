@@ -3,6 +3,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import ReactDataGrid from 'react-data-grid';
 import TaggingInstructions from 'components/Research/Media/TaggingInstructions';
+import FacebookAudienceLink from 'components/Common/FacebookAudienceLink';
 
 class Tagging extends React.Component {
 	constructor(props) {
@@ -41,7 +42,7 @@ class Tagging extends React.Component {
 				channelData = Object.assign({}, c, {
 					total: 0,
 					unique: 0,
-					facebookAudienceID: '<N/A>'
+					facebookAudienceID: ''
 				});
 			}
 			if (channelData.total === 0) {
@@ -54,7 +55,8 @@ class Tagging extends React.Component {
 			{key: 'channelName', name: 'Channel', resizable: true},
 			{key: 'total', name: 'Total Tags', resizable: true},
 			{key: 'unique', name: 'Unique Tags', resizable: true},
-			{key: 'facebookAudienceID', name: 'Facebook Audience', resizable: true},
+			{key: 'facebookAudienceID', name: 'Facebook Audience', resizable: true,
+				formatter: <FacebookAudienceLink />},
 			{key: 'channelName', name: 'Instructions',
 				formatter: <InstructionsButton onClick={this.handleChannelInstructions} />}
 		];

@@ -50,7 +50,23 @@ export default function(state=initialState, action) {
 		});
 	case 'ADD_MEDIA_PLAN_CHANNELS':
 		return state.updateIn(['mediaPlans', action.payload.researchID, 'channels'], channels => {
-			return channels.merge(List(action.payload.channels));
+			return channels.concat(Immutable.fromJS(action.payload.channels));
+		});
+	case 'ADD_AUDIENCE':
+		let newAudienceIdx = state.getIn(['audiences', action.payload.researchID]).size + 1;
+		return state.updateIn(['audiences', action.payload.researchID], audiences => {
+			const newAudiences = action.payload.audienceIDs.map(aID => {
+				const audience = {
+					name: `New Audience #${newAudienceIdx}`,
+					description: '',
+					size: 0,
+					source: action.payload.audienceSource,
+					facebookAudienceID: aID
+				};
+				newAudienceIdx++;
+				return audience;
+			});
+			return audiences.concat(Immutable.fromJS(newAudiences));
 		});
     default:
 		return state;

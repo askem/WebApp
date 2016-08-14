@@ -60,6 +60,32 @@ const mockData = {
 		}
 	},
 
+	audiences: {
+		1073: [
+			{
+				name: 'Orange Only FB Likes',
+				description: 'Facebook page likes',
+				size: 18200,
+				facebookAudienceID: '4123213321',
+				source: 'facebook'
+			},
+			{
+				name: 'Purchase Intent Jan 2016',
+				description: 'Based on previous DCE research',
+				size: 6000,
+				facebookAudienceID: '4123213387',
+				source: 'askem'
+			},
+			{
+				name: 'Look Alike 1% Purchase Intent Jan 2016',
+				description: 'Based on previous DCE research',
+				size: 50200,
+				facebookAudienceID: '4123213388',
+				source: 'askem'
+			},
+		]
+	},
+
 	businessDashboardsByResearch: {
 		1073: {
 			"totalRFAs": 100,
