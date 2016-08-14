@@ -31,6 +31,15 @@ module.exports = {
 		new webpack.HotModuleReplacementPlugin()
 	],
 
+	// For XLSX : See https://github.com/SheetJS/js-xlsx/issues/285
+	node: {
+		fs: 'empty'
+	},
+	externals: [
+		{ './cptable': 'var cptable' },
+		{'./jszip': 'jszip'}
+	],
+
 	// http://moduscreate.com/es6-es2015-import-no-relative-path-webpack/
 	resolve: {
 		// modules: [
