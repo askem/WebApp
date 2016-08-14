@@ -64,11 +64,6 @@ class MediaPlan extends React.Component {
 			return tm;
 		});
 		const channels = this.props.mediaPlan.channels
-		// .map(c => {
-		// 	c.isTargetingVal = c.isTargeting ? 'Yes' : 'No';
-		// 	c.taggingMethodVal = taggingMethodDisplay(c.taggingMethod);
-		// 	return c;
-		// });
 		const rowGetter = idx => channels[idx];
 		const columns = [
 			{key: 'channelName', name: 'Channel', resizable: true, editable: true},
@@ -82,7 +77,7 @@ class MediaPlan extends React.Component {
 			{key: 'budget', name: 'Budget', resizable: true, editable: true},
 			{key: 'technicalContact', name: 'Technical Contact', resizable: true, editor: <EmailEditor />},
 			{key: 'businessContact', name: 'Admin Contact', resizable: true, editor: <EmailEditor />},
-			{key: 'isTargeting', name: 'Is Targeting', resizable: true,
+			{key: 'isRetargeting', name: 'Is Retargeting', resizable: true,
 				formatter: <BoolFormatter />,
 			}
 		];

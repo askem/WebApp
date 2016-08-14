@@ -43,7 +43,7 @@ const mockData = {
 					"budget": "$700",
 					"technicalContact": "technical@example.com",
 					"businessContact": "business@example.com",
-					"isTargeting": true
+					"isRetargeting": true
 				},
 				{
 					"channelName": "fbvideofemale",
@@ -54,7 +54,7 @@ const mockData = {
 					"budget": "$650.00",
 					"technicalContact": "technical@example.com",
 					"businessContact": "business@example.com",
-					"isTargeting": false
+					"isRetargeting": false
 				}
 			]
 		}

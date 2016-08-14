@@ -21,7 +21,7 @@ class ImportMediaPlan extends React.Component {
 			'budget': 'Budget',
 			'technicalContact': 'Technical Contact',
 			'businessContact': 'Admin Contact',
-			'isTargeting': 'Is Targeting'
+			'isRetargeting': 'Is Retargeting'
 		};
 		let channels = [];
 		worksheet.forEach(row => {
@@ -29,7 +29,7 @@ class ImportMediaPlan extends React.Component {
 			for (let col in colNames) {
 				let value = row[colNames[col]];
 				switch (col) {
-					case 'isTargeting':
+					case 'isRetargeting':
 						value = value === 'Yes';
 						break;
 					case 'estimatedReach', 'estimatedUniques':
