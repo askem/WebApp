@@ -3,6 +3,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ReactDataGrid from 'react-data-grid';
 import { Editors } from 'react-data-grid/addons';
 import TAGGING_METHODS from 'constants/TAGGING_METHODS';
+import ImportMediaPlan from 'components/Research/Media/ImportMediaPlan';
 
 class NumberEditor extends Editors.SimpleTextEditor {
 	render() {
@@ -28,6 +29,11 @@ class MediaPlan extends React.Component {
 	constructor(props) {
     	super(props);
 		this.handleRowUpdated = this.handleRowUpdated.bind(this);
+		this.openImportDialog = this.openImportDialog.bind(this);
+		this.closeImportDialog = this.closeImportDialog.bind(this);
+		this.state = {
+			importOpen: false
+		};
 	}
 	handleRowUpdated(e) {
 		console.info(e);
@@ -41,6 +47,16 @@ class MediaPlan extends React.Component {
     // Object.assign(rows[e.rowIdx], e.updated);
     // this.setState({rows:rows});
  	}
+	openImportDialog() {
+		this.setState({
+			importOpen: true
+		});
+	}
+	closeImportDialog() {
+		this.setState({
+			importOpen: false
+		});
+	}
 	render() {
 		const taggingMethods = TAGGING_METHODS.map(tm => {
 			tm.value = tm.title;
@@ -71,12 +87,19 @@ class MediaPlan extends React.Component {
 			}
 		];
 		const buttonStyle = {width: 150, marginRight: 10};
+
+		let importDialog;
+		if (this.state.importOpen) {
+			importDialog = <ImportMediaPlan {...this.props} onRequestClose={this.closeImportDialog} />
+		}
+
 		return (
 			<div>
+				{importDialog}
 				<h1>Media Plan</h1>
 				<div style={{marginBottom: 20, marginTop: 20, width: '80%', marginRight: 'auto', marginLeft: 'auto'}}>
-					<RaisedButton style={buttonStyle}>Add Channel</RaisedButton>
-					<RaisedButton style={buttonStyle}>Import Excel</RaisedButton>
+					{/*<RaisedButton style={buttonStyle}>Add Channel</RaisedButton>*/}
+					<RaisedButton style={buttonStyle} onClick={this.openImportDialog}>Import Excel</RaisedButton>
 				</div>
 
 				<div className="pane" style={{width: '80%', padding: 0}}>

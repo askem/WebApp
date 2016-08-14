@@ -88,7 +88,7 @@ class TaggingInstructions extends React.Component {
 				</ol>;
 			default:
 				return <div>
-				Tagging is not available for <em>channelName</em> channel.
+				Tagging is not available for <em>{channelName}</em> channel.
 				</div>
 
 		}

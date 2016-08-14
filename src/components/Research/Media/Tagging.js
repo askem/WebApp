@@ -70,8 +70,8 @@ class Tagging extends React.Component {
 			<div>
 				{instructionsDialog}
 				<h1>Tagging</h1>
-				<h2>Impressions</h2>
-				{/*<div style={{marginBottom: 20, marginTop: 20, width: '80%', marginRight: 'auto', marginLeft: 'auto'}}>
+				{/*<h2>Impressions</h2>
+					<div style={{marginBottom: 20, marginTop: 20, width: '80%', marginRight: 'auto', marginLeft: 'auto'}}>
 					<RaisedButton style={buttonStyle}>Tagging Instructions</RaisedButton>
 				</div>*/}
 
@@ -80,15 +80,13 @@ class Tagging extends React.Component {
 					rowsCount={data.length} />
 				</div>
 
+				{/*
 				<h2>Conversions</h2>
-				{/*<div style={{marginBottom: 20, marginTop: 20, width: '80%', marginRight: 'auto', marginLeft: 'auto'}}>
-					<RaisedButton style={buttonStyle}>Tagging Instructions</RaisedButton>
-				</div>*/}
-
 				<div className="pane" style={{width: '80%', padding: 0}}>
 					<ReactDataGrid columns={columns} rowGetter={rowGetter}
 					rowsCount={data.length} />
 				</div>
+				*/}
 			</div>
 		)
 	}

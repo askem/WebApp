@@ -48,6 +48,10 @@ export default function(state=initialState, action) {
 				return values.push(newValue);
 			}
 		});
+	case 'ADD_MEDIA_PLAN_CHANNELS':
+		return state.updateIn(['mediaPlans', action.payload.researchID, 'channels'], channels => {
+			return channels.merge(List(action.payload.channels));
+		});
     default:
 		return state;
 	}
