@@ -18,6 +18,19 @@ const mockData = {
 		1464710210668: {}
 	},
 
+	taggingStatus: {
+		1073: {
+			channels: [
+				{
+					"channelName": "fbvideoweb",
+					"total": 1400,
+					"unique": 1000,
+					"facebookAudienceID": '1342353263'
+				}
+			]
+		}
+	},
+
 	mediaPlans: {
 		1073: {
 			channels: [

@@ -74,15 +74,17 @@ class MediaPlan extends React.Component {
 		return (
 			<div>
 				<h1>Media Plan</h1>
-				<div style={{margin: 10, marginBottom: 20}}>
+				<div style={{marginBottom: 20, marginTop: 20, width: '80%', marginRight: 'auto', marginLeft: 'auto'}}>
 					<RaisedButton style={buttonStyle}>Add Channel</RaisedButton>
 					<RaisedButton style={buttonStyle}>Import Excel</RaisedButton>
 				</div>
 
-				<ReactDataGrid columns={columns} rowGetter={rowGetter}
-				onRowUpdated={this.handleRowUpdated}
-				rowsCount={channels.length} enableCellSelect={true}
-				cellNavigationMode="changeRow" />
+				<div className="pane" style={{width: '80%', padding: 0}}>
+					<ReactDataGrid columns={columns} rowGetter={rowGetter}
+					onRowUpdated={this.handleRowUpdated}
+					rowsCount={channels.length} enableCellSelect={true}
+					cellNavigationMode="changeRow" />
+				</div>
 
 			</div>
 		)
