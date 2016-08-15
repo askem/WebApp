@@ -279,7 +279,9 @@ class ModelInputsWizard extends React.Component {
 					<div key={`q-${questionIdx}`}
 						className="preview animated fadeIn"
 						style={{animationDuration: '4s'}}>
-						<Question question={q} />
+						<Question question={q}
+							onSingleVote={()=>{}}
+							onMultiVote={()=>{}} />
 					</div>
 				</div>
 

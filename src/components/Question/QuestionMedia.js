@@ -23,6 +23,8 @@ class QuestionMedia extends React.Component {
 			children.push(<AnswerPopup
 				key={`answer-${paIndex}`} ref={`answer-${paIndex}`}
 				paIndex={paIndex} questionID={q.questionID}
+				onSingleVote={this.props.onSingleVote}
+				onMultiVote={this.props.onMultiVote}
 				{...pa} />);
 			const dotIDString = `dot-${paIndex}`;
 			children.push(<div className="dot" key={dotIDString} ref={dotIDString} />);

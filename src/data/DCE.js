@@ -347,52 +347,144 @@ const dceModel =
         "questionID": 8
     }
 ],
-		"questions2": [
+	"questionSets": [],
+	"connections": {
+		"possibleAnswers": [
 			{
-				"kpis": ["exposure_targeting"],
-				"popupsArrangement": "circle",
-				"questionID": 1,
-				"textValue": "Do you like {{category}}?",
-				"possibleAnswers": [
-					{"possibleAnswerID": 101, "textValue": "yes"},
-					{"possibleAnswerID": 102, "textValue": "no"}
-				],
-				"mediaID": "{{category_image}}"
+				"ID": 101,
+				"destination": {
+					"type": "question",
+					"ID": 2
+				}
 			},
 			{
-				"kpis": ["intent_purchase"],
-				"popupsArrangement": "circle",
-				"questionID": 2,
-				"textValue": "Which brands of {{category}} do you buy?",
-				"possibleAnswers": [
-					{"possibleAnswerID": 201, "textValue": "{{brand}}", "random": true},
-					{"possibleAnswerID": 202, "textValue": "{{competitors}}", "random": true},
-					{"possibleAnswerID": 203, "textValue": "None"},
-					{"possibleAnswerID": 204, "textValue": "All"}
-				],
-				"mediaID": "{{category_image}}"
+				"ID": 201,
+				"destination": {
+					"type": "question",
+					"ID": 3
+				}
 			},
 			{
-				"kpis": ["awareness"],
-				"popupsArrangement": "circle",
-				"questionID": 3,
-				"textValue": "Would you say that **{{messages}}**?",
-				"possibleAnswers": [
-					{"possibleAnswerID": 301, "textValue": "yes"},
-					{"possibleAnswerID": 302, "textValue": "no"},
-					{"possibleAnswerID": 303, "textValue": "maybe"}
-				],
-				"mediaID": "{{add_brand_images}}"
+				"ID": 202,
+				"destination": {
+					"type": "question",
+					"ID": 3
+				}
+			},
+			{
+				"ID": 203,
+				"destination": {
+					"type": "question",
+					"ID": 3
+				}
+			},
+			{
+				"ID": 301,
+				"destination": {
+					"type": "question",
+					"ID": 4
+				}
+			},
+			{
+				"ID": 302,
+				"destination": {
+					"type": "question",
+					"ID": 4
+				}
+			},
+			{
+				"ID": 303,
+				"destination": {
+					"type": "question",
+					"ID": 4
+				}
+			},
+			{
+				"ID": 402,
+				"destination": {
+					"type": "question",
+					"ID": 7
+				}
+			},
+			{
+				"ID": 401,
+				"destination": {
+					"type": "question",
+					"ID": 5
+				}
+			},
+			{
+				"ID": 501,
+				"destination": {
+					"type": "question",
+					"ID": 6
+				}
+			},
+			{
+				"ID": 502,
+				"destination": {
+					"type": "question",
+					"ID": 6
+				}
+			},
+			{
+				"ID": 503,
+				"destination": {
+					"type": "question",
+					"ID": 6
+				}
+			},
+			{
+				"ID": 601,
+				"destination": {
+					"type": "question",
+					"ID": 7
+				}
+			},
+			{
+				"ID": 602,
+				"destination": {
+					"type": "question",
+					"ID": 7
+				}
+			},
+			{
+				"ID": 603,
+				"destination": {
+					"type": "question",
+					"ID": 7
+				}
+			},
+			{
+				"ID": 701,
+				"destination": {
+					"type": "question",
+					"ID": 8
+				}
+			},
+			{
+				"ID": 702,
+				"destination": {
+					"type": "question",
+					"ID": 8
+				}
+			},
+			{
+				"ID": 703,
+				"destination": {
+					"type": "question",
+					"ID": 8
+				}
 			}
 		],
-		"questionSets": [
-			{
-				"ID": 0,
-				"questionIDs": [2],
-				"kpis": ["awareness"]
-			}
-		]
-	},
+		"questionSets": [],
+		"start": {
+			"ID": 1,
+			"type": "question"
+		}
+	}
+},
+
 	"analysisLogic": {
 		"KPIBinding":
 			[

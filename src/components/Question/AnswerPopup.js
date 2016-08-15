@@ -2,14 +2,15 @@ import React from 'react';
 import AskemUserText from 'components/Common/AskemUserText';
 
 class AnswerPopup extends React.Component {
-
-
+	constructor(props) {
+		super(props);
+		this.onPopupClick = this.onPopupClick.bind(this);
+	}
 	onPopupClick(event) {
 		const uiTypeID = this.props.uiTypeID;
 		const paIndex = this.props.paIndex;
 		const paID = this.props.possibleAnswerID;
 		const isOpenText = (uiTypeID >= 100 && uiTypeID < 200);
-
 		if (this.props.isMultiAnswerQuestion) {
 			if (this.props.isChecked) {
 				if (this.props.onUncheck) {
@@ -47,7 +48,7 @@ class AnswerPopup extends React.Component {
 			className={className}
 			alt={this.props.textValue}
 			data-id={this.props.possibleAnswerID}
-			onClick={this.props.onSingleVote ? this.onPopupClick : null}>
+			onClick={this.onPopupClick}>
 				<AskemUserText>{this.props.textValue}</AskemUserText>
 				{checkmark}
 			</div>;

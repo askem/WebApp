@@ -1,6 +1,12 @@
 import React from 'react';
 
-const AskemUserText = (props) => <div dir="auto">{props.children.toString()}</div>;
+const AskemUserText = (props) => {
+	let textValue = '';
+	if (props.children) {
+		textValue = props.children.toString();
+	}
+	return <div dir="auto">{textValue}</div>
+};
 
 // const AskemUserText = React.createClass({
 // 	getInitialState () {
