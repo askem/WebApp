@@ -1,6 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const Dashboard = require('webpack-dashboard');
+const DashboardPlugin = require('webpack-dashboard/plugin');
+const dashboard = new Dashboard();
+
 module.exports = {
 	entry: [
 		'webpack-dev-server/client?http://0.0.0.0:3000',
@@ -31,6 +35,7 @@ module.exports = {
 	},
 
 	plugins: [
+		new DashboardPlugin(dashboard.setData), 
 		new webpack.HotModuleReplacementPlugin()
 	],
 
