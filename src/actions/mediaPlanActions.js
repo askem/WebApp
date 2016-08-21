@@ -8,4 +8,13 @@ const addMediaPlanChannels = (researchID, channels) => {
 	}
 }
 
-export { addMediaPlanChannels };
+const getMediaPlan = researchID => {
+	return {
+		type: 'FETCH_MEDIA_PLAN',
+		payload: {
+			researchID
+		}
+	}
+}
+
+export { addMediaPlanChannels, getMediaPlan };

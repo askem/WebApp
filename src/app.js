@@ -20,6 +20,9 @@ import dataReducer from 'reducers/dataReducer';
 import routing from 'reducers/routingReducer';
 import logger from 'middleware/logger';
 
+import { createLogicMiddleware } from 'redux-logic';
+import logics from 'logic/index';
+
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
@@ -30,6 +33,20 @@ import dceModel from 'data/DCE';
 // http://stackoverflow.com/a/34015469/988941
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
+
+
+const api = (...params) => fetch(params)
+	.then(response => {
+		if (!response.ok) {
+			throw Error(response.statusText);
+		}
+		return response;
+	});
+
+const logicDeps = {
+	api,
+};
+const logicMiddleware = createLogicMiddleware(logics, logicDeps);
 
 
 mockData.model = dceModel;
@@ -47,7 +64,8 @@ const store = createStore(
 	initialState,
 	compose(
 		applyMiddleware(
-			logger
+			logger,
+			logicMiddleware
 		),
 		window.devToolsExtension ? window.devToolsExtension() : f => f
 	)

@@ -26,8 +26,11 @@ h1,h2,h3,h4 {
 
 
 .spinner-loading {
-	width: 800px;
+	width: 400px;
+	padding-top: 100px;
 	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
 }
 .spinner.three-bounce > div {
 	background-color: #9665AA;

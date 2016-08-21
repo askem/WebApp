@@ -52,6 +52,15 @@ export default function(state=initialState, action) {
 		return state.updateIn(['mediaPlans', action.payload.researchID, 'channels'], channels => {
 			return channels.concat(Immutable.fromJS(action.payload.channels));
 		});
+	case 'FETCH_MEDIA_PLAN_SUCCESS':
+		return state.setIn(['mediaPlans', action.payload.researchID],
+			Immutable.fromJS(action.payload.mediaPlan));
+	case 'FETCH_MEDIA_PLAN_FAIL':
+		return state.setIn(['mediaPlans', action.payload.researchID],
+			Immutable.fromJS({
+				loadingFail: true,
+				loadingError: action.payload.error.message
+			}));
 	case 'ADD_AUDIENCE':
 		let newAudienceIdx = state.getIn(['audiences', action.payload.researchID]).size + 1;
 		return state.updateIn(['audiences', action.payload.researchID], audiences => {

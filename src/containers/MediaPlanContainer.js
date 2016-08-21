@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import MediaPlan from 'components/Research/Media/MediaPlan';
-import { addMediaPlanChannels } from 'actions/mediaPlanActions';
+import { addMediaPlanChannels, getMediaPlan } from 'actions/mediaPlanActions';
 
 const MediaPlanContainer = connect(
 	function mapStateToProps(state, ownProps) {
@@ -19,6 +19,7 @@ const MediaPlanContainer = connect(
 	},
 	function mapDispatchToProps(dispatch) {
 		return {
+			getMediaPlan: researchID => dispatch(getMediaPlan(researchID)),
 			addChannels: (researchID, channels) => dispatch(addMediaPlanChannels(researchID, channels))
 		};
 	}

@@ -19,7 +19,7 @@ class Survey extends React.Component {
 	}
 	preloadImages(questions) {
 		if (questions === null) { return; }
-		for (const q in questions) {
+		for (let q in questions) {
 			$('<img />').attr('src', q.questionImageURL).appendTo('body').css('display','none');
 		}
 	}

@@ -28,7 +28,7 @@ const ResearchSurveyContainer = connect(
 
 			const entitiesToMap = ar => {
 				let map = {};
-				for (const idx in ar) {
+				for (let idx in ar) {
 					const entity = ar[idx];
 					map[entity.ID] = entity.destination;
 				}
