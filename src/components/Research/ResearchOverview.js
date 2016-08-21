@@ -6,8 +6,8 @@ const ResearchOverview = (props) => {
 	if (!props.research) {
 		return <h2>Research Campaign #{props.researchID} does not exist</h2>
 	}
-	const kpis = props.results.kpis;
 
+	const kpis = props.results.kpiSets[0].kpis.filter(k => k.categoryType === 'KpiValue');
 	return <div>
 		<h1>
 			{props.research.title}
@@ -29,7 +29,8 @@ const ResearchOverview = (props) => {
 			</div>
 		</div>
 
-		<div className="dashboard-pane">
+		<div className="dashboard-pane"
+			style={{flexWrap: 'wrap', justifyContent: 'flex-start'}}>
 			{kpis.map(kpi => {
 				const kpiID = kpi.kpiID;
 				const kpiDefinition = props.model.KPIs.find(k => k.kpiID === kpiID);

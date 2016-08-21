@@ -6,7 +6,7 @@ const COLOR_RED = '#F15B40';
 const COLOR_YELLOW = '#F6D935';
 
 const KPIQuickView = (props) => {
-	const brandLift = props.kpiResult.kpiValue;
+	const brandLift = props.kpiResult.value;
 	let color = COLOR_YELLOW;
 	if (brandLift > props.kpiResult.MoE) {
 		color = COLOR_GREEN;
