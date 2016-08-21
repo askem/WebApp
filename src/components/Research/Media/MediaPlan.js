@@ -4,7 +4,6 @@ import ReactDataGrid from 'react-data-grid';
 import { Editors } from 'react-data-grid/addons';
 import TAGGING_METHODS from 'constants/TAGGING_METHODS';
 import ImportMediaPlan from 'components/Research/Media/ImportMediaPlan';
-import Loading from 'components/Common/Loading';
 
 class NumberEditor extends Editors.SimpleTextEditor {
 	render() {
@@ -32,26 +31,11 @@ class MediaPlan extends React.Component {
 		this.handleRowUpdated = this.handleRowUpdated.bind(this);
 		this.openImportDialog = this.openImportDialog.bind(this);
 		this.closeImportDialog = this.closeImportDialog.bind(this);
-		this.loadData = this.loadData.bind(this);
-		this.refresh = this.refresh.bind(this);
 		this.state = {
 			importOpen: false
 		};
 	}
-	loadData(props) {
-		props.getMediaPlan(props.researchID);
-	}
-	refresh() {
-		this.loadData(this.props);
-	}
-	componentWillMount() {
-		this.loadData(this.props)
-	}
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.researchID !== this.props.researchID) {
-			this.loadData(nextProps)
-		}
-	}
+
 	handleRowUpdated(e) {
 		console.info(e);
 
@@ -75,16 +59,6 @@ class MediaPlan extends React.Component {
 		});
 	}
 	render() {
-		if (!this.props.mediaPlan) {
-			return <Loading />;
-		}
-		if (this.props.mediaPlan.loadingFail) {
-			return <div>
-				<h1>Loading Error!</h1>
-				<h3>{this.props.mediaPlan.loadingError}</h3>
-				<RaisedButton onClick={this.refresh}>Retry</RaisedButton>
-			</div>;
-		}
 		const taggingMethods = TAGGING_METHODS.map(tm => {
 			tm.value = tm.title;
 			tm.text = tm.title;
