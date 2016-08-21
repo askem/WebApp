@@ -1,18 +1,37 @@
 import React from 'react';
-import Survey from 'components/Survey/Survey';
+import SurveyPreview from 'components/Research/SurveyPreview';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class ResearchSurvey extends React.Component {
 	constructor(props) {
     	super(props);
+		this.togglePreview = this.togglePreview.bind(this);
+		this.state = {
+			surveyPreview: false
+		}
+	}
+	togglePreview() {
+		this.setState({
+			surveyPreview: !this.state.surveyPreview
+		});
 	}
 	render() {
+		let preview;
+		if (this.state.surveyPreview) {
+			preview = <SurveyPreview
+				togglePreview={this.togglePreview}
+				survey={this.props.survey}
+				questions={this.props.questions} />
+		}
 		return (
 			<div>
+				{preview}
 				<h1>Survey</h1>
-				<div style={{width:400, height: 650}}>
-					<Survey
-					survey={this.props.survey}
-					questions={this.props.questions} />
+				<div>
+					<RaisedButton style={{width: 200}}
+						onClick={this.togglePreview}>
+						Show Preview
+					</RaisedButton>
 				</div>
 			</div>
 		)
