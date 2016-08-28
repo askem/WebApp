@@ -1,6 +1,17 @@
 import { connect } from 'react-redux';
+import fulfill from 'utils/HOC/fulfill';
 import Brief from 'components/Research/Brief/Brief';
 import * as actions from 'actions/briefActions';
+
+const FulfilledBrief = fulfill(
+	Brief,
+	['research', 'modelData'],
+	['researchID'],
+	props => {
+		// TODO
+		//props.getBrief(props.researchID);
+	}
+);
 
 const BriefContainer = connect(
 	function mapStateToProps(state, ownProps) {
@@ -26,6 +37,6 @@ const BriefContainer = connect(
 			onModelVariableChange: (researchID, variableID, value) => dispatch(actions.setModelVariable(researchID, variableID, value)),
 		};
 	}
-)(Brief);
+)(FulfilledBrief);
 
 export default BriefContainer;

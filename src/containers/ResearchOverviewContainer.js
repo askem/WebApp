@@ -1,5 +1,17 @@
 import { connect } from 'react-redux';
+import fulfill from 'utils/HOC/fulfill';
 import ResearchOverview from 'components/Research/ResearchOverview';
+import { getResearch } from 'actions/researchActions';
+
+const FulfilledResearchOverview = fulfill(
+	ResearchOverview,
+	['research'],//, 'results'],
+	['researchID'],
+	props => {
+		props.getResearch(props.researchID);
+		// TODO
+	}
+);
 
 const ResearchOverviewContainer = connect(
 	function mapStateToProps(state, ownProps) {
@@ -28,9 +40,9 @@ const ResearchOverviewContainer = connect(
 	},
 	function mapDispatchToProps(dispatch) {
 		return {
-
+			getResearch: researchID => dispatch(getResearch(researchID)),
 		};
 	}
-)(ResearchOverview);
+)(FulfilledResearchOverview);
 
 export default ResearchOverviewContainer;

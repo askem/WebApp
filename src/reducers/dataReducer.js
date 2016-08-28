@@ -48,6 +48,15 @@ export default function(state=initialState, action) {
 				return values.push(newValue);
 			}
 		});
+	case 'FETCH_RESEARCH_SUCCESS':
+		return state.setIn(['researchCampaigns', action.payload.researchID],
+			Immutable.fromJS(action.payload.research));
+	case 'FETCH_RESEARCH_FAIL':
+		return state.setIn(['researchCampaigns', action.payload.researchID],
+			Immutable.fromJS({
+				loadingFail: true,
+				loadingError: action.payload.error.message
+			}));
 	case 'ADD_MEDIA_PLAN_CHANNELS':
 		return state.updateIn(['mediaPlans', action.payload.researchID, 'channels'], channels => {
 			return channels.concat(Immutable.fromJS(action.payload.channels));

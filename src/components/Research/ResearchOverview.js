@@ -7,14 +7,9 @@ const ResearchOverview = (props) => {
 		return <h2>Research Campaign #{props.researchID} does not exist</h2>
 	}
 
-	const kpis = props.results.kpiSets[0].kpis.filter(k => k.categoryType === 'KpiValue');
-	return <div>
-		<h1>
-			{props.research.title}
-		</h1>
-
-
-		<div className="dashboard-pane">
+	let businessResultsPane;
+	if (props.businessResults) {
+		businessResultsPane = <div className="dashboard-pane">
 			<div className="pane-item">
 				<span className="value">185k</span>
 				<span className="title">Exposed</span>
@@ -27,16 +22,30 @@ const ResearchOverview = (props) => {
 				<span className="value">{`${props.businessResults.spentCurrency}${props.businessResults.spent}`}</span>
 				<span className="title">Spent</span>
 			</div>
-		</div>
+		</div>;
+	}
 
-		<div className="dashboard-pane"
-			style={{flexWrap: 'wrap', justifyContent: 'flex-start'}}>
-			{kpis.map(kpi => {
-				const kpiID = kpi.kpiID;
-				const kpiDefinition = props.model.KPIs.find(k => k.kpiID === kpiID);
-				return <KPIQuickView key={`kpi-${kpiID}`} kpiResult={kpi} kpi={kpiDefinition} />
-			})}
-		</div>
+	let kpisPane;
+	if (props.results && props.results.kpiSets &&  props.results.kpiSets.length > 0) {
+		const kpis = props.results.kpiSets[0].kpis.filter(k => k.categoryType === 'KpiValue');
+		kpisPane = (
+			<div className="dashboard-pane"
+				style={{flexWrap: 'wrap', justifyContent: 'flex-start'}}>
+				{kpis.map(kpi => {
+					const kpiID = kpi.kpiID;
+					const kpiDefinition = props.model.KPIs.find(k => k.kpiID === kpiID);
+					return <KPIQuickView key={`kpi-${kpiID}`} kpiResult={kpi} kpi={kpiDefinition} />
+				})}
+			</div>
+		);
+	}
+
+	return <div>
+		<h1>
+			{props.research.name}
+		</h1>
+		{businessResultsPane}
+		{kpisPane}
 
 	<div className="dashboard-pane">
 		<TargetingInsights />

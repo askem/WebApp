@@ -3,7 +3,7 @@ const mockData = {
 
 	researchCampaigns: {
 		1073: {
-			title: 'Alcon 2016-06',
+			name: 'Alcon 2016-06',
 			modelID: 'dce',
 			modelVersion: '0.1',
 			kpis: ['exposure_targeting', 'intent_purchase'],
@@ -32,7 +32,7 @@ const mockData = {
 	},
 
 	mediaPlans: {
-		1073: {
+		0: {
 			channels: [
 				{
 					"channelName": "fbvideoweb",
