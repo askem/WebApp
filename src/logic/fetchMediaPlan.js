@@ -23,8 +23,8 @@ const fetchMediaPlan = createLogic({
 
 	process({ getState, action, api }, dispatch) {
 		const researchID = action.payload.researchID;
-    	return api(`/mockdata/${researchID}/mediaplan.json`)
-		.then(response => response.json())
+    	return api.fetchMediaPlan(researchID)
+		//.then(response => response.json())
 		// .then(mediaPlan => {
 		// 	return {
 		// 		researchID,

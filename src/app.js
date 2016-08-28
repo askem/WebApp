@@ -17,6 +17,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import mockData from 'data/mockData';
 import dceModel from 'data/DCE';
+import AskemAPI from 'data/AskemAPI';
 
 // Needed for onTouchTap - for material-ui
 // http://stackoverflow.com/a/34015469/988941
@@ -24,13 +25,14 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 
-const api = (...params) => fetch(params)
-	.then(response => {
-		if (!response.ok) {
-			throw Error(response.statusText);
-		}
-		return response;
-	});
+const api = new AskemAPI({
+	baseURI: 'https://3po.askem.com/0/',
+	accessToken: '2d5a3b3cef67422db402273506fa9152',
+	loginURI: 'https://r2d2.askem.com/0/login'
+});
+
+// For console testing
+window.api = api;
 
 const logicDeps = {
 	api,
