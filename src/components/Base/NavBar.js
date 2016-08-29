@@ -1,6 +1,8 @@
 import React from 'react';
 import { blobURL } from 'utils/AskemUtils';
 import FaAngleDown from 'react-icons/lib/fa/angle-down';
+import FaBell from 'react-icons/lib/fa/bell';
+// import FaBellO from 'react-icons/lib/fa/bell-o';
 
 const NavBar = (props) => {
 	let userIdentifier;
@@ -32,7 +34,9 @@ const NavBar = (props) => {
 			<div className="name">{props.name}</div>
 		</div>
 		<div className="top-prefs">
-			<div className="notifications"></div>
+			<div className="notifications">
+				<FaBell size={20} />
+			</div>
 			<div className="user">
 				{props.username}
 				<FaAngleDown size={15} style={{marginTop: -3}}/>

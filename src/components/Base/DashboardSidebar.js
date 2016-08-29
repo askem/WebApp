@@ -1,5 +1,6 @@
 import React from 'react';
 import FaAngleDown from 'react-icons/lib/fa/angle-down';
+import FaAngleRight from 'react-icons/lib/fa/angle-right';
 
 import FaDashboard from 'react-icons/lib/fa/dashboard';
 import MdContentPaste from 'react-icons/lib/md/content-paste';
@@ -40,14 +41,17 @@ class DashboardSidebar extends React.Component {
 				</header>
 			</a>
 			<div>
-				{items.map(i => (
-					<a key={i.id} onClick={this.onSelectItem}
+				{items.map(i => {
+					const isSelected = i.id === selected;
+					const chevron = isSelected ? <FaAngleRight style={{float: 'right'}} size={27} /> : null;
+					return <a key={i.id} onClick={this.onSelectItem}
 						href={`#/campaigns/${researchID}/${i.id}`}
-						className={`sidebar-item ${i.id === selected ? 'selected' : ''}`}>
+						className={`sidebar-item ${isSelected ? 'selected' : ''}`}>
 						{i.icon}
 						{i.title}
+						{chevron}
 					</a>
-				))}
+				})}
 			</div>
 			<a href="/">
 				<footer></footer>

@@ -1,5 +1,16 @@
 import { connect } from 'react-redux';
+import fulfill from 'utils/HOC/fulfill';
 import Tagging from 'components/Research/Media/Tagging';
+import { getMediaPlan } from 'actions/mediaPlanActions';
+
+const FulfilledTagging = fulfill(
+	Tagging,
+	['mediaPlan'],//,taggingStatus
+	['researchID'],
+	props => {
+		props.getMediaPlan(props.researchID);
+	}
+);
 
 const TaggingContainer = connect(
 	function mapStateToProps(state, ownProps) {
@@ -21,9 +32,9 @@ const TaggingContainer = connect(
 	},
 	function mapDispatchToProps(dispatch) {
 		return {
-			//onApprove: samplingID => dispatch(approveSampleMix(samplingID))
+			getMediaPlan: researchID => dispatch(getMediaPlan(researchID)),
 		};
 	}
-)(Tagging);
+)(FulfilledTagging);
 
 export default TaggingContainer;

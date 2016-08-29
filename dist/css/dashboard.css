@@ -150,7 +150,12 @@ h1,h2,h3,h4 {
 .top-header .top-prefs {
 	display: flex;
 	align-items: center;
+	color: #34474f;
 }
+.top-header .top-prefs .notifications {
+	margin-right: 20px;
+}
+
 .top-header .top-prefs .user {
 
 }
@@ -327,11 +332,9 @@ h1,h2,h3,h4 {
 }
 
 .dashboard-sidebar .sidebar-item {
-	padding-top: 12px;
-	padding-bottom: 12px;
+	padding: 12px 3px 12px 20px;
 	width: 100%;
 	font-size: 15px;
-	padding-left: 20px;
 	display: block;
 	color: white;
 	vertical-align: middle;
