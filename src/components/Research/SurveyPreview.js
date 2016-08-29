@@ -34,8 +34,8 @@ class SurveyPreview extends React.Component {
 			<Dialog title="Survey Preview"
 				actions={actions}
 				contentStyle={{width:600}}
-				bodyStyle={{backgroundColor: '#4e5665'}}
-				titleStyle={{backgroundColor: '#4e5665', color: 'white'}}
+				bodyStyle={{backgroundColor: '#444444'}}
+				titleStyle={{backgroundColor: '#444444', color: 'white'}}
 				onRequestClose={this.props.togglePreview}
 				modal={false} open={true}>
 			<div style={{width:400, height: 650, color: 'black',

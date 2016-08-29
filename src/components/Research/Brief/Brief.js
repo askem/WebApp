@@ -2,22 +2,69 @@ import React from 'react';
 import { Breadcrumb } from 'react-bootstrap';
 import GoHome from 'react-icons/lib/go/home';
 import ModelInputsWizard from 'components/Research/Brief/ModelInputsWizard'
+import RaisedButton from 'material-ui/RaisedButton';
 
 class Brief extends React.Component {
 	constructor(props) {
     	super(props);
+		this.startEditing = this.startEditing.bind(this);
+		this.stopEditing = this.stopEditing.bind(this);
+		this.state = {
+			editing: false
+		}
+	}
+	startEditing() {
+		this.setState({
+			editing: true
+		});
+	}
+	stopEditing() {
+		this.setState({
+			editing: false
+		});
 	}
 	render() {
-		return (
-			<div>
+		if (this.state.editing) {
+			return <div>
 				<ModelInputsWizard model={this.props.model}
-					modelData={this.props.modelData}
-					researchID={this.props.researchID}
-					research={this.props.research}
-					onModelVariableChange={this.props.onModelVariableChange}
-					toggleResearchKPI={this.props.toggleResearchKPI} />
+						modelData={this.props.modelData}
+						researchID={this.props.researchID}
+						research={this.props.research}
+						onModelVariableChange={this.props.onModelVariableChange}
+						toggleResearchKPI={this.props.toggleResearchKPI} />
+					<div style={{width: '70%', textAlign: 'right',
+						marginTop: 30,
+						marginRight: 'auto', marginLeft: 'auto'}}>
+						<RaisedButton backgroundColor="#9665aa" labelColor="#ffffff"
+							label="Done" onClick={this.stopEditing} />
+					</div>
+			</div>
+		}
 
-			</div>);
+		const selected = new Set(this.props.research.kpis);
+		const selectedKPIs = this.props.model.KPIGroups.map(group => {
+			const kpis = this.props.model.KPIs.filter(
+				k => k.groupID === group.groupID && selected.has(k.kpiID));
+			if (kpis.length === 0) { return null; }
+			return <div key={group.groupID}>
+					<h4 style={{marginBottom: 0}}>{group.name}</h4>
+					{kpis.map(k => <div key={k.kpiID} style={{paddingLeft: 20}}>
+						{k.name}
+					</div>)}
+				</div>;
+		});
+
+		return <div>
+			<div style={{width: '70%', textAlign: 'right', marginRight: 'auto', marginLeft: 'auto'}}>
+				<RaisedButton onClick={this.startEditing}>Edit Brief</RaisedButton>
+			</div>
+			<div className="pane-title" style={{width: '70%'}}>Selected KPIs</div>
+			<div className="pane results-pane">
+				{selectedKPIs}
+			</div>
+
+
+		</div>
 	}
 }
 
