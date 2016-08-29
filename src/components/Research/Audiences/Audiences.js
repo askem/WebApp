@@ -54,7 +54,6 @@ class Audiences extends React.Component {
 		return (
 			<div>
 				{addDialog}
-				<h1>Audiences</h1>
 				<div style={{marginBottom: 20, marginTop: 20, width: '80%', marginRight: 'auto', marginLeft: 'auto'}}>
 					{/*<RaisedButton style={buttonStyle}>Add Channel</RaisedButton>*/}
 					<RaisedButton style={buttonStyle} onClick={this.openAddDialog}>Add Audience</RaisedButton>

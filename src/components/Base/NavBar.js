@@ -1,5 +1,6 @@
 import React from 'react';
 import { blobURL } from 'utils/AskemUtils';
+import FaAngleDown from 'react-icons/lib/fa/angle-down';
 
 const NavBar = (props) => {
 	let userIdentifier;
@@ -24,28 +25,30 @@ const NavBar = (props) => {
         userIdentifier = <button className="btn btn-white login" onClick={props.onLogin}>Sign in</button>;
     }
 
-    return <nav className="navbar navbar-default navbar-static-top askem-header" role="navigation">
-    	<div className="container">
-    		<div className="row">
-    			<div className="col-xs-2 col-md-offset-1">
-    				<a className="logo" href="/"></a>
-    			</div>
-    			<div className="col-xs-10 col-md-8 col-lg-9">
-    				<div className="row user-area">
-    					<div className="col-xs-5 col-xs-offset-7 col-md-2 col-md-offset-10 login-button">
-    						{userIdentifier}
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
+    return <nav className="top-header">
+
+		<div className="top-title">
+			<div className="title">{props.title}</div>
+			<div className="name">{props.name}</div>
+		</div>
+		<div className="top-prefs">
+			<div className="notifications"></div>
+			<div className="user">
+				{props.username}
+				<FaAngleDown size={15} style={{marginTop: -3}}/>
+			</div>
+		</div>
+
     </nav>;
 	{/*<AskemLoginModal show={this.state.loginModalVisible} onRequestHide={this.toggleLoginModal} />*/}
 }
 
 NavBar.propTypes = {
+	title: React.PropTypes.string.isRequired,
+	name: React.PropTypes.string.isRequired,
 	// researchID: React.PropTypes.string.isRequired,
 	// research: React.PropTypes.object,
+	username: React.PropTypes.string
 }
 
 export default NavBar;

@@ -23,21 +23,6 @@ const SamplingsList = (props) => {
 		return <h2>Research Campaign #{props.researchID} does not exist</h2>
 	}
 	return <div>
-		{/*<Breadcrumb>
-			<Breadcrumb.Item>
-				<GoHome size={26} />
-			</Breadcrumb.Item>
-			<Breadcrumb.Item>
-				<img src="/images/temp/brand.jpg" />
-			</Breadcrumb.Item>
-			<Breadcrumb.Item>
-				<img src="/images/temp/campaign.jpg" />
-			</Breadcrumb.Item>
-			<Breadcrumb.Item active={true}>
-				Samples
-			</Breadcrumb.Item>
-		</Breadcrumb>*/}
-		<h1>Samples</h1>
 
 	{/*
 		<div style={{paddingTop: 8, paddingBottom: 8}}>

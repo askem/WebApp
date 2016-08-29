@@ -26,7 +26,6 @@ class ResearchSurvey extends React.Component {
 		return (
 			<div>
 				{preview}
-				<h1>Survey</h1>
 				<div>
 					<RaisedButton style={{width: 200}}
 						onClick={this.togglePreview}>

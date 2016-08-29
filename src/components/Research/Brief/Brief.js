@@ -10,22 +10,6 @@ class Brief extends React.Component {
 	render() {
 		return (
 			<div>
-				{/*<Breadcrumb>
-					<Breadcrumb.Item>
-						<GoHome size={26} />
-					</Breadcrumb.Item>
-					<Breadcrumb.Item>
-						<img src="/images/temp/brand.jpg" />
-					</Breadcrumb.Item>
-					<Breadcrumb.Item>
-						<img src="/images/temp/campaign.jpg" />
-					</Breadcrumb.Item>
-					<Breadcrumb.Item active={true}>
-						Brief
-					</Breadcrumb.Item>
-				</Breadcrumb>*/}
-				<h1>Brief</h1>
-
 				<ModelInputsWizard model={this.props.model}
 					modelData={this.props.modelData}
 					researchID={this.props.researchID}

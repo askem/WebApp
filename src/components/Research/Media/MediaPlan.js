@@ -92,7 +92,6 @@ class MediaPlan extends React.Component {
 		return (
 			<div>
 				{importDialog}
-				<h1>Media Plan</h1>
 				<div style={{marginBottom: 20, marginTop: 20, width: '80%', marginRight: 'auto', marginLeft: 'auto'}}>
 					{/*<RaisedButton style={buttonStyle}>Add Channel</RaisedButton>*/}
 					<RaisedButton style={buttonStyle} onClick={this.openImportDialog}>Import Excel</RaisedButton>

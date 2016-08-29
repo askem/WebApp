@@ -1,9 +1,9 @@
 import React from 'react';
 import round from 'utils/math/round';
 
-const COLOR_GREEN = '#3DBB95';
-const COLOR_RED = '#F15B40';
-const COLOR_YELLOW = '#F6D935';
+const COLOR_GREEN = '#159571';
+const COLOR_RED = '#c82e13';
+const COLOR_YELLOW = '#dcbe15';
 
 const KPIQuickView = (props) => {
 	const brandLift = props.kpiResult.value;
@@ -18,9 +18,8 @@ const KPIQuickView = (props) => {
 		brandLiftNumber = `+${brandLiftNumber}`;
 	}
 	return <div className="kpi-result animated zoomIn">
-		<div className="kpi-number" style={{backgroundColor: color, marginBotton: 8,
-			color: 'white', textShadow: '1px 1px black',
-			boxShadow: '0 8px rgba(61, 187, 149, 0.3)', border: 'none'}}>
+		<div className="kpi-number" style={{borderColor: color,
+			color: color}}>
 			{brandLiftNumber}
 		</div>
 		<div className="kpi-title">

@@ -68,7 +68,6 @@ class ResearchResults extends React.Component {
 				Results
 			</Breadcrumb.Item>
 		</Breadcrumb>*/}
-			<h1>Results</h1>
 
 			<div className="results-with-segments">
 				<div className="results-segmentations">

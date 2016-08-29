@@ -9,18 +9,21 @@ const ResearchOverview = (props) => {
 
 	let businessResultsPane;
 	if (props.businessResults) {
-		businessResultsPane = <div className="dashboard-pane">
-			<div className="pane-item">
-				<span className="value">185k</span>
-				<span className="title">Exposed</span>
-			</div>
-			<div className="pane-item">
-				<span className="value">248</span>
-				<span className="title">Qualified Responders</span>
-			</div>
-			<div className="pane-item">
-				<span className="value">{`${props.businessResults.spentCurrency}${props.businessResults.spent}`}</span>
-				<span className="title">Spent</span>
+		businessResultsPane = <div>
+			<div className="pane-title">Totals</div>
+			<div className="dashboard-pane results-pane">
+				<div className="pane-item">
+					<span className="value">185k</span>
+					<span className="title">Exposed</span>
+				</div>
+				<div className="pane-item">
+					<span className="value">248</span>
+					<span className="title">Qualified Responders</span>
+				</div>
+				<div className="pane-item">
+					<span className="value">{`${props.businessResults.spentCurrency}${props.businessResults.spent}`}</span>
+					<span className="title">Spent</span>
+				</div>
 			</div>
 		</div>;
 	}
@@ -29,27 +32,28 @@ const ResearchOverview = (props) => {
 	if (props.results && props.results.kpiSets &&  props.results.kpiSets.length > 0) {
 		const kpis = props.results.kpiSets[0].kpis.filter(k => k.categoryType === 'KpiValue');
 		kpisPane = (
-			<div className="dashboard-pane"
-				style={{flexWrap: 'wrap', justifyContent: 'flex-start'}}>
-				{kpis.map(kpi => {
-					const kpiID = kpi.kpiID;
-					const kpiDefinition = props.model.KPIs.find(k => k.kpiID === kpiID);
-					return <KPIQuickView key={`kpi-${kpiID}`} kpiResult={kpi} kpi={kpiDefinition} />
-				})}
+			<div>
+				<div className="pane-title">KPIs</div>
+				<div className="dashboard-pane results-pane"
+					style={{flexWrap: 'wrap'}}>
+					{kpis.map(kpi => {
+						const kpiID = kpi.kpiID;
+						const kpiDefinition = props.model.KPIs.find(k => k.kpiID === kpiID);
+						return <KPIQuickView key={`kpi-${kpiID}`} kpiResult={kpi} kpi={kpiDefinition} />
+					})}
+				</div>
 			</div>
 		);
 	}
 
 	return <div>
-		<h1>
-			{props.research.name}
-		</h1>
 		{businessResultsPane}
 		{kpisPane}
 
-	<div className="dashboard-pane">
-		<TargetingInsights />
-	</div>
+		<div className="pane-title">Targeting Insights</div>
+		<div className="dashboard-pane results-pane">
+			<TargetingInsights />
+		</div>
 
 
 	</div>

@@ -65,25 +65,6 @@ const SampleMix = (props) => {
 	};
 
 	return <div>
-		{/*<Breadcrumb>
-			<Breadcrumb.Item>
-				<GoHome size={26} />
-			</Breadcrumb.Item>
-			<Breadcrumb.Item>
-				<img src="/images/temp/brand.jpg" />
-			</Breadcrumb.Item>
-			<Breadcrumb.Item>
-				<img src="/images/temp/campaign.jpg" />
-			</Breadcrumb.Item>
-			<Breadcrumb.Item>
-				Survey {props.sampling.surveyID}
-			</Breadcrumb.Item>
-			<Breadcrumb.Item active={true}>
-				Sample Mix
-			</Breadcrumb.Item>
-		</Breadcrumb>*/}
-		<h1>Sample Mix</h1>
-
 		<Tab.Container id="left-tabs-example" defaultActiveKey="first">
 			<div className="sample-mix-container" >
 				<div style={{width: 120}}>

@@ -28,15 +28,15 @@ const dashboardRouter = (store) =>  {
 	return <Router history={history}>
 		<Route component={DashboardFrame}>
 			<Route path="/" component={DummyComponent} />
-			<Route path="/campaigns/:researchID" component={ResearchOverviewContainer} />
-			<Route path="/campaigns/:researchID/brief" component={BriefContainer} />
-			<Route path="/campaigns/:researchID/media" component={MediaPlanContainer} />
-			<Route path="/campaigns/:researchID/tagging" component={TaggingContainer} />
-			<Route path="/campaigns/:researchID/audiences" component={AudiencesContainer} />
-			<Route path="/campaigns/:researchID/results" component={ResearchResultsContainer} />
-			<Route path="/campaigns/:researchID/survey" component={ResearchSurveyContainer} />
-			<Route path="/campaigns/:researchID/samplings" component={SamplingsListContainer} />
-			<Route path="/campaigns/:researchID/samplings/:samplingID/samplemix" component={SampleMixContainer} />
+			<Route name="Dashboard" path="/campaigns/:researchID" component={ResearchOverviewContainer} />
+			<Route name="Brief" path="/campaigns/:researchID/brief" component={BriefContainer} />
+			<Route name="Media Plan" path="/campaigns/:researchID/media" component={MediaPlanContainer} />
+			<Route name="Tagging" path="/campaigns/:researchID/tagging" component={TaggingContainer} />
+			<Route name="Audiences" path="/campaigns/:researchID/audiences" component={AudiencesContainer} />
+			<Route name="Results" path="/campaigns/:researchID/results" component={ResearchResultsContainer} />
+			<Route name="Survey" path="/campaigns/:researchID/survey" component={ResearchSurveyContainer} />
+			<Route name="Samplings" path="/campaigns/:researchID/samplings" component={SamplingsListContainer} />
+			<Route name="Sample Mix" path="/campaigns/:researchID/samplings/:samplingID/samplemix" component={SampleMixContainer} />
 		</Route>
 	</Router>;
 }

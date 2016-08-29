@@ -71,7 +71,6 @@ class Tagging extends React.Component {
 		return (
 			<div>
 				{instructionsDialog}
-				<h1>Tagging</h1>
 				{/*<h2>Impressions</h2>
 					<div style={{marginBottom: 20, marginTop: 20, width: '80%', marginRight: 'auto', marginLeft: 'auto'}}>
 					<RaisedButton style={buttonStyle}>Tagging Instructions</RaisedButton>

@@ -13,13 +13,22 @@ class DashboardFrame extends React.Component {
 		if (this.props.keyValue === DEBUG_SCREEN_HOTKEY) {
 			debugMenu = <DebugMenu />;
 		}
+		let activeRouteName;
+		const activeRoute = this.props.routes[this.props.routes.length - 1];
+		if (activeRoute) {
+			activeRouteName = activeRoute.name;
+		}
 		return <div>
 			{debugMenu}
-			<NavBar onLogout={noop} onLogin={noop} profileImageMediaID="6d4f9866-ef41-4db5-8c35-b32f20791ec4" username="superadmin" loggedIn={true} />
 			<div className="dashboard-container">
 				<DashboardSidebarContainer {...this.props} />
 				<div className="dashboard-main">
-					{this.props.children}
+					<NavBar onLogout={noop} onLogin={noop}
+						title={activeRouteName} name="Alcon 2016-07"
+						profileImageMediaID="6d4f9866-ef41-4db5-8c35-b32f20791ec4" username="superadmin" loggedIn={true} />
+					<div className="dashboard-content">
+						{this.props.children}
+					</div>
 				</div>
 			</div>
 		</div>
