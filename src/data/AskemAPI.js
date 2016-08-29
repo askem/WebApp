@@ -29,7 +29,7 @@ class AskemAPI {
 		});
 	}
 
-	fetch(endpoint, postObject) {
+	fetchEndpoint(endpoint, postObject) {
 		let options = {
 			headers: this._headers,
 			cors: true
@@ -55,11 +55,15 @@ class AskemAPI {
 
 	/* API */
 	fetchResearchCampaign(researchID) {
-		return this.fetch(`researchCampaigns/${researchID}`)
+		return this.fetchEndpoint(`researchCampaigns/${researchID}`)
 		.then(results => results.researchCampaign);
 	}
+	fetchResearchKPIs(researchID) {
+		// TODO : real endpoint
+		return this.fetchEndpoint(`samplings/${researchID}/kpis`);
+	}
 	fetchSamplingKPIs(samplingID) {
-		return this.fetch(`samplings/${samplingID}/kpis`);
+		return this.fetchEndpoint(`samplings/${samplingID}/kpis`);
 	}
 
 	/* API - Not yet implemented */

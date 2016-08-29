@@ -57,6 +57,15 @@ export default function(state=initialState, action) {
 				loadingFail: true,
 				loadingError: action.payload.error.message
 			}));
+	case 'FETCH_RESEARCH_KPIS_SUCCESS':
+		return state.setIn(['resultsByResearch', action.payload.researchID],
+			Immutable.fromJS(action.payload.resultsSet));
+	case 'FETCH_RESEARCH_KPIS_FAIL':
+		return state.setIn(['resultsByResearch', action.payload.researchID],
+			Immutable.fromJS({
+				loadingFail: true,
+				loadingError: action.payload.error.message
+			}));
 	case 'ADD_MEDIA_PLAN_CHANNELS':
 		return state.updateIn(['mediaPlans', action.payload.researchID, 'channels'], channels => {
 			return channels.concat(Immutable.fromJS(action.payload.channels));

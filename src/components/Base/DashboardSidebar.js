@@ -11,7 +11,7 @@ import TiPipette from 'react-icons/lib/ti/pipette';
 import FaPieChart from 'react-icons/lib/fa/pie-chart';
 import FaCheckCircleO from 'react-icons/lib/fa/check-circle-o';
 
-const iconStyle = {size: 30, marginRight: 10};
+const iconStyle = {size: 30, marginRight: 10, color: 'rgba(255, 255, 255, 0.9)'};
 const items = [
 	{id: '', title: 'Dashboard', icon: <FaDashboard size={27} style={iconStyle}/>},
 	{id: 'brief', title: 'Brief', icon: <FaListUl size={27} style={iconStyle}/>},
@@ -20,6 +20,7 @@ const items = [
 	{id: 'audiences', title: 'Audiences', icon: <FaGroup size={25} style={iconStyle}/>},
 	{id: 'samplings', title: 'Samples', icon: <TiPipette size={27} style={iconStyle}/>},
 	{id: 'survey', title: 'Survey', icon: <FaPieChart size={27} style={iconStyle}/>},
+	'DIVIDER',
 	{id: 'results', title: 'Results', icon: <FaCheckCircleO size={27} style={iconStyle}/>}
 ]
 
@@ -42,6 +43,11 @@ class DashboardSidebar extends React.Component {
 			</a>
 			<div>
 				{items.map(i => {
+					if (i === 'DIVIDER') {
+						return <div key="divider">
+							<hr style={{width: '80%', borderTop: '1px solid #836592'}}/>
+						</div>;
+					}
 					const isSelected = i.id === selected;
 					const chevron = isSelected ? <FaAngleRight style={{float: 'right'}} size={27} /> : null;
 					return <a key={i.id} onClick={this.onSelectItem}

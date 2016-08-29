@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import fulfill from 'utils/HOC/fulfill';
 import ResearchOverview from 'components/Research/ResearchOverview';
-import { getResearch } from 'actions/researchActions';
+import { getResearch, getResearchKPIs } from 'actions/researchActions';
 
 const FulfilledResearchOverview = fulfill(
 	ResearchOverview,
@@ -9,7 +9,7 @@ const FulfilledResearchOverview = fulfill(
 	['researchID'],
 	props => {
 		props.getResearch(props.researchID);
-		// TODO
+		props.getResearchKPIs(props.researchID);
 	}
 );
 
@@ -41,6 +41,7 @@ const ResearchOverviewContainer = connect(
 	function mapDispatchToProps(dispatch) {
 		return {
 			getResearch: researchID => dispatch(getResearch(researchID)),
+			getResearchKPIs: researchID => dispatch(getResearchKPIs(researchID)),
 		};
 	}
 )(FulfilledResearchOverview);

@@ -31,19 +31,23 @@ const ResearchOverview = (props) => {
 	let kpisPane;
 	if (props.results && props.results.kpiSets &&  props.results.kpiSets.length > 0) {
 		const kpis = props.results.kpiSets[0].kpis.filter(k => k.categoryType === 'KpiValue');
-		kpisPane = (
-			<div>
-				<div className="pane-title">KPIs</div>
-				<div className="dashboard-pane results-pane"
-					style={{flexWrap: 'wrap'}}>
-					{kpis.map(kpi => {
-						const kpiID = kpi.kpiID;
-						const kpiDefinition = props.model.KPIs.find(k => k.kpiID === kpiID);
-						return <KPIQuickView key={`kpi-${kpiID}`} kpiResult={kpi} kpi={kpiDefinition} />
-					})}
+		const kpiViews = kpis.map(kpi => {
+			const kpiID = kpi.kpiID;
+			const kpiDefinition = props.model.KPIs.find(k => k.kpiID === kpiID);
+			if (!kpiDefinition) { return null; }
+			return <KPIQuickView key={`kpi-${kpiID}`} kpiResult={kpi} kpi={kpiDefinition} />
+		});
+		if (kpiViews.filter(k => k !== null).length > 0) {
+			kpisPane = (
+				<div>
+					<div className="pane-title">KPIs</div>
+					<div className="dashboard-pane results-pane"
+						style={{flexWrap: 'wrap'}}>
+						{kpiViews}
+					</div>
 				</div>
-			</div>
-		);
+			);
+		}
 	}
 
 	return <div>

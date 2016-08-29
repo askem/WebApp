@@ -10,7 +10,7 @@ const getTeamUser = () => localStorage._teamUser;
 const setTeamUser = (user) => { localStorage._teamUser = user; };
 
 const UserChooser = (props) => {
-	const users = ['IH', 'ZR', 'YH', 'TB', 'MT', 'NM'];
+	const users = ['IH', 'ZR', 'YH', 'TB', 'MT', 'JZ', 'NM'];
 	return <div>
 		{users.map(u => {
 			const boundChoose = props.onChoose.bind(this, u);
