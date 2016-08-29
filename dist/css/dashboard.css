@@ -349,7 +349,7 @@ h1,h2,h3,h4 {
 
 .dashboard-sidebar .sidebar-item.selected {
 	 background-color: rgba(255,255,255,.1);
-	 font-weight: bold;
+	 /*font-weight: bold;*/
  }
 
 .dashboard-main {

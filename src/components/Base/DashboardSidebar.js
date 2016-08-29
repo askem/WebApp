@@ -17,7 +17,7 @@ const items = [
 	{id: 'brief', title: 'Brief', icon: <FaListUl size={27} style={iconStyle}/>},
 	{id: 'media', title: 'Media Plan', icon: <MdContentPaste size={27} style={iconStyle}/>},
 	{id: 'tagging', title: 'Tagging', icon: <FaTags size={27} style={iconStyle}/>},
-	{id: 'audiences', title: 'Audiences', icon: <FaGroup size={27} style={iconStyle}/>},
+	{id: 'audiences', title: 'Audiences', icon: <FaGroup size={25} style={iconStyle}/>},
 	{id: 'samplings', title: 'Samples', icon: <TiPipette size={27} style={iconStyle}/>},
 	{id: 'survey', title: 'Survey', icon: <FaPieChart size={27} style={iconStyle}/>},
 	{id: 'results', title: 'Results', icon: <FaCheckCircleO size={27} style={iconStyle}/>}

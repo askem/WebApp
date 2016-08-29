@@ -270,7 +270,7 @@ class ModelInputsWizard extends React.Component {
 			<div>
 				<div className="brief-wizard">
 					<div className="inputs">
-						<div className="pane" style={{width: '90%'}}>
+						<div className="pane results-pane" style={{width: '90%'}}>
 							{vars.map((v, idx) => this.renderVariableInput(v, varValues[idx]))}
 						</div>
 						<WizardProgressButtons style={{width: '90%'}} canGoBack={true} canGoFwd={questionIdx < this.questions.length - 1}

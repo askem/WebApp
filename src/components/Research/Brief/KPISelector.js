@@ -33,11 +33,12 @@ class KPISelector extends React.Component {
 		}
 
 		);
-		return (
-			<div className="pane">
-				{groups}
-			</div>
-		);
+		return <div>
+				<div className="pane-title" style={{width: '70%'}}>Select KPIs</div>
+				<div className="pane results-pane">
+					{groups}
+				</div>
+			</div>;
 	}
 }
 KPISelector.propTypes = {
