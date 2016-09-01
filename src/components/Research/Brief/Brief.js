@@ -11,9 +11,20 @@ class Brief extends React.Component {
 		this.startEditing = this.startEditing.bind(this);
 		this.stopEditing = this.stopEditing.bind(this);
 		this.saveChanges = this.saveChanges.bind(this);
+		this.savingFailed = this.savingFailed.bind(this);
 		this.state = {
 			editing: false,
 			saving: false
+		}
+	}
+	componentWillReceiveProps(nextProps) {
+		if (this.state.saving && this.props.researchCommits &&
+		!this.props.researchCommits.inProgress) {
+			if (this.props.researchCommits.success) {
+				this.refs.savingProgresButton.success(this.stopEditing);
+			} else {
+				this.refs.savingProgresButton.error(this.savingFailed);
+			}
 		}
 	}
 	startEditing() {
@@ -32,10 +43,15 @@ class Brief extends React.Component {
 			editing: false
 		});
 	}
+	savingFailed() {
+		this.setState({
+			saving: false
+		})
+	}
 	render() {
 		if (this.state.editing) {
 			const saveButtonState = this.state.saving ? 'loading' : '';
-			const saveButton = <ProgressButton state={saveButtonState}
+			const saveButton = <ProgressButton ref="savingProgresButton" state={saveButtonState}
 				onClick={this.saveChanges}>Save Changes</ProgressButton>;
 			// const saveButton = <RaisedButton backgroundColor="#9665aa" labelColor="#ffffff"
 			// 	label="Done" onClick={this.stopEditing} />;

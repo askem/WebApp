@@ -21,11 +21,13 @@ const BriefContainer = connect(
 		if (research) { research = research.toJS(); }
 		let model = state.getIn(['data', 'model']);
 		if (model) { model = model.toJS(); }
-
+		let researchCommits = state.getIn(['commits', 'commitResearchData', researchID]);
+		if (researchCommits) { researchCommits = researchCommits.toJS(); }
 		return {
 			model,
 			research,
-			researchID
+			researchID,
+			researchCommits,
 		};
 	},
 	function mapDispatchToProps(dispatch) {

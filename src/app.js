@@ -6,6 +6,7 @@ import Immutable from 'immutable';
 import { combineReducers } from 'redux-immutable';
 import dataReducer from 'reducers/dataReducer';
 import routingReducer from 'reducers/routingReducer';
+import commitsReducer from 'reducers/commitsReducer';
 import dashboardRouter from 'dashboardRouter';
 import logger from 'middleware/logger';
 
@@ -47,7 +48,8 @@ const initialState = Immutable.fromJS({
 
 const rootReducer = combineReducers({
 	data: dataReducer,
-	routing: routingReducer
+	routing: routingReducer,
+	commits: commitsReducer,
 });
 
 const store = createStore(
