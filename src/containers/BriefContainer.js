@@ -2,14 +2,15 @@ import { connect } from 'react-redux';
 import fulfill from 'utils/HOC/fulfill';
 import Brief from 'components/Research/Brief/Brief';
 import * as actions from 'actions/briefActions';
+import { getResearch, commitResearchData } from 'actions/researchActions';
 
 const FulfilledBrief = fulfill(
 	Brief,
-	['research', 'modelData'],
+	['research'],
 	['researchID'],
 	props => {
 		// TODO
-		//props.getBrief(props.researchID);
+		props.getResearch(props.researchID);
 	}
 );
 
@@ -20,21 +21,20 @@ const BriefContainer = connect(
 		if (research) { research = research.toJS(); }
 		let model = state.getIn(['data', 'model']);
 		if (model) { model = model.toJS(); }
-		let modelData = state.getIn(['data', 'researchModelData', researchID]);
-		if (modelData) { modelData = modelData.toJS(); }
 
 		return {
 			model,
-			modelData,
 			research,
 			researchID
 		};
 	},
 	function mapDispatchToProps(dispatch) {
 		return {
+			getResearch: researchID => dispatch(getResearch(researchID)),
 			setResearchKPIs: (researchID, kpis) => dispatch(actions.setResearchKPIs(researchID, kpis)),
 			toggleResearchKPI: (researchID, kpi) => dispatch(actions.toggleResearchKPI(researchID, kpi)),
 			onModelVariableChange: (researchID, variableID, value) => dispatch(actions.setModelVariable(researchID, variableID, value)),
+			commitResearchData: researchID => dispatch(commitResearchData(researchID)),
 		};
 	}
 )(FulfilledBrief);

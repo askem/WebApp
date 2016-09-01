@@ -6,8 +6,67 @@ const mockData = {
 			name: 'Alcon 2016-06',
 			modelID: 'dce',
 			modelVersion: '0.1',
-			kpis: ['exposure_targeting', 'intent_purchase'],
-			samplings:[0, 1]
+			kpiBindings: null,
+			samplings:[0, 1],
+			modelData: {
+			"modelID": "dce",
+			"modelVersion": "0.1",
+			"locale": "he-IL",
+			"variableValues": [
+				{"id": "brandCategory", "value": "orange juice"},
+				{"id": "consumeVerb", "value": "drink"},
+				{"id": "consumptionCategories", "value": [
+					"Freshly squeezed only",
+					"Botteled fresh orange juice",
+					"Orange Soft drinks"
+				]},
+				{"id": "competitors", "value": [
+					"Second Ready",
+					"Florida's Favorite",
+					"Tropicazza",
+					"Simpsons"
+				]},
+				{"id": "brandName", "value": "Orange Only"},
+				{"id": "productName", "value": "Orange Only 100%"},
+				{"id": "shortAdDescription", "value": "2 women crashed into an truck delivering orange crates"},
+				{"id": "adMessage", "value": "It is the freshest"},
+				{"id": "adAltMessages", "value": [
+					"It is the tastiest",
+					"It is made out of natural ingrediants ",
+					"It is the healthiest",
+				]},
+				{"id": "categoryImage1", "value":{"mediaID": "fd19dfde-83e1-4a81-b970-3aaa6fc38ffe"}},
+				{"id": "categoryImage2", "value":{"mediaID": "f0cb1b43-8474-49b9-a4c7-a3839de8d5f5"}},
+				{"id": "categoryImage3", "value":{"mediaID": "293a040a-f4ce-48f6-ae1e-b75870b56ac7"}},
+				{"id": "goldenFrame1", "value":{"mediaID": "12c8920c-fa9f-420b-bf3c-6e1003467059"}},
+				{"id": "goldenFrame2", "value":{"mediaID": "f26a7295-5a00-4468-be3e-bf4315b63c60"}},
+				{"id": "goldenFrame3", "value":{"mediaID": "ad3bbbeb-0a6a-462e-824e-452019440764"}},
+				{"id": "atmosphereImages", "value":
+					[
+						{"value": {"mediaID": "{GUID}", "crop": "0,0,100,100"}},
+						{"value": {"mediaID": "{GUID}", "crop": "0,0,100,100"}},
+					]
+				}
+			],
+			"requiredKPIs": ["exposure_targeting", "recall_campaign"],
+
+			"survey": {
+
+			},
+			"analysisLogic": {
+				"KPIBinding":
+					[
+						{"kpiID": "exposure_targeting", "answersBingding":[42364554672, 42364554673]},
+						{"kpiID": "recall_campaign", "answersBingding":[]},
+						{"kpiID": "recall_brand", "answersBingding":[]},
+						{"kpiID": "recall_message", "answersBingding":[]},
+						{"kpiID": "awareness_brand", "answersBingding":[]},
+						{"kpiID": "awareness_presenter", "answersBingding":[]},
+						{"kpiID": "brand_preference", "answersBingding":[]},
+						{"kpiID": "purchase_intent", "answersBingding":[]},
+					]
+				}
+			}
 		}
 	},
 	samplings: {
@@ -1144,68 +1203,6 @@ const mockData = {
 			}
 		]
 	},
-
-	researchModelData: {
-		1073: {
-			"modelID": "dce",
-			"modelVersion": "0.1",
-			"locale": "he-IL",
-			"variableValues": [
-				{"id": "brandCategory", "value": "orange juice"},
-				{"id": "consumeVerb", "value": "drink"},
-				{"id": "consumptionCategories", "value": [
-					"Freshly squeezed only",
-					"Botteled fresh orange juice",
-					"Orange Soft drinks"
-				]},
-				{"id": "competitors", "value": [
-					"Second Ready",
-					"Florida's Favorite",
-					"Tropicazza",
-					"Simpsons"
-				]},
-				{"id": "brandName", "value": "Orange Only"},
-				{"id": "productName", "value": "Orange Only 100%"},
-				{"id": "shortAdDescription", "value": "2 women crashed into an truck delivering orange crates"},
-				{"id": "adMessage", "value": "It is the freshest"},
-				{"id": "adAltMessages", "value": [
-					"It is the tastiest",
-					"It is made out of natural ingrediants ",
-					"It is the healthiest",
-				]},
-				{"id": "categoryImage1", "value":{"mediaID": "fd19dfde-83e1-4a81-b970-3aaa6fc38ffe"}},
-				{"id": "categoryImage2", "value":{"mediaID": "f0cb1b43-8474-49b9-a4c7-a3839de8d5f5"}},
-				{"id": "categoryImage3", "value":{"mediaID": "293a040a-f4ce-48f6-ae1e-b75870b56ac7"}},
-				{"id": "goldenFrame1", "value":{"mediaID": "12c8920c-fa9f-420b-bf3c-6e1003467059"}},
-				{"id": "goldenFrame2", "value":{"mediaID": "f26a7295-5a00-4468-be3e-bf4315b63c60"}},
-				{"id": "goldenFrame3", "value":{"mediaID": "ad3bbbeb-0a6a-462e-824e-452019440764"}},
-				{"id": "atmosphereImages", "value":
-					[
-						{"value": {"mediaID": "{GUID}", "crop": "0,0,100,100"}},
-						{"value": {"mediaID": "{GUID}", "crop": "0,0,100,100"}},
-					]
-				}
-			],
-			"requiredKPIs": ["exposure_targeting_score", "recall_campaign"],
-
-			"survey": {
-
-			},
-			"analysisLogic": {
-				"KPIBinding":
-					[
-						{"kpiID": "exposure_targeting_score", "answersBingding":[42364554672, 42364554673]},
-						{"kpiID": "recall_campaign", "answersBingding":[]},
-						{"kpiID": "recall_brand", "answersBingding":[]},
-						{"kpiID": "recall_message", "answersBingding":[]},
-						{"kpiID": "awareness_brand", "answersBingding":[]},
-						{"kpiID": "awareness_presenter", "answersBingding":[]},
-						{"kpiID": "brand_preference", "answersBingding":[]},
-						{"kpiID": "purchase_intent", "answersBingding":[]},
-					]
-				}
-			}
-	}
 
 };
 

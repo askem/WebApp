@@ -16,5 +16,13 @@ const getResearchKPIs = researchID => {
 	}
 };
 
+const commitResearchData = researchID => {
+	return {
+		type: 'COMMIT_RESEARCH_DATA',
+		payload: {
+			researchID
+		}
+	}
+};
 
-export { getResearch, getResearchKPIs };
+export { getResearch, getResearchKPIs, commitResearchData };

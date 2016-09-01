@@ -5,7 +5,7 @@ import { getMediaPlan } from 'actions/mediaPlanActions';
 
 const FulfilledTagging = fulfill(
 	Tagging,
-	['mediaPlan'],//,taggingStatus
+	['mediaPlan', 'taggingStatus'],
 	['researchID'],
 	props => {
 		props.getMediaPlan(props.researchID);

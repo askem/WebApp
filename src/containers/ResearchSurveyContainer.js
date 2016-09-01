@@ -14,7 +14,7 @@ const ResearchSurveyContainer = connect(
 			survey = survey.toJS();
 
 			const vars = state.getIn(['data', 'model', 'variables']).toJS();
-			const researchVarValues = state.getIn(['data', 'researchModelData', researchID, 'variableValues']).toJS();
+			const researchVarValues = state.getIn(['data', 'researchCampaigns', researchID, 'modelData', 'variableValues']).toJS();
 			const valueFinder = v => {
 				let value = researchVarValues.find(val => val.id === v.id);
 				if (value) { value = value.value; }

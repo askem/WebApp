@@ -8,11 +8,11 @@ export default function(state=initialState, action) {
 	case 'SET_MODEL':
 		return state.set('model', Map(action.payload));
 	case 'SET_RESEARCH_KPIS':
-		return state.setIn(['researchCampaigns', action.payload.researchID, 'kpis'], List(action.payload.kpis));
+		return state.setIn(['researchCampaigns', action.payload.researchID, 'modelData', 'requiredKPIs'], List(action.payload.kpis));
 	case 'TOGGLE_RESEARCH_KPI':
 		const k = action.payload.kpi;
 		const allKPIs = state.getIn(['model', 'KPIs']).toJS();
-		return state.updateIn(['researchCampaigns', action.payload.researchID, 'kpis'], kpis => {
+		return state.updateIn(['researchCampaigns', action.payload.researchID, 'modelData', 'requiredKPIs'], kpis => {
 			const idx = kpis.keyOf(k);
 			if (idx === undefined) {
 				// Adding
@@ -40,7 +40,7 @@ export default function(state=initialState, action) {
 			id: varID,
 			value: Immutable.fromJS(action.payload.value)
 		});
-		return state.updateIn(['researchModelData', action.payload.researchID, 'variableValues'], values => {
+		return state.updateIn(['researchCampaigns', action.payload.researchID, 'modelData', 'variableValues'], values => {
 			const idx = values.findKey(v => v.get('id') === varID);
 			if (idx !== undefined) {
 				return values.set(idx, newValue);
@@ -49,8 +49,10 @@ export default function(state=initialState, action) {
 			}
 		});
 	case 'FETCH_RESEARCH_SUCCESS':
+		let research = action.payload.research;
+		research.modelData = JSON.parse(research.modelData || '{}');
 		return state.setIn(['researchCampaigns', action.payload.researchID],
-			Immutable.fromJS(action.payload.research));
+			Immutable.fromJS(research));
 	case 'FETCH_RESEARCH_FAIL':
 		return state.setIn(['researchCampaigns', action.payload.researchID],
 			Immutable.fromJS({

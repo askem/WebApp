@@ -54,4 +54,36 @@ const fetchResearchKPIs = createLogic({
 	}
 });
 
-export { fetchResearch, fetchResearchKPIs };
+const commitResearchData = createLogic({
+	type: 'COMMIT_RESEARCH_DATA',
+	cancelType: 'CANCEL_COMMIT_RESEARCH_DATA',
+	latest: true,
+	validate({ getState, action }, allow, reject) {
+		const researchID = action.payload.researchID;
+		let modelData = getState().getIn(['data', 'researchCampaigns', researchID, 'modelData']);
+		if (!modelData || modelData.get('loadingFail')) {
+			reject(action);
+		}
+		modelData = modelData.toJS();
+		const kpiBindings = null;
+		const surveyID = null;
+		action.payload.modelData = modelData;
+		action.payload.kpiBindings = kpiBindings;
+		action.payload.surveyID = surveyID;
+		allow(action);
+	},
+	process({ getState, action, api }, dispatch) {
+		const researchID = action.payload.researchID;
+    	return api.updateResearchData(researchID, action.payload.modelData, action.payload.kpiBindings, action.payload.surveyID)
+		.then(result => dispatch({ type: 'COMMIT_RESEARCH_DATA_SUCCESS', payload: {
+			researchID,
+
+		}}))
+	    .catch(error => dispatch({ type: 'COMMIT_RESEARCH_DATA_FAIL', payload: {
+			researchID,
+			error
+		}, error: true }));
+	}
+});
+
+export { fetchResearch, fetchResearchKPIs, commitResearchData };

@@ -1,3 +1,11 @@
+const defaultModelData = {
+	"modelID": "dce",
+	"modelVersion": "0.1",
+	"locale": "en-US",
+	"variableValues": [],
+	"requiredKPIs": ["exposure_targeting"]
+};
+
 class AskemAPI {
 	constructor(props = {}) {
 		this._baseURI = props.baseURI || 'https://api.askem.com/0/';
@@ -64,6 +72,20 @@ class AskemAPI {
 	}
 	fetchSamplingKPIs(samplingID) {
 		return this.fetchEndpoint(`samplings/${samplingID}/kpis`);
+	}
+	updateResearchData(researchID, modelData, kpiBindings, surveyID) {
+		return this.fetchEndpoint(`researchCampaigns/${researchID}`, {
+			modelData: JSON.stringify(modelData),
+			kpiBindings,
+			surveyID
+		});
+	}
+	createResearchCampaign(name, description, modelData = defaultModelData) {
+		return this.fetchEndpoint(`researchCampaigns`, {
+			name,
+			description,
+			modelData: JSON.stringify(modelData)
+		});
 	}
 
 	/* API - Not yet implemented */

@@ -175,12 +175,12 @@ class ModelInputsWizard extends React.Component {
 		this.initWizard(props);
 	}
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.research.kpis.join(',') !== this.props.research.kpis.join(',')) {
+		if (nextProps.research.modelData.requiredKPIs.join(',') !== this.props.research.modelData.requiredKPIs.join(',')) {
 			this.initWizard(nextProps);
 		}
 	}
 	initWizard(props) {
-		const kpis = props.research.kpis;
+		const kpis = props.research.modelData.requiredKPIs
 		const relevantQuestions = props.model.survey.questions.filter(
 			q => q.kpis === null || intersection(q.kpis, kpis).length > 0);
 
@@ -250,7 +250,7 @@ class ModelInputsWizard extends React.Component {
 		const questionIdx = this.state.questionIdx;
 		if (questionIdx < 0) {
 			return <div>
-				<KPISelector {...this.props} selected={new Set(this.props.research.kpis)} />
+				<KPISelector {...this.props} selected={new Set(this.props.research.modelData.requiredKPIs)} />
 				<WizardProgressButtons canGoFwd={true} goFwd={this.goFwd} />
 			</div>;
 		}
@@ -260,7 +260,7 @@ class ModelInputsWizard extends React.Component {
 		const qTemplate = this.questions[questionIdx];
 		const vars = this.variablesPerQuestion[qTemplate.questionID];
 		const valueFinder = v => {
-			let value = this.props.modelData.variableValues.find(val => val.id === v.id);
+			let value = this.props.research.modelData.variableValues.find(val => val.id === v.id);
 			if (value) { value = value.value; }
 			return value;
 		};
@@ -292,7 +292,6 @@ class ModelInputsWizard extends React.Component {
 
 ModelInputsWizard.propTypes = {
 	model: React.PropTypes.object.isRequired,
-	modelData: React.PropTypes.object.isRequired,
 	researchID: React.PropTypes.string.isRequired,
 	research: React.PropTypes.object.isRequired,
 	onModelVariableChange: React.PropTypes.func.isRequired

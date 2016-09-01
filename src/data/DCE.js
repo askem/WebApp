@@ -9,7 +9,7 @@ const dceModel =
 		{"id": "brandName", "name": "Brand Name","description":"", "type": "string", "defaultValue": null, "validations": {"length": 40}},
 		{"id": "productName", "name": "Product Name","description":"", "type": "string", "defaultValue": null, "validations": {"length": 40}},
 		{"id": "consumptionCategories", "name": "Consumption Categories", "description":"", "type": "string[]", "hint": "Consumption Category #{{#}}", "defaultValue": null, "validations": {"min": 1, "max": 4}},
-		{"id": "consumeVerb", "name": "Consumtion Verb", "description":"How do people consume your product?", "type": "string", "defaultValue": "buy"},
+		{"id": "consumeVerb", "name": "Consumption Verb", "description":"How do people consume your product?", "type": "string", "defaultValue": "buy"},
 		{"id": "brandCategory", "name": "Brand Category", "description":"", "type": "category", "defaultValue": null},
 		{"id": "shortAdDescription", "name": "Short Ad Description", "description":"", "type": "string", "defaultValue": null},
 		{"id": "competitors", "name": "Major Competitors", "description":"", "type": "string[]", "hint": "Competitor #{{#}}", "defaultValue": null, "validations": {"length": 40, "min": 1, "max": 4}},
@@ -488,7 +488,7 @@ const dceModel =
 	"analysisLogic": {
 		"KPIBinding":
 			[
-				{"kpiID": "exposure_targeting_score", "answersBingding":[101, 102]},
+				{"kpiID": "exposure_targeting", "answersBingding":[101, 102]},
 				{"kpiID": "recall_campaign", "answersBingding":[]},
 				{"kpiID": "recall_brand", "answersBingding":[]},
 				{"kpiID": "recall_message", "answersBingding":[]},

@@ -3,20 +3,29 @@ import { Breadcrumb } from 'react-bootstrap';
 import GoHome from 'react-icons/lib/go/home';
 import ModelInputsWizard from 'components/Research/Brief/ModelInputsWizard'
 import RaisedButton from 'material-ui/RaisedButton';
+import ProgressButton from 'react-progress-button';
 
 class Brief extends React.Component {
 	constructor(props) {
     	super(props);
 		this.startEditing = this.startEditing.bind(this);
 		this.stopEditing = this.stopEditing.bind(this);
+		this.saveChanges = this.saveChanges.bind(this);
 		this.state = {
-			editing: false
+			editing: false,
+			saving: false
 		}
 	}
 	startEditing() {
 		this.setState({
 			editing: true
 		});
+	}
+	saveChanges() {
+		this.setState({
+			saving: true
+		});
+		this.props.commitResearchData(this.props.researchID);
 	}
 	stopEditing() {
 		this.setState({
@@ -25,9 +34,13 @@ class Brief extends React.Component {
 	}
 	render() {
 		if (this.state.editing) {
+			const saveButtonState = this.state.saving ? 'loading' : '';
+			const saveButton = <ProgressButton state={saveButtonState}
+				onClick={this.saveChanges}>Save Changes</ProgressButton>;
+			// const saveButton = <RaisedButton backgroundColor="#9665aa" labelColor="#ffffff"
+			// 	label="Done" onClick={this.stopEditing} />;
 			return <div>
 				<ModelInputsWizard model={this.props.model}
-						modelData={this.props.modelData}
 						researchID={this.props.researchID}
 						research={this.props.research}
 						onModelVariableChange={this.props.onModelVariableChange}
@@ -35,13 +48,12 @@ class Brief extends React.Component {
 					<div style={{width: '70%', textAlign: 'right',
 						marginTop: 30,
 						marginRight: 'auto', marginLeft: 'auto'}}>
-						<RaisedButton backgroundColor="#9665aa" labelColor="#ffffff"
-							label="Done" onClick={this.stopEditing} />
+						{saveButton}
 					</div>
 			</div>
 		}
 
-		const selected = new Set(this.props.research.kpis);
+		const selected = new Set(this.props.research.modelData.requiredKPIs);
 		const selectedKPIs = this.props.model.KPIGroups.map(group => {
 			const kpis = this.props.model.KPIs.filter(
 				k => k.groupID === group.groupID && selected.has(k.kpiID));
@@ -70,7 +82,6 @@ class Brief extends React.Component {
 
 Brief.propTypes = {
 	model: React.PropTypes.object.isRequired,
-	modelData: React.PropTypes.object.isRequired,
 	researchID: React.PropTypes.string.isRequired,
 	research: React.PropTypes.object.isRequired,
 	toggleResearchKPI: React.PropTypes.func.isRequired,

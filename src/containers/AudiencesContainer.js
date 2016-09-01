@@ -1,6 +1,16 @@
 import { connect } from 'react-redux';
+import fulfill from 'utils/HOC/fulfill';
 import Audiences from 'components/Research/Audiences/Audiences';
 import addAudience from 'actions/addAudience';
+
+const FulfilledAudiences = fulfill(
+	Audiences,
+	['audiences'],
+	['researchID'],
+	props => {
+		//props.getAudiences(props.researchID);
+	}
+);
 
 const AudiencesContainer = connect(
 	function mapStateToProps(state, ownProps) {
@@ -22,6 +32,6 @@ const AudiencesContainer = connect(
 			onAddAudience: (researchID, audienceSource, audienceIDs) => dispatch(addAudience(researchID, audienceSource, audienceIDs))
 		};
 	}
-)(Audiences);
+)(FulfilledAudiences);
 
 export default AudiencesContainer;
