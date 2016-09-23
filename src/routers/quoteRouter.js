@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Route, IndexRoute, browserHistory, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 
-import DashboardFrame from 'components/base/DashboardFrame';
+import QuoteFrame from 'components/base/QuoteFrame';
 
 const DummyComponent = () => (
 	<div style={{color:'red'}}></div>
@@ -17,7 +17,7 @@ const quoteRouter = (store) =>  {
 	});
 
 	return <Router history={history}>
-		<Route component={DashboardFrame}>
+		<Route component={QuoteFrame}>
 			<Route path="/" component={DummyComponent} />
 		</Route>
 	</Router>;
