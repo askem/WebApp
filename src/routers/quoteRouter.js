@@ -3,6 +3,7 @@ import { Router, Route, IndexRoute, browserHistory, hashHistory } from 'react-ro
 import { syncHistoryWithStore } from 'react-router-redux';
 
 import QuoteFrame from 'components/base/QuoteFrame';
+import QuoteWizardContainer from 'containers/QuoteWizardContainer';
 
 const DummyComponent = () => (
 	<div style={{color:'red'}}></div>
@@ -18,7 +19,7 @@ const quoteRouter = (store) =>  {
 
 	return <Router history={history}>
 		<Route component={QuoteFrame}>
-			<Route path="/" component={DummyComponent} />
+			<Route path="/" component={QuoteWizardContainer} />
 		</Route>
 	</Router>;
 }

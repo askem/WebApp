@@ -42,7 +42,17 @@ window.api = api;
 
 
 const initialState = Immutable.fromJS({
-	data: {}
+	data: {
+		demographics: {
+			gender: {
+				male: true,
+				female: true
+			},
+			ageGroups: [
+				
+			]
+		}
+	}
 });
 
 const rootReducer = combineReducers({

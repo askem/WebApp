@@ -587,3 +587,31 @@ h1,h2,h3,h4 {
     transform-origin: center center;
   }
 }
+
+
+
+/*   Quote		 */
+.quote-wizard-header {
+	font-family: 'Bebas Neue';
+	display: flex;
+	color: #ECEBE9;
+}
+
+.quote-wizard-header .stage {
+	display: flex;
+	align-items: center;
+	margin-right: 20px;
+}
+
+.quote-wizard-header .active {
+	color: #383362;
+}
+
+.quote-wizard-header .number {
+	font-size: 60px;
+	margin-right: 10px;
+}
+
+.quote-wizard-header .title {
+	font-size: 26px;
+}
