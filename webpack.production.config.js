@@ -4,13 +4,14 @@ const webpack = require('webpack');
 module.exports = {
 	devtool: 'source-map',
 
-	entry: [
-		path.resolve(__dirname, 'src/app.js')
-	],
+	entry: {
+		bundle: path.resolve(__dirname, 'src/app.js'),
+		quote:  path.resolve(__dirname, 'src/quote.js')
+	},
 
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'bundle.js'
+		filename: '[name].js'
 	},
 
 	module: {

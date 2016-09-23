@@ -7,7 +7,7 @@ import { combineReducers } from 'redux-immutable';
 import dataReducer from 'reducers/dataReducer';
 import routingReducer from 'reducers/routingReducer';
 import commitsReducer from 'reducers/commitsReducer';
-import dashboardRouter from 'dashboardRouter';
+import dashboardRouter from 'routers/dashboardRouter';
 import logger from 'middleware/logger';
 
 import { createLogicMiddleware } from 'redux-logic';

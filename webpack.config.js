@@ -6,15 +6,22 @@ const DashboardPlugin = require('webpack-dashboard/plugin');
 const dashboard = new Dashboard();
 
 module.exports = {
-	entry: [
-		'webpack-dev-server/client?http://0.0.0.0:3000',
-		'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
-		path.resolve(__dirname, 'src/app.js'),
-	],
+	entry: {
+		bundle: [
+			'webpack-dev-server/client?http://0.0.0.0:3000',
+			'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
+			path.resolve(__dirname, 'src/app.js'),
+		],
+		quote: [
+			'webpack-dev-server/client?http://0.0.0.0:3000',
+			'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
+			path.resolve(__dirname, 'src/quote.js'),
+		]
+	},
 
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'bundle.js'
+		filename: '[name].js'
 	},
 
 	module: {
@@ -35,7 +42,7 @@ module.exports = {
 	},
 
 	plugins: [
-		new DashboardPlugin(dashboard.setData), 
+		new DashboardPlugin(dashboard.setData),
 		new webpack.HotModuleReplacementPlugin()
 	],
 
