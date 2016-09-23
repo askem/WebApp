@@ -50,7 +50,16 @@ export default function(state=initialState, action) {
 		});
 	case 'FETCH_RESEARCH_SUCCESS':
 		let research = action.payload.research;
-		research.modelData = JSON.parse(research.modelData || '{}');
+		let modelData = {};
+		if (research.modelData) {
+			try {
+				modelData = JSON.parse(research.modelData);
+			} catch (e) { }
+		}
+		if (!modelData.requiredKPIs) {
+			modelData.requiredKPIs = ['exposure_targeting'];	// TODO: this assumes DCE
+		}
+		research.modelData = modelData;
 		return state.setIn(['researchCampaigns', action.payload.researchID],
 			Immutable.fromJS(research));
 	case 'FETCH_RESEARCH_FAIL':

@@ -180,7 +180,7 @@ class ModelInputsWizard extends React.Component {
 		}
 	}
 	initWizard(props) {
-		const kpis = props.research.modelData.requiredKPIs
+		const kpis = props.research.modelData.requiredKPIs;
 		const relevantQuestions = props.model.survey.questions.filter(
 			q => q.kpis === null || intersection(q.kpis, kpis).length > 0);
 
