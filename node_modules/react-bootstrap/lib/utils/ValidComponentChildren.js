@@ -1,14 +1,12 @@
 'use strict';
 
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-// FIXME: This should really be ValidElementChildren.
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 /**
  * Iterates through children that are typically specified as `props.children`,
@@ -44,6 +42,8 @@ function map(children, func, context) {
  * @param {function(*, int)} func.
  * @param {*} context Context for context.
  */
+// TODO: This module should be ElementChildren, and should use named exports.
+
 function forEach(children, func, context) {
   var index = 0;
 
@@ -125,6 +125,26 @@ function find(children, func, context) {
   return result;
 }
 
+function every(children, func, context) {
+  var index = 0;
+  var result = true;
+
+  _react2['default'].Children.forEach(children, function (child) {
+    if (!result) {
+      return;
+    }
+    if (!_react2['default'].isValidElement(child)) {
+      return;
+    }
+
+    if (!func.call(context, child, index++)) {
+      result = false;
+    }
+  });
+
+  return result;
+}
+
 function some(children, func, context) {
   var index = 0;
   var result = false;
@@ -145,12 +165,28 @@ function some(children, func, context) {
   return result;
 }
 
+function toArray(children) {
+  var result = [];
+
+  _react2['default'].Children.forEach(children, function (child) {
+    if (!_react2['default'].isValidElement(child)) {
+      return;
+    }
+
+    result.push(child);
+  });
+
+  return result;
+}
+
 exports['default'] = {
   map: map,
   forEach: forEach,
   count: count,
   find: find,
   filter: filter,
-  some: some
+  every: every,
+  some: some,
+  toArray: toArray
 };
 module.exports = exports['default'];

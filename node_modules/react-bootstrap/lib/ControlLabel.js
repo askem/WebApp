@@ -1,16 +1,26 @@
 'use strict';
 
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _objectWithoutProperties = require('babel-runtime/helpers/object-without-properties')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _classnames = require('classnames');
 
@@ -24,7 +34,9 @@ var _warning = require('warning');
 
 var _warning2 = _interopRequireDefault(_warning);
 
-var _utilsBootstrapUtils = require('./utils/bootstrapUtils');
+var _bootstrapUtils = require('./utils/bootstrapUtils');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var propTypes = {
   /**
@@ -42,13 +54,12 @@ var contextTypes = {
   $bs_formGroup: _react2['default'].PropTypes.object
 };
 
-var ControlLabel = (function (_React$Component) {
-  _inherits(ControlLabel, _React$Component);
+var ControlLabel = function (_React$Component) {
+  (0, _inherits3['default'])(ControlLabel, _React$Component);
 
   function ControlLabel() {
-    _classCallCheck(this, ControlLabel);
-
-    _React$Component.apply(this, arguments);
+    (0, _classCallCheck3['default'])(this, ControlLabel);
+    return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
   }
 
   ControlLabel.prototype.render = function render() {
@@ -60,29 +71,32 @@ var ControlLabel = (function (_React$Component) {
     var htmlFor = _props$htmlFor === undefined ? controlId : _props$htmlFor;
     var srOnly = _props.srOnly;
     var className = _props.className;
+    var props = (0, _objectWithoutProperties3['default'])(_props, ['htmlFor', 'srOnly', 'className']);
 
-    var props = _objectWithoutProperties(_props, ['htmlFor', 'srOnly', 'className']);
+    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props);
 
-    process.env.NODE_ENV !== 'production' ? _warning2['default'](controlId == null || htmlFor === controlId, '`controlId` is ignored on `<ControlLabel>` when `htmlFor` is specified.') : undefined;
+    var bsProps = _splitBsProps[0];
+    var elementProps = _splitBsProps[1];
 
-    delete props.bsClass;
 
-    var classes = _extends({}, _utilsBootstrapUtils.getClassSet(this.props), {
+    process.env.NODE_ENV !== 'production' ? (0, _warning2['default'])(controlId == null || htmlFor === controlId, '`controlId` is ignored on `<ControlLabel>` when `htmlFor` is specified.') : void 0;
+
+    var classes = (0, _extends3['default'])({}, (0, _bootstrapUtils.getClassSet)(bsProps), {
       'sr-only': srOnly
     });
 
-    return _react2['default'].createElement('label', _extends({}, props, {
+    return _react2['default'].createElement('label', (0, _extends3['default'])({}, elementProps, {
       htmlFor: htmlFor,
-      className: _classnames2['default'](className, classes)
+      className: (0, _classnames2['default'])(className, classes)
     }));
   };
 
   return ControlLabel;
-})(_react2['default'].Component);
+}(_react2['default'].Component);
 
 ControlLabel.propTypes = propTypes;
 ControlLabel.defaultProps = defaultProps;
 ControlLabel.contextTypes = contextTypes;
 
-exports['default'] = _utilsBootstrapUtils.bsClass('control-label', ControlLabel);
+exports['default'] = (0, _bootstrapUtils.bsClass)('control-label', ControlLabel);
 module.exports = exports['default'];

@@ -1,58 +1,38 @@
 'use strict';
 
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
 
-var _react = require('react');
+var _extends2 = require('babel-runtime/helpers/extends');
 
-var _react2 = _interopRequireDefault(_react);
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _classnames = require('classnames');
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
-var _reactOverlaysLibTransition = require('react-overlays/lib/Transition');
+var _react = require('react');
 
-var _reactOverlaysLibTransition2 = _interopRequireDefault(_reactOverlaysLibTransition);
+var _react2 = _interopRequireDefault(_react);
 
-var Fade = (function (_React$Component) {
-  _inherits(Fade, _React$Component);
+var _Transition = require('react-overlays/lib/Transition');
 
-  function Fade() {
-    _classCallCheck(this, Fade);
+var _Transition2 = _interopRequireDefault(_Transition);
 
-    _React$Component.apply(this, arguments);
-  }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-  // Explicitly copied from Transition for doc generation.
-  // TODO: Remove duplication once #977 is resolved.
-
-  Fade.prototype.render = function render() {
-    var timeout = this.props.timeout;
-
-    return _react2['default'].createElement(
-      _reactOverlaysLibTransition2['default'],
-      _extends({}, this.props, {
-        timeout: timeout,
-        className: _classnames2['default'](this.props.className, 'fade'),
-        enteredClassName: 'in',
-        enteringClassName: 'in'
-      }),
-      this.props.children
-    );
-  };
-
-  return Fade;
-})(_react2['default'].Component);
-
-Fade.propTypes = {
+var propTypes = {
   /**
    * Show the component; triggers the fade in or fade out animation
    */
@@ -102,12 +82,34 @@ Fade.propTypes = {
   onExited: _react2['default'].PropTypes.func
 };
 
-Fade.defaultProps = {
+var defaultProps = {
   'in': false,
   timeout: 300,
   unmountOnExit: false,
   transitionAppear: false
 };
+
+var Fade = function (_React$Component) {
+  (0, _inherits3['default'])(Fade, _React$Component);
+
+  function Fade() {
+    (0, _classCallCheck3['default'])(this, Fade);
+    return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
+  }
+
+  Fade.prototype.render = function render() {
+    return _react2['default'].createElement(_Transition2['default'], (0, _extends3['default'])({}, this.props, {
+      className: (0, _classnames2['default'])(this.props.className, 'fade'),
+      enteredClassName: 'in',
+      enteringClassName: 'in'
+    }));
+  };
+
+  return Fade;
+}(_react2['default'].Component);
+
+Fade.propTypes = propTypes;
+Fade.defaultProps = defaultProps;
 
 exports['default'] = Fade;
 module.exports = exports['default'];

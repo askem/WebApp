@@ -1,24 +1,26 @@
 'use strict';
 
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _objectWithoutProperties = require('babel-runtime/helpers/object-without-properties')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
-
-var _TabPane = require('./TabPane');
-
-var _TabPane2 = _interopRequireDefault(_TabPane);
 
 var _TabContainer = require('./TabContainer');
 
@@ -28,30 +30,13 @@ var _TabContent = require('./TabContent');
 
 var _TabContent2 = _interopRequireDefault(_TabContent);
 
-var Tab = (function (_React$Component) {
-  _inherits(Tab, _React$Component);
+var _TabPane = require('./TabPane');
 
-  function Tab() {
-    _classCallCheck(this, Tab);
+var _TabPane2 = _interopRequireDefault(_TabPane);
 
-    _React$Component.apply(this, arguments);
-  }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-  Tab.prototype.render = function render() {
-    var _props = this.props;
-    var title = _props.title;
-    var disabled = _props.disabled;
-    var tabClassName = _props.tabClassName;
-
-    var props = _objectWithoutProperties(_props, ['title', 'disabled', 'tabClassName']);
-
-    return _react2['default'].createElement(_TabPane2['default'], props);
-  };
-
-  return Tab;
-})(_react2['default'].Component);
-
-Tab.propTypes = _extends({}, _TabPane2['default'].propTypes, {
+var propTypes = (0, _extends3['default'])({}, _TabPane2['default'].propTypes, {
 
   disabled: _react2['default'].PropTypes.bool,
 
@@ -62,6 +47,30 @@ Tab.propTypes = _extends({}, _TabPane2['default'].propTypes, {
    */
   tabClassName: _react2['default'].PropTypes.string
 });
+
+var Tab = function (_React$Component) {
+  (0, _inherits3['default'])(Tab, _React$Component);
+
+  function Tab() {
+    (0, _classCallCheck3['default'])(this, Tab);
+    return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
+  }
+
+  Tab.prototype.render = function render() {
+    var props = (0, _extends3['default'])({}, this.props);
+
+    // These props are for the parent `<Tabs>` rather than the `<TabPane>`.
+    delete props.title;
+    delete props.disabled;
+    delete props.tabClassName;
+
+    return _react2['default'].createElement(_TabPane2['default'], props);
+  };
+
+  return Tab;
+}(_react2['default'].Component);
+
+Tab.propTypes = propTypes;
 
 Tab.Container = _TabContainer2['default'];
 Tab.Content = _TabContent2['default'];

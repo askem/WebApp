@@ -2,40 +2,31 @@
 
 exports.__esModule = true;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _common = require('./common');
+var _createChainableTypeChecker = require('./utils/createChainableTypeChecker');
 
-/**
- * Checks whether a prop provides a type of element.
- *
- * The type of element can be provided in two forms:
- * - tag name (string)
- * - a return value of React.createClass(...)
- *
- * @param props
- * @param propName
- * @param componentName
- * @returns {Error|undefined}
- */
+var _createChainableTypeChecker2 = _interopRequireDefault(_createChainableTypeChecker);
 
-function validate(props, propName, componentName) {
-  var errBeginning = _common.errMsg(props, propName, componentName, '. Expected an Element `type`');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  if (typeof props[propName] !== 'function') {
-    if (_react2['default'].isValidElement(props[propName])) {
-      return new Error(errBeginning + ', not an actual Element');
-    }
+function elementType(props, propName, componentName, location, propFullName) {
+  var propValue = props[propName];
+  var propType = typeof propValue === 'undefined' ? 'undefined' : _typeof(propValue);
 
-    if (typeof props[propName] !== 'string') {
-      return new Error(errBeginning + ' such as a tag name or return value of React.createClass(...)');
-    }
+  if (_react2.default.isValidElement(propValue)) {
+    return new Error('Invalid ' + location + ' `' + propFullName + '` of type ReactElement ' + ('supplied to `' + componentName + '`, expected an element type (a string ') + 'or a ReactClass).');
   }
+
+  if (propType !== 'function' && propType !== 'string') {
+    return new Error('Invalid ' + location + ' `' + propFullName + '` of value `' + propValue + '` ' + ('supplied to `' + componentName + '`, expected an element type (a string ') + 'or a ReactClass).');
+  }
+
+  return null;
 }
 
-exports['default'] = _common.createChainableTypeChecker(validate);
-module.exports = exports['default'];
+exports.default = (0, _createChainableTypeChecker2.default)(elementType);

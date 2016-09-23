@@ -1,16 +1,26 @@
 'use strict';
 
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _objectWithoutProperties = require('babel-runtime/helpers/object-without-properties')['default'];
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _classnames = require('classnames');
 
@@ -20,16 +30,18 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactPropTypesLibElementType = require('react-prop-types/lib/elementType');
+var _elementType = require('react-prop-types/lib/elementType');
 
-var _reactPropTypesLibElementType2 = _interopRequireDefault(_reactPropTypesLibElementType);
+var _elementType2 = _interopRequireDefault(_elementType);
 
-var _utilsBootstrapUtils = require('./utils/bootstrapUtils');
+var _bootstrapUtils = require('./utils/bootstrapUtils');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var propTypes = {
   horizontal: _react2['default'].PropTypes.bool,
   inline: _react2['default'].PropTypes.bool,
-  componentClass: _reactPropTypesLibElementType2['default']
+  componentClass: _elementType2['default']
 };
 
 var defaultProps = {
@@ -38,13 +50,12 @@ var defaultProps = {
   componentClass: 'form'
 };
 
-var Form = (function (_React$Component) {
-  _inherits(Form, _React$Component);
+var Form = function (_React$Component) {
+  (0, _inherits3['default'])(Form, _React$Component);
 
   function Form() {
-    _classCallCheck(this, Form);
-
-    _React$Component.apply(this, arguments);
+    (0, _classCallCheck3['default'])(this, Form);
+    return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
   }
 
   Form.prototype.render = function render() {
@@ -53,27 +64,32 @@ var Form = (function (_React$Component) {
     var inline = _props.inline;
     var Component = _props.componentClass;
     var className = _props.className;
+    var props = (0, _objectWithoutProperties3['default'])(_props, ['horizontal', 'inline', 'componentClass', 'className']);
 
-    var props = _objectWithoutProperties(_props, ['horizontal', 'inline', 'componentClass', 'className']);
+    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props);
 
-    delete props.bsClass;
+    var bsProps = _splitBsProps[0];
+    var elementProps = _splitBsProps[1];
+
 
     var classes = [];
     if (horizontal) {
-      classes.push(_utilsBootstrapUtils.prefix(this.props, 'horizontal'));
+      classes.push((0, _bootstrapUtils.prefix)(bsProps, 'horizontal'));
     }
     if (inline) {
-      classes.push(_utilsBootstrapUtils.prefix(this.props, 'inline'));
+      classes.push((0, _bootstrapUtils.prefix)(bsProps, 'inline'));
     }
 
-    return _react2['default'].createElement(Component, _extends({}, props, { className: _classnames2['default'](className, classes) }));
+    return _react2['default'].createElement(Component, (0, _extends3['default'])({}, elementProps, {
+      className: (0, _classnames2['default'])(className, classes)
+    }));
   };
 
   return Form;
-})(_react2['default'].Component);
+}(_react2['default'].Component);
 
 Form.propTypes = propTypes;
 Form.defaultProps = defaultProps;
 
-exports['default'] = _utilsBootstrapUtils.bsClass('form', Form);
+exports['default'] = (0, _bootstrapUtils.bsClass)('form', Form);
 module.exports = exports['default'];

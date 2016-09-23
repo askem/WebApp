@@ -1,10 +1,26 @@
 'use strict';
 
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _classnames = require('classnames');
 
@@ -14,35 +30,54 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactPropTypesLibElementType = require('react-prop-types/lib/elementType');
+var _elementType = require('react-prop-types/lib/elementType');
 
-var _reactPropTypesLibElementType2 = _interopRequireDefault(_reactPropTypesLibElementType);
+var _elementType2 = _interopRequireDefault(_elementType);
 
-var CarouselCaption = _react2['default'].createClass({
-  displayName: 'Carousel.Caption',
-  propTypes: {
-    /**
-     * You can use a custom element for this component
-     */
-    componentClass: _reactPropTypesLibElementType2['default']
-  },
+var _bootstrapUtils = require('./utils/bootstrapUtils');
 
-  getDefaultProps: function getDefaultProps() {
-    return {
-      componentClass: 'div'
-    };
-  },
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-  render: function render() {
-    var ComponentClass = this.props.componentClass;
+var propTypes = {
+  componentClass: _elementType2['default']
+};
 
-    return _react2['default'].createElement(
-      ComponentClass,
-      _extends({}, this.props, { className: _classnames2['default'](this.props.className, 'carousel-caption') }),
-      this.props.children
-    );
+var defaultProps = {
+  componentClass: 'div'
+};
+
+var CarouselCaption = function (_React$Component) {
+  (0, _inherits3['default'])(CarouselCaption, _React$Component);
+
+  function CarouselCaption() {
+    (0, _classCallCheck3['default'])(this, CarouselCaption);
+    return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
   }
-});
 
-exports['default'] = CarouselCaption;
+  CarouselCaption.prototype.render = function render() {
+    var _props = this.props;
+    var Component = _props.componentClass;
+    var className = _props.className;
+    var props = (0, _objectWithoutProperties3['default'])(_props, ['componentClass', 'className']);
+
+    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props);
+
+    var bsProps = _splitBsProps[0];
+    var elementProps = _splitBsProps[1];
+
+
+    var classes = (0, _bootstrapUtils.getClassSet)(bsProps);
+
+    return _react2['default'].createElement(Component, (0, _extends3['default'])({}, elementProps, {
+      className: (0, _classnames2['default'])(className, classes)
+    }));
+  };
+
+  return CarouselCaption;
+}(_react2['default'].Component);
+
+CarouselCaption.propTypes = propTypes;
+CarouselCaption.defaultProps = defaultProps;
+
+exports['default'] = (0, _bootstrapUtils.bsClass)('carousel-caption', CarouselCaption);
 module.exports = exports['default'];

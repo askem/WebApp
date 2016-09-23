@@ -1,3 +1,14 @@
+## [v0.4.0]
+> 2016-07-29
+
+- **Breaking:** Remove `keyOf` and `singlePropFrom` ([#26])
+- **Breaking:** Rename `mountable` to `componentOrElement` ([#26])
+- **Bugfix:** Pass through additional arguments to wrapped validators ([#26])
+
+[v0.4.0]: https://github.com/react-bootstrap/react-prop-types/compare/v0.3.2...v0.4.0
+[#26]: https://github.com/react-bootstrap/react-prop-types/pull/26
+
+
 ## [v0.3.2]
 > 2016-05-13
 

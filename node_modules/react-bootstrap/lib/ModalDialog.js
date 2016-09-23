@@ -1,10 +1,26 @@
 'use strict';
 
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
+
+var _extends3 = require('babel-runtime/helpers/extends');
+
+var _extends4 = _interopRequireDefault(_extends3);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _classnames = require('classnames');
 
@@ -14,52 +30,73 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _styleMaps = require('./styleMaps');
+var _bootstrapUtils = require('./utils/bootstrapUtils');
 
-var _utilsBootstrapUtils = require('./utils/bootstrapUtils');
+var _StyleConfig = require('./utils/StyleConfig');
 
-/* eslint-disable react/prop-types */
-var ModalDialog = _react2['default'].createClass({
-  displayName: 'ModalDialog',
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-  propTypes: {
-    /**
-     * A css class to apply to the Modal dialog DOM node.
-     */
-    dialogClassName: _react2['default'].PropTypes.string
-  },
+var propTypes = {
+  /**
+   * A css class to apply to the Modal dialog DOM node.
+   */
+  dialogClassName: _react2['default'].PropTypes.string
+};
 
-  render: function render() {
-    var modalStyle = _extends({
-      display: 'block'
-    }, this.props.style);
-    var bsClassPrefix = _utilsBootstrapUtils.prefix(this.props);
-    var dialogClasses = _utilsBootstrapUtils.getClassSet(this.props);
+var ModalDialog = function (_React$Component) {
+  (0, _inherits3['default'])(ModalDialog, _React$Component);
 
-    delete dialogClasses[bsClassPrefix];
-    dialogClasses[_utilsBootstrapUtils.prefix(this.props, 'dialog')] = true;
+  function ModalDialog() {
+    (0, _classCallCheck3['default'])(this, ModalDialog);
+    return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
+  }
+
+  ModalDialog.prototype.render = function render() {
+    var _extends2;
+
+    var _props = this.props;
+    var dialogClassName = _props.dialogClassName;
+    var className = _props.className;
+    var style = _props.style;
+    var children = _props.children;
+    var props = (0, _objectWithoutProperties3['default'])(_props, ['dialogClassName', 'className', 'style', 'children']);
+
+    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props);
+
+    var bsProps = _splitBsProps[0];
+    var elementProps = _splitBsProps[1];
+
+
+    var bsClassName = (0, _bootstrapUtils.prefix)(bsProps);
+
+    var modalStyle = (0, _extends4['default'])({ display: 'block' }, style);
+
+    var dialogClasses = (0, _extends4['default'])({}, (0, _bootstrapUtils.getClassSet)(bsProps), (_extends2 = {}, _extends2[bsClassName] = false, _extends2[(0, _bootstrapUtils.prefix)(bsProps, 'dialog')] = true, _extends2));
 
     return _react2['default'].createElement(
       'div',
-      _extends({}, this.props, {
-        title: null,
+      (0, _extends4['default'])({}, elementProps, {
         tabIndex: '-1',
         role: 'dialog',
         style: modalStyle,
-        className: _classnames2['default'](this.props.className, bsClassPrefix)
+        className: (0, _classnames2['default'])(className, bsClassName)
       }),
       _react2['default'].createElement(
         'div',
-        { className: _classnames2['default'](this.props.dialogClassName, dialogClasses) },
+        { className: (0, _classnames2['default'])(dialogClassName, dialogClasses) },
         _react2['default'].createElement(
           'div',
-          { className: _utilsBootstrapUtils.prefix(this.props, 'content'), role: 'document' },
-          this.props.children
+          { className: (0, _bootstrapUtils.prefix)(bsProps, 'content'), role: 'document' },
+          children
         )
       )
     );
-  }
-});
+  };
 
-exports['default'] = _utilsBootstrapUtils.bsSizes([_styleMaps.Sizes.LARGE, _styleMaps.Sizes.SMALL], _utilsBootstrapUtils.bsClass('modal', ModalDialog));
+  return ModalDialog;
+}(_react2['default'].Component);
+
+ModalDialog.propTypes = propTypes;
+
+exports['default'] = (0, _bootstrapUtils.bsClass)('modal', (0, _bootstrapUtils.bsSizes)([_StyleConfig.Size.LARGE, _StyleConfig.Size.SMALL], ModalDialog));
 module.exports = exports['default'];

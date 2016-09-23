@@ -1,16 +1,26 @@
 'use strict';
 
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _objectWithoutProperties = require('babel-runtime/helpers/object-without-properties')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _classnames = require('classnames');
 
@@ -20,61 +30,41 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactPropTypesLibDeprecated = require('react-prop-types/lib/deprecated');
+var _bootstrapUtils = require('./utils/bootstrapUtils');
 
-var _reactPropTypesLibDeprecated2 = _interopRequireDefault(_reactPropTypesLibDeprecated);
+var _StyleConfig = require('./utils/StyleConfig');
 
-var _styleMaps = require('./styleMaps');
+var _ValidComponentChildren = require('./utils/ValidComponentChildren');
 
-var _utilsBootstrapUtils = require('./utils/bootstrapUtils');
+var _ValidComponentChildren2 = _interopRequireDefault(_ValidComponentChildren);
 
-var _utilsValidComponentChildren = require('./utils/ValidComponentChildren');
-
-var _utilsValidComponentChildren2 = _interopRequireDefault(_utilsValidComponentChildren);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var propTypes = {
   /**
    * Sets `id` on `<FormControl>` and `htmlFor` on `<FormGroup.Label>`.
    */
   controlId: _react2['default'].PropTypes.string,
-  /**
-   * @private
-   */
-  standalone: _reactPropTypesLibDeprecated2['default'](_react2['default'].PropTypes.bool, 'Use a `<FormControl>` or `<InputGroup>` directly.'),
-  validationState: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error']),
-  /**
-   * @private
-   */
-  bsStyle: _reactPropTypesLibDeprecated2['default'](_react2['default'].PropTypes.oneOf(['success', 'warning', 'error']), 'Use `validationState`'),
-  /**
-   * @private
-   */
-  hasFeedback: _reactPropTypesLibDeprecated2['default'](_react2['default'].PropTypes.bool, 'Use a `<FormControl.Feedback>` element.'),
-  /**
-   * @private
-   */
-  groupClassName: _reactPropTypesLibDeprecated2['default'](_react2['default'].PropTypes.string, 'Use `className`.')
+  validationState: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error'])
 };
 
 var childContextTypes = {
   $bs_formGroup: _react2['default'].PropTypes.object.isRequired
 };
 
-var FormGroup = (function (_React$Component) {
-  _inherits(FormGroup, _React$Component);
+var FormGroup = function (_React$Component) {
+  (0, _inherits3['default'])(FormGroup, _React$Component);
 
   function FormGroup() {
-    _classCallCheck(this, FormGroup);
-
-    _React$Component.apply(this, arguments);
+    (0, _classCallCheck3['default'])(this, FormGroup);
+    return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
   }
 
   FormGroup.prototype.getChildContext = function getChildContext() {
     var _props = this.props;
     var controlId = _props.controlId;
-    var bsStyle = _props.bsStyle;
-    var _props$validationState = _props.validationState;
-    var validationState = _props$validationState === undefined ? bsStyle : _props$validationState;
+    var validationState = _props.validationState;
+
 
     return {
       $bs_formGroup: {
@@ -85,34 +75,28 @@ var FormGroup = (function (_React$Component) {
   };
 
   FormGroup.prototype.hasFeedback = function hasFeedback(children) {
-    var _this = this;
+    var _this2 = this;
 
-    return _utilsValidComponentChildren2['default'].some(children, function (child) {
-      return child.props.bsRole === 'feedback' || child.props.children && _this.hasFeedback(child.props.children);
+    return _ValidComponentChildren2['default'].some(children, function (child) {
+      return child.props.bsRole === 'feedback' || child.props.children && _this2.hasFeedback(child.props.children);
     });
   };
 
   FormGroup.prototype.render = function render() {
     var _props2 = this.props;
-    var standalone = _props2.standalone;
-    var bsStyle = _props2.bsStyle;
-    var _props2$validationState = _props2.validationState;
-    var validationState = _props2$validationState === undefined ? bsStyle : _props2$validationState;
-    var groupClassName = _props2.groupClassName;
-    var _props2$className = _props2.className;
-    var className = _props2$className === undefined ? groupClassName : _props2$className;
+    var validationState = _props2.validationState;
+    var className = _props2.className;
     var children = _props2.children;
-    var _props2$hasFeedback = _props2.hasFeedback;
-    var hasFeedback = _props2$hasFeedback === undefined ? this.hasFeedback(children) : _props2$hasFeedback;
+    var props = (0, _objectWithoutProperties3['default'])(_props2, ['validationState', 'className', 'children']);
 
-    var props = _objectWithoutProperties(_props2, ['standalone', 'bsStyle', 'validationState', 'groupClassName', 'className', 'children', 'hasFeedback']);
+    var _splitBsPropsAndOmit = (0, _bootstrapUtils.splitBsPropsAndOmit)(props, ['controlId']);
 
-    delete props.bsClass;
-    delete props.bsSize;
-    delete props.controlId;
+    var bsProps = _splitBsPropsAndOmit[0];
+    var elementProps = _splitBsPropsAndOmit[1];
 
-    var classes = _extends({}, !standalone && _utilsBootstrapUtils.getClassSet(this.props), {
-      'has-feedback': hasFeedback
+
+    var classes = (0, _extends3['default'])({}, (0, _bootstrapUtils.getClassSet)(bsProps), {
+      'has-feedback': this.hasFeedback(children)
     });
     if (validationState) {
       classes['has-' + validationState] = true;
@@ -120,16 +104,18 @@ var FormGroup = (function (_React$Component) {
 
     return _react2['default'].createElement(
       'div',
-      _extends({}, props, { className: _classnames2['default'](className, classes) }),
+      (0, _extends3['default'])({}, elementProps, {
+        className: (0, _classnames2['default'])(className, classes)
+      }),
       children
     );
   };
 
   return FormGroup;
-})(_react2['default'].Component);
+}(_react2['default'].Component);
 
 FormGroup.propTypes = propTypes;
 FormGroup.childContextTypes = childContextTypes;
 
-exports['default'] = _utilsBootstrapUtils.bsClass('form-group', _utilsBootstrapUtils.bsSizes([_styleMaps.Sizes.LARGE, _styleMaps.Sizes.SMALL], FormGroup));
+exports['default'] = (0, _bootstrapUtils.bsClass)('form-group', (0, _bootstrapUtils.bsSizes)([_StyleConfig.Size.LARGE, _StyleConfig.Size.SMALL], FormGroup));
 module.exports = exports['default'];

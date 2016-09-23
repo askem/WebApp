@@ -1,10 +1,26 @@
 'use strict';
 
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _classnames = require('classnames');
 
@@ -14,47 +30,78 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _utilsBootstrapUtils = require('./utils/bootstrapUtils');
+var _bootstrapUtils = require('./utils/bootstrapUtils');
 
-var _utilsValidComponentChildren = require('./utils/ValidComponentChildren');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utilsValidComponentChildren2 = _interopRequireDefault(_utilsValidComponentChildren);
+// TODO: `pullRight` doesn't belong here. There's no special handling here.
 
-var Badge = _react2['default'].createClass({
-  displayName: 'Badge',
+var propTypes = {
+  pullRight: _react2['default'].PropTypes.bool
+};
 
-  propTypes: {
-    pullRight: _react2['default'].PropTypes.bool
-  },
+var defaultProps = {
+  pullRight: false
+};
 
-  getDefaultProps: function getDefaultProps() {
-    return {
-      pullRight: false,
-      bsClass: 'badge'
-    };
-  },
+var Badge = function (_React$Component) {
+  (0, _inherits3['default'])(Badge, _React$Component);
 
-  hasContent: function hasContent() {
-    var children = this.props.children;
+  function Badge() {
+    (0, _classCallCheck3['default'])(this, Badge);
+    return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
+  }
 
-    return _utilsValidComponentChildren2['default'].count(children) > 0 || _react2['default'].Children.count(children) > 1 || typeof children === 'string' || typeof children === 'number';
-  },
+  Badge.prototype.hasContent = function hasContent(children) {
+    var result = false;
 
-  render: function render() {
-    var _classes;
+    _react2['default'].Children.forEach(children, function (child) {
+      if (result) {
+        return;
+      }
 
-    var classes = (_classes = {
-      'pull-right': this.props.pullRight
-    }, _classes[_utilsBootstrapUtils.prefix(this.props)] = this.hasContent(), _classes);
+      if (child || child === 0) {
+        result = true;
+      }
+    });
+
+    return result;
+  };
+
+  Badge.prototype.render = function render() {
+    var _props = this.props;
+    var pullRight = _props.pullRight;
+    var className = _props.className;
+    var children = _props.children;
+    var props = (0, _objectWithoutProperties3['default'])(_props, ['pullRight', 'className', 'children']);
+
+    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props);
+
+    var bsProps = _splitBsProps[0];
+    var elementProps = _splitBsProps[1];
+
+
+    var classes = (0, _extends3['default'])({}, (0, _bootstrapUtils.getClassSet)(bsProps), {
+      'pull-right': pullRight,
+
+      // Hack for collapsing on IE8.
+      hidden: !this.hasContent(children)
+    });
+
     return _react2['default'].createElement(
       'span',
-      _extends({}, this.props, {
-        className: _classnames2['default'](this.props.className, classes)
+      (0, _extends3['default'])({}, elementProps, {
+        className: (0, _classnames2['default'])(className, classes)
       }),
-      this.props.children
+      children
     );
-  }
-});
+  };
 
-exports['default'] = Badge;
+  return Badge;
+}(_react2['default'].Component);
+
+Badge.propTypes = propTypes;
+Badge.defaultProps = defaultProps;
+
+exports['default'] = (0, _bootstrapUtils.bsClass)('badge', Badge);
 module.exports = exports['default'];

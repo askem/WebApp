@@ -1,16 +1,26 @@
 'use strict';
 
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _objectWithoutProperties = require('babel-runtime/helpers/object-without-properties')['default'];
-
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _classnames = require('classnames');
 
@@ -20,10 +30,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _styleMaps = require('./styleMaps');
-
-var _utilsBootstrapUtils = require('./utils/bootstrapUtils');
-
 var _InputGroupAddon = require('./InputGroupAddon');
 
 var _InputGroupAddon2 = _interopRequireDefault(_InputGroupAddon);
@@ -32,34 +38,43 @@ var _InputGroupButton = require('./InputGroupButton');
 
 var _InputGroupButton2 = _interopRequireDefault(_InputGroupButton);
 
-var InputGroup = (function (_React$Component) {
-  _inherits(InputGroup, _React$Component);
+var _bootstrapUtils = require('./utils/bootstrapUtils');
+
+var _StyleConfig = require('./utils/StyleConfig');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var InputGroup = function (_React$Component) {
+  (0, _inherits3['default'])(InputGroup, _React$Component);
 
   function InputGroup() {
-    _classCallCheck(this, InputGroup);
-
-    _React$Component.apply(this, arguments);
+    (0, _classCallCheck3['default'])(this, InputGroup);
+    return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
   }
 
   InputGroup.prototype.render = function render() {
     var _props = this.props;
     var className = _props.className;
+    var props = (0, _objectWithoutProperties3['default'])(_props, ['className']);
 
-    var props = _objectWithoutProperties(_props, ['className']);
+    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props);
 
-    delete props.bsClass;
-    delete props.bsSize;
+    var bsProps = _splitBsProps[0];
+    var elementProps = _splitBsProps[1];
 
-    var classes = _utilsBootstrapUtils.getClassSet(this.props);
 
-    return _react2['default'].createElement('span', _extends({}, props, { className: _classnames2['default'](className, classes) }));
+    var classes = (0, _bootstrapUtils.getClassSet)(bsProps);
+
+    return _react2['default'].createElement('span', (0, _extends3['default'])({}, elementProps, {
+      className: (0, _classnames2['default'])(className, classes)
+    }));
   };
 
   return InputGroup;
-})(_react2['default'].Component);
+}(_react2['default'].Component);
 
 InputGroup.Addon = _InputGroupAddon2['default'];
 InputGroup.Button = _InputGroupButton2['default'];
 
-exports['default'] = _utilsBootstrapUtils.bsClass('input-group', _utilsBootstrapUtils.bsSizes([_styleMaps.Sizes.LARGE, _styleMaps.Sizes.SMALL], InputGroup));
+exports['default'] = (0, _bootstrapUtils.bsClass)('input-group', (0, _bootstrapUtils.bsSizes)([_StyleConfig.Size.LARGE, _StyleConfig.Size.SMALL], InputGroup));
 module.exports = exports['default'];

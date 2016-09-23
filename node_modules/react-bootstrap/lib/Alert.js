@@ -1,10 +1,30 @@
 'use strict';
 
-var _extends = require('babel-runtime/helpers/extends')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
 exports.__esModule = true;
+
+var _values = require('babel-runtime/core-js/object/values');
+
+var _values2 = _interopRequireDefault(_values);
+
+var _extends3 = require('babel-runtime/helpers/extends');
+
+var _extends4 = _interopRequireDefault(_extends3);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _classnames = require('classnames');
 
@@ -14,39 +34,36 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactPropTypesLibDeprecated = require('react-prop-types/lib/deprecated');
+var _bootstrapUtils = require('./utils/bootstrapUtils');
 
-var _reactPropTypesLibDeprecated2 = _interopRequireDefault(_reactPropTypesLibDeprecated);
+var _StyleConfig = require('./utils/StyleConfig');
 
-var _styleMaps = require('./styleMaps');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utilsBootstrapUtils = require('./utils/bootstrapUtils');
+var propTypes = {
+  onDismiss: _react2['default'].PropTypes.func,
+  closeLabel: _react2['default'].PropTypes.string
+};
 
-var Alert = _react2['default'].createClass({
-  displayName: 'Alert',
+var defaultProps = {
+  closeLabel: 'Close alert'
+};
 
-  propTypes: {
-    onDismiss: _react2['default'].PropTypes.func,
-    /**
-     * @private
-     */
-    dismissAfter: _reactPropTypesLibDeprecated2['default'](_react2['default'].PropTypes.number, 'No longer supported.'),
-    closeLabel: _react2['default'].PropTypes.string
-  },
+var Alert = function (_React$Component) {
+  (0, _inherits3['default'])(Alert, _React$Component);
 
-  getDefaultProps: function getDefaultProps() {
-    return {
-      closeLabel: 'Close Alert'
-    };
-  },
+  function Alert() {
+    (0, _classCallCheck3['default'])(this, Alert);
+    return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
+  }
 
-  renderDismissButton: function renderDismissButton() {
+  Alert.prototype.renderDismissButton = function renderDismissButton(onDismiss) {
     return _react2['default'].createElement(
       'button',
       {
         type: 'button',
         className: 'close',
-        onClick: this.props.onDismiss,
+        onClick: onDismiss,
         'aria-hidden': 'true',
         tabIndex: '-1'
       },
@@ -56,48 +73,56 @@ var Alert = _react2['default'].createClass({
         '×'
       )
     );
-  },
+  };
 
-  renderSrOnlyDismissButton: function renderSrOnlyDismissButton() {
+  Alert.prototype.renderSrOnlyDismissButton = function renderSrOnlyDismissButton(onDismiss, closeLabel) {
     return _react2['default'].createElement(
       'button',
       {
         type: 'button',
         className: 'close sr-only',
-        onClick: this.props.onDismiss
+        onClick: onDismiss
       },
-      this.props.closeLabel
+      closeLabel
     );
-  },
+  };
 
-  render: function render() {
-    var classes = _utilsBootstrapUtils.getClassSet(this.props);
-    var isDismissable = !!this.props.onDismiss;
+  Alert.prototype.render = function render() {
+    var _extends2;
 
-    classes[_utilsBootstrapUtils.prefix(this.props, 'dismissable')] = isDismissable;
+    var _props = this.props;
+    var onDismiss = _props.onDismiss;
+    var closeLabel = _props.closeLabel;
+    var className = _props.className;
+    var children = _props.children;
+    var props = (0, _objectWithoutProperties3['default'])(_props, ['onDismiss', 'closeLabel', 'className', 'children']);
+
+    var _splitBsProps = (0, _bootstrapUtils.splitBsProps)(props);
+
+    var bsProps = _splitBsProps[0];
+    var elementProps = _splitBsProps[1];
+
+
+    var dismissable = !!onDismiss;
+    var classes = (0, _extends4['default'])({}, (0, _bootstrapUtils.getClassSet)(bsProps), (_extends2 = {}, _extends2[(0, _bootstrapUtils.prefix)(bsProps, 'dismissable')] = dismissable, _extends2));
 
     return _react2['default'].createElement(
       'div',
-      _extends({}, this.props, {
+      (0, _extends4['default'])({}, elementProps, {
         role: 'alert',
-        className: _classnames2['default'](this.props.className, classes)
+        className: (0, _classnames2['default'])(className, classes)
       }),
-      isDismissable ? this.renderDismissButton() : null,
-      this.props.children,
-      isDismissable ? this.renderSrOnlyDismissButton() : null
+      dismissable && this.renderDismissButton(onDismiss),
+      children,
+      dismissable && this.renderSrOnlyDismissButton(onDismiss, closeLabel)
     );
-  },
+  };
 
-  componentDidMount: function componentDidMount() {
-    if (this.props.dismissAfter && this.props.onDismiss) {
-      this.dismissTimer = setTimeout(this.props.onDismiss, this.props.dismissAfter);
-    }
-  },
+  return Alert;
+}(_react2['default'].Component);
 
-  componentWillUnmount: function componentWillUnmount() {
-    clearTimeout(this.dismissTimer);
-  }
-});
+Alert.propTypes = propTypes;
+Alert.defaultProps = defaultProps;
 
-exports['default'] = _utilsBootstrapUtils.bsStyles(_styleMaps.State.values(), _styleMaps.State.INFO, _utilsBootstrapUtils.bsClass('alert', Alert));
+exports['default'] = (0, _bootstrapUtils.bsStyles)((0, _values2['default'])(_StyleConfig.State), _StyleConfig.State.INFO, (0, _bootstrapUtils.bsClass)('alert', Alert));
 module.exports = exports['default'];
