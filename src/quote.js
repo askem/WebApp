@@ -40,17 +40,18 @@ window.api = api;
 // };
 // const logicMiddleware = createLogicMiddleware(logics, logicDeps);
 
-
 const initialState = Immutable.fromJS({
 	data: {
+		sample: {
+			sampleSize: 400,
+			reach: 350000000
+		},
 		demographics: {
 			gender: {
 				male: true,
 				female: true
 			},
-			ageGroups: [
-				
-			]
+			ageGroups: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+']
 		}
 	}
 });

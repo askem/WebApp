@@ -13,7 +13,7 @@ const QuoteWizardContainer = connect(
 	function mapDispatchToProps(dispatch) {
 		return {
 			setQuoteDemoGender: (gender, value) => dispatch(quoteActions.setQuoteDemoGender(gender, value)),
-			setQuoteDemoAgeGroups: value => dispatch(quoteActions.setQuoteDemoAgeGroups(value)),
+			toggleQuoteDemoAgeGroup: group => dispatch(quoteActions.toggleQuoteDemoAgeGroup(group)),
 		};
 	}
 )(QuoteWizard);

@@ -8,13 +8,13 @@ const setQuoteDemoGender = (gender, value) => {
 	}
 }
 
-const setQuoteDemoAgeGroups = (value) => {
+const toggleQuoteDemoAgeGroup = (ageGroup) => {
 	return {
-		type: 'SET_QUOTE_DEMO_AGE_GROUPS',
+		type: 'TOGGLE_QUOTE_DEMO_AGE_GROUP',
 		payload: {
-			value
+			ageGroup
 		}
 	}
 }
 
-export { setQuoteDemoGender, setQuoteDemoAgeGroups };
+export { setQuoteDemoGender, toggleQuoteDemoAgeGroup };
