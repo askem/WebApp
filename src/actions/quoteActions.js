@@ -1,3 +1,4 @@
+/* Audience */
 const setQuoteDemoGender = (gender, value) => {
 	return {
 		type: 'SET_QUOTE_DEMO_GENDER',
@@ -17,6 +18,52 @@ const toggleQuoteDemoAgeGroup = (ageGroup) => {
 	}
 }
 
+const addQuoteAudiencePage = (fbPage) => {
+	return {
+		type: 'ADD_QUOTE_AUDIENCE_PAGE',
+		payload: {
+			fbPage
+		}
+	}
+}
+
+const toggleQuoteAudiencePageConnected = (pageIndex) => {
+	return {
+		type: 'TOGGLE_QUOTE_AUDIENCE_PAGE_CONNECTED',
+		payload: {
+			pageIndex
+		}
+	}
+}
+
+const removeQuoteAudiencePage = (pageIndex) => {
+	return {
+		type: 'REMOVE_QUOTE_AUDIENCE_PAGE',
+		payload: {
+			pageIndex
+		}
+	}
+}
+
+const addQuoteAudienceInterest = (interest) => {
+	return {
+		type: 'ADD_QUOTE_AUDIENCE_INTEREST',
+		payload: {
+			interest
+		}
+	}
+}
+
+const removeQuoteAudienceInterest = (interestIndex) => {
+	return {
+		type: 'REMOVE_QUOTE_AUDIENCE_INTEREST',
+		payload: {
+			interestIndex
+		}
+	}
+}
+
+/* Survey */
 const addQuoteQuestion = () => {
 	return {
 		type: 'ADD_QUOTE_QUESTION'
@@ -84,6 +131,8 @@ const setQuotePossibleAnswerText = (questionID, possibleAnswerID, textValue) => 
 
 export {
 	setQuoteDemoGender, toggleQuoteDemoAgeGroup,
+	addQuoteAudiencePage, toggleQuoteAudiencePageConnected, removeQuoteAudiencePage,
+	addQuoteAudienceInterest, removeQuoteAudienceInterest,
 	addQuoteQuestion, deleteQuoteQuestion, setQuoteQuestionText, setQuoteQuestionImage,
 	addQuotePossibleAnswer, deleteQuotePossibleAnswer, setQuotePossibleAnswerText
 };

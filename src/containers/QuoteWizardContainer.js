@@ -4,12 +4,13 @@ import * as quoteActions from 'actions/quoteActions';
 
 const QuoteWizardContainer = connect(
 	function mapStateToProps(state, ownProps) {
-		let demographics = state.getIn(['data', 'demographics']);
-		if (demographics) { demographics = demographics.toJS(); }
+		let audience = state.getIn(['data', 'audience']);
+		if (audience) { audience = audience.toJS(); }
 		let surveyMetadata = state.getIn(['data', 'surveyMetadata']);
 		if (surveyMetadata) { surveyMetadata = surveyMetadata.toJS(); }
 		return {
-			demographics,
+			audience,
+			demographics: audience.demographics,
 			surveyMetadata
 		};
 	},
@@ -17,6 +18,11 @@ const QuoteWizardContainer = connect(
 		return {
 			setQuoteDemoGender: (gender, value) => dispatch(quoteActions.setQuoteDemoGender(gender, value)),
 			toggleQuoteDemoAgeGroup: group => dispatch(quoteActions.toggleQuoteDemoAgeGroup(group)),
+			addQuoteAudiencePage: fbPage => dispatch(quoteActions.addQuoteAudiencePage(fbPage)),
+			toggleQuoteAudiencePageConnected: pageIndex => dispatch(quoteActions.toggleQuoteAudiencePageConnected(pageIndex)),
+			removeQuoteAudiencePage: pageIndex => dispatch(quoteActions.removeQuoteAudiencePage(pageIndex)),
+			addQuoteAudienceInterest: interest => dispatch(quoteActions.addQuoteAudienceInterest(interest)),
+			removeQuoteAudienceInterest: interestIndex => dispatch(quoteActions.removeQuoteAudienceInterest(interestIndex)),
 			addQuoteQuestion: () => dispatch(quoteActions.addQuoteQuestion()),
 			deleteQuoteQuestion: (questionID) => dispatch(quoteActions.deleteQuoteQuestion(questionID)),
 			setQuoteQuestionText: (questionID, textValue) => dispatch(quoteActions.setQuoteQuestionText(questionID, textValue)),

@@ -21,6 +21,7 @@ class QuestionCreator extends React.Component {
 			this.setState({
 				errorMessage: `⚠️Survey must contain at least 1 question`
 			});
+			console.warn(`⚠️Survey must contain at least 1 question`);
 			return;
 		}
 		this.props.deleteQuoteQuestion(this.props.question.questionID);
@@ -35,6 +36,7 @@ class QuestionCreator extends React.Component {
 			this.setState({
 				errorMessage: `⚠️Please add up to a maximum of ${maxPossibleAnswers} answers`
 			});
+			console.warn(`⚠️Please add up to a maximum of ${maxPossibleAnswers} answers`);
 			return;
 		}
 		this.props.addQuotePossibleAnswer(this.props.question.questionID);
@@ -44,6 +46,7 @@ class QuestionCreator extends React.Component {
 			this.setState({
 				errorMessage: `⚠️The question must have at least 1 answer`
 			});
+			console.warn(`⚠️The question must have at least 1 answer`);
 			return;
 		}
 		this.props.deleteQuotePossibleAnswer(this.props.question.questionID, possibleAnswerID);
@@ -55,8 +58,6 @@ class QuestionCreator extends React.Component {
 	}
 	render() {
 		if (this.state.errorMessage) {
-			console.warn(this.state.errorMessage);
-			this.setState({errorMessage: ''});
 		}
 		return (
 			<div>

@@ -5,9 +5,9 @@ const initialState = Immutable.fromJS({});
 const quoteDataReducer = (state = initialState, action) => {
 	switch(action.type) {
 		case 'SET_QUOTE_DEMO_GENDER':
-			return state.setIn(['demographics', 'gender', action.payload.gender], action.payload.value);
+			return state.setIn(['audience', 'demographics', 'gender', action.payload.gender], action.payload.value);
 		case 'TOGGLE_QUOTE_DEMO_AGE_GROUP':
-		return state.updateIn(['demographics', 'ageGroups'], groups => {
+		return state.updateIn(['audience', 'demographics', 'ageGroups'], groups => {
 			const group = action.payload.ageGroup
 			const idx = groups.keyOf(group);
 			if (idx === undefined) {
@@ -16,6 +16,22 @@ const quoteDataReducer = (state = initialState, action) => {
 				return groups.delete(idx);
 			}
 		});
+
+		case 'ADD_QUOTE_AUDIENCE_PAGE':
+			return state.updateIn(['audience', 'facebookPages'], pages =>
+			pages.push(Immutable.fromJS(action.payload.fbPage)));
+		case 'TOGGLE_QUOTE_AUDIENCE_PAGE_CONNECTED':
+			return state.updateIn(['audience', 'facebookPages', action.payload.pageIndex], page =>
+			page.set('targetConnected', !page.get('targetConnected')));
+		case 'REMOVE_QUOTE_AUDIENCE_PAGE':
+			return state.updateIn(['audience', 'facebookPages'], pages =>
+			pages.delete(action.payload.pageIndex));
+		case 'ADD_QUOTE_AUDIENCE_INTEREST':
+			return state.updateIn(['audience', 'interests'], pages =>
+			pages.push(Immutable.fromJS(action.payload.interest)));
+		case 'REMOVE_QUOTE_AUDIENCE_INTEREST':
+			return state.updateIn(['audience', 'interests'], pages =>
+			pages.delete(action.payload.interestIndex));
 
 		case 'ADD_QUOTE_QUESTION':
 			return state.updateIn(['surveyMetadata', 'questions'], questions =>

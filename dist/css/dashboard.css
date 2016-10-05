@@ -650,3 +650,32 @@ h1,h2,h3,h4 {
 .quote-wizard-header .title {
 	font-size: 26px;
 }
+
+.quote-audience .title {
+	font-weight: bold;
+	font-size: 22px;
+}
+
+.quote-fbpage {
+	display: flex;
+	font-family: "Open Sans", Helvetica, Arial, sans-serif;
+	line-height: 30px;
+}
+.quote-fbpage img {
+	width: 30px;
+	height: 30px;
+}
+.quote-fbpage .name {
+	padding-left: 5px;
+	font-weight: 600;
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.quote-fbpage .fans {
+	/*width: 120px;*/
+	white-space: nowrap;
+	padding-right: 5px;
+}

@@ -1,24 +1,25 @@
 import React from 'react';
+import CreateSurvey from 'components/Quote/CreateSurvey';
 import QuoteDemographics from 'components/Quote/QuoteDemographics';
-import QuoteModels from 'components/Quote/QuoteModels';
+import SampleSize from 'components/Quote/SampleSize';
 
 const stages = {
-	ASK: 0,
-	TARGET: 1,
-	ANSWERS: 2
+	AUDIENCE: 0,
+	SURVEY: 1,
+	SAMPLE_SIZE: 2
 };
 
 const stageTitles = [
-	'Ask',
-	'Target',
-	'Get Answers'
+	'Audience',
+	'Survey',
+	'Sample Size'
 ];
 
 class QuoteWizard extends React.Component {
 	constructor(props) {
     	super(props);
 		this.state = {
-			stage: stages.ASK
+			stage: stages.AUDIENCE
 		};
 	}
 	handleStageClick(stage) {
@@ -32,11 +33,14 @@ class QuoteWizard extends React.Component {
 	render() {
 		let stageComponent;
 		switch (this.state.stage) {
-			case stages.ASK:
-				stageComponent = <QuoteModels {...this.props} />
-				break;
-			case stages.TARGET:
+			case stages.AUDIENCE:
 				stageComponent = <QuoteDemographics {...this.props} />;
+				break;
+			case stages.SURVEY:
+				stageComponent = <CreateSurvey {...this.props} />;
+				break;
+			case stages.SAMPLE_SIZE:
+				stageComponent = <SampleSize {...this.props} />;
 				break;
 			default:
 		}
