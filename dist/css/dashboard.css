@@ -651,6 +651,10 @@ h1,h2,h3,h4 {
 	font-size: 26px;
 }
 
+.quote-audience {
+	padding-bottom: 20px;
+}
+
 .quote-audience .title {
 	font-weight: bold;
 	font-size: 22px;
@@ -678,4 +682,46 @@ h1,h2,h3,h4 {
 	/*width: 120px;*/
 	white-space: nowrap;
 	padding-right: 5px;
+}
+
+.quote-interest {
+	display: flex;
+	font-family: "Open Sans", Helvetica, Arial, sans-serif;
+	line-height: 30px;
+}
+
+.quote-interest .name {
+	font-weight: 600;
+	margin-left: 5px;
+}
+
+.quote-interest .topic {
+	margin-left: 5px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.quote-interest .reach {
+	white-space: nowrap;
+	padding-right: 5px;
+}
+
+.quote-location {
+	display: flex;
+}
+
+.quote-location .title {
+	font-weight: normal;
+	font-size: 18px;
+}
+
+.quote-location img {
+	margin-left: 10px;
+	height: 30px;
+}
+
+.quote-uneditable-select .resizable-input {
+	/* hide edit box */
+	display: none;
 }

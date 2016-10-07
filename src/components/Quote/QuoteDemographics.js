@@ -3,8 +3,32 @@ import AGE_GROUPS from 'constants/AGE_GROUPS';
 import consolidateAgeGroups from 'utils/array/consolidateAgeGroups';
 import Toggle from 'react-input-toggle/dist/react-input-toggle';
 require('react-input-toggle/dist/react-input-toggle.css');
+import ReactSelectize from 'react-selectize';
 require('react-selectize/themes/index.css');
 import QuoteFBPages from 'components/Quote/QuoteFBPages';
+import QuoteInterests from 'components/Quote/QuoteInterests';
+
+const getFacebookPages = (input) => {
+	return fetch(`https://graph.facebook.com/v2.7/search?q=${input.replace(/ /g, '+')}&type=page&fields=picture.type(large),name,fan_count&access_token=1160541464012998|iQI7gMB2GTQ-3oO4A07lzjjgNWE`)
+	.then((response) => {
+		return response.json();
+	}).then((json) => {
+		const options = json.data.map(page => ({
+			value: page.id,
+			label: page.name,
+			iconURL: page.picture.data.url,
+			fans: page.fan_count
+		}));
+		return {
+			options
+		};
+	});
+}
+const renderFacebookPageOption = (option) => <div>
+	<img src={option.iconURL} style={{width:30, height: 30}}/>
+	<strong>{option.label}</strong>
+	{option.fans} fans
+</div>;
 
 class QuoteDemographics extends React.Component {
 	constructor(props) {
@@ -32,14 +56,24 @@ class QuoteDemographics extends React.Component {
 	render() {
 		let demoView;
 		if (this.state.customizing) {
+			const renderUS = (location) => <div className="quote-location">
+				<div className="title">U.S. (Genral Population)</div>
+				<img style={{height: 30}} src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Blank_US_Map_(states_only).svg/2000px-Blank_US_Map_(states_only).svg.png" />
+			</div>;
 			demoView = <div>
 				<div className="quote-audience">
 					<div className="title">
-						Base Audience
+						Location
 					</div>
-					<div className="value">
-						General Population (U.S.)
-						<img style={{width: 100}} src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Blank_US_Map_(states_only).svg/2000px-Blank_US_Map_(states_only).svg.png" />
+					<div className="value quote-uneditable-select">
+						<ReactSelectize.SimpleSelect ref="locationSelector"
+							hideResetButton={true}
+							filterOptions={(options, search) => options}
+							options={['genpop_US']}
+							renderOption={renderUS}
+							renderValue={renderUS}
+							value={'genpop_US'}
+						/>
 					</div>
 				</div>
 
@@ -65,12 +99,18 @@ class QuoteDemographics extends React.Component {
 				</div>
 
 				<div className="quote-audience">
-					<div className="title">My Facebook Pages</div>
+					<div className="title">Interests</div>
 					<div className="value" style={{width: 500}}>
-						<QuoteFBPages {...this.props} />
-
+						<QuoteInterests {...this.props} />
 					</div>
 				</div>
+
+				{/*<div className="quote-audience">
+					<div className="title">Your Audience</div>
+					<div className="value" style={{width: 500}}>
+						<QuoteFBPages {...this.props} />
+					</div>
+				</div>*/}
 
 			</div>;
 		} else {
@@ -84,6 +124,9 @@ class QuoteDemographics extends React.Component {
 				}
 				genderText += 'Male';
 			}
+
+
+
 			demoView = <div>
 				<div>
 					General Population (U.S.)
@@ -102,6 +145,9 @@ class QuoteDemographics extends React.Component {
 						{genderText}
 					</div>
 				</div>
+
+
+
 			</div>;
 		}
 		const editButton =

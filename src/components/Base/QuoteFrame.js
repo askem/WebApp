@@ -8,7 +8,7 @@ class QuoteFrame extends React.Component {
 			<div className="dashboard-container">
 				<div className="dashboard-main">
 					<NavBar onLogout={noop} onLogin={noop}
-						title="" name="Quote"
+						title="Consumer Survey" name="Quote"
 						username="" loggedIn={false} />
 					<div className="dashboard-content">
 						{this.props.children}

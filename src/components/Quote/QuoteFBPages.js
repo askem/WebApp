@@ -36,7 +36,7 @@ class QuoteFBPages extends React.Component {
 		if (searchString.length === 0) { return; }
 		// TODO: abort previous request
 		const self = this;
-		fetch(`https://graph.facebook.com/v2.7/search?q=${searchString.replace(/ /g, '+')}&type=page&fields=picture.type(large),name,fan_count&access_token=1160541464012998|iQI7gMB2GTQ-3oO4A07lzjjgNWE`)
+		fetch(`https://graph.facebook.com/v2.8/search?q=${searchString.replace(/ /g, '+')}&type=page&fields=picture.type(large),name,fan_count&access_token=1160541464012998|iQI7gMB2GTQ-3oO4A07lzjjgNWE`)
 		.then((response) => {
 			return response.json();
 		}).then((json) => {
@@ -101,7 +101,7 @@ class QuoteFBPages extends React.Component {
 						}} icon={<FaClose />} />
 					</div>
 				)}
-				<div style={{display: 'flex', marginBottom: 300}}>
+				<div style={{display: 'flex'}}>
 					{pageSelector}
 					<FlatButton
 						label={this.state.adding ? 'Cancel' : 'Add Page'}
