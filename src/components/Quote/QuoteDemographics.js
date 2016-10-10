@@ -57,7 +57,7 @@ class QuoteDemographics extends React.Component {
 		let demoView;
 		if (this.state.customizing) {
 			const renderUS = (location) => <div className="quote-location">
-				<div className="title">U.S. (Genral Population)</div>
+				<div className="title">United States</div>
 				<img style={{height: 30}} src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Blank_US_Map_(states_only).svg/2000px-Blank_US_Map_(states_only).svg.png" />
 			</div>;
 			demoView = <div>
@@ -129,7 +129,7 @@ class QuoteDemographics extends React.Component {
 
 			demoView = <div>
 				<div>
-					General Population (U.S.)
+					United States
 				</div>
 
 				<div className="quote-demo">

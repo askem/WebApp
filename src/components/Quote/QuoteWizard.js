@@ -2,6 +2,7 @@ import React from 'react';
 import CreateSurvey from 'components/Quote/CreateSurvey';
 import QuoteDemographics from 'components/Quote/QuoteDemographics';
 import SampleSize from 'components/Quote/SampleSize';
+import QuoteReach from 'components/Quote/QuoteReach';
 
 const stages = {
 	AUDIENCE: 0,
@@ -56,7 +57,15 @@ class QuoteWizard extends React.Component {
 						</div>
 					})}
 				</div>
-				{stageComponent}
+				<div className="quote-wizard-main">
+					<div className="quote-wizard-maincontent">
+						{stageComponent}
+					</div>
+					<div className="quote-wizard-side">
+						<QuoteReach reach={300000} />
+					</div>
+				</div>
+
 			</div>
 		)
 	}

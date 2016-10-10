@@ -651,6 +651,45 @@ h1,h2,h3,h4 {
 	font-size: 26px;
 }
 
+.quote-wizard-main {
+	display: flex;
+}
+
+.quote-wizard-maincontent {
+	background-color: white;
+	border: 1px solid;
+	border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+	border-radius: 3px;
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 20px;
+	/*display: flex;
+	justify-content: space-around;
+	margin-bottom: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;*/
+	border-top: 2px solid #9665aa;
+}
+
+.quote-wizard-side {
+	width: 250px;
+}
+
+.quote-estimated-reach-title {
+	font-weight: bold;
+	font-size: 22px;
+}
+
+.quote-estimated-reach {
+	font-family: 'Bebas Neue';
+	font-size: 70px;
+}
+
+.quote-estimated-reach-description {
+	font-size: 12px;
+}
+
 .quote-audience {
 	padding-bottom: 20px;
 }
@@ -682,6 +721,10 @@ h1,h2,h3,h4 {
 	/*width: 120px;*/
 	white-space: nowrap;
 	padding-right: 5px;
+}
+
+.quote-interest-container {
+	display: flex;
 }
 
 .quote-interest {

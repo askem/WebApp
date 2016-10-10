@@ -106,7 +106,7 @@ class CreateSurvey extends React.Component {
 
 				<button onClick={this.addQuestion}>Add Question</button>
 
-				<button onClick={this.props.onCancel}>Cancel</button>
+				{/*<button onClick={this.props.onCancel}>Cancel</button>*/}
 			</div>
 		)
 	}

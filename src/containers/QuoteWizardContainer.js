@@ -4,9 +4,9 @@ import * as quoteActions from 'actions/quoteActions';
 
 const QuoteWizardContainer = connect(
 	function mapStateToProps(state, ownProps) {
-		let audience = state.getIn(['data', 'audience']);
+		let audience = state.getIn(['data', 'quote', 'audience']);
 		if (audience) { audience = audience.toJS(); }
-		let surveyMetadata = state.getIn(['data', 'surveyMetadata']);
+		let surveyMetadata = state.getIn(['data', 'quote', 'surveyMetadata']);
 		if (surveyMetadata) { surveyMetadata = surveyMetadata.toJS(); }
 		return {
 			audience,

@@ -42,38 +42,40 @@ window.api = api;
 
 const initialState = Immutable.fromJS({
 	data: {
-		sample: {
-			sampleSize: 400,
-			reach: 350000000
-		},
-
-		audience: {
-			// baseAudience
-			demographics: {
-				gender: {
-					male: true,
-					female: true
-				},
-				ageGroups: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+']
+		quote: {
+			sample: {
+				sampleSize: 400,
+				reach: 350000000
 			},
-			facebookPages: [
-				{
-					facebookID: '12345678',
-					name: 'MY FACEBOOK PAGE',
-					fans: 300000,
-					iconURL: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/10489765_862388573774524_778769360338540944_n.png?oh=c0c407d5181442f0b7f72d21be9a7362&oe=58736EE4',
-					targetConnected: true
-				}
-			],
-			interests: [
 
-			]
-		},
+			audience: {
+				// baseAudience
+				demographics: {
+					gender: {
+						male: true,
+						female: true
+					},
+					ageGroups: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+']
+				},
+				facebookPages: [
+					{
+						facebookID: '12345678',
+						name: 'MY FACEBOOK PAGE',
+						fans: 300000,
+						iconURL: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/10489765_862388573774524_778769360338540944_n.png?oh=c0c407d5181442f0b7f72d21be9a7362&oe=58736EE4',
+						targetConnected: true
+					}
+				],
+				interests: [
 
-		surveyMetadata: {
-			questions: [
+				]
+			},
 
-			]
+			surveyMetadata: {
+				questions: [
+
+				]
+			}
 		}
 	}
 });

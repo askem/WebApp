@@ -32,7 +32,12 @@ class QuoteInterests extends React.Component {
 		this.setState({
 			searchString
 		});
-		if (searchString.length === 0) { return; }
+		if (searchString.length === 0) {
+			this.setState({
+				searchResults: null
+			});
+			return;
+		}
 		// TODO: abort previous request
 		const self = this;
 		fetch(`https://graph.facebook.com/v2.8/search?locale=en_US&q=${searchString.replace(/ /g, '+')}&type=adinterest&access_token=1160541464012998|iQI7gMB2GTQ-3oO4A07lzjjgNWE`)
@@ -63,6 +68,7 @@ class QuoteInterests extends React.Component {
 		if (this.state.adding) {
 			interestSelector = <ReactSelectize.SimpleSelect ref="interestSelector"
 				open={true} autofocus={true} hideResetButton={true}
+				renderNoResultsFound={() => <div className="no-results-found">Start typing an interest</div>}
 				search={this.state.searchString}
 				onSearchChange={this.handleSearchChange}
 				options={this.state.searchResults}
@@ -78,9 +84,9 @@ class QuoteInterests extends React.Component {
 		return (
 			<div>
 				{this.props.audience.interests.map((interest, idx) =>
-					<div key={interest.facebookID} style={{display: 'flex'}}>
+					<div key={interest.facebookID} className="quote-interest-container">
 						<FBInterest {...interest} />
-						<FlatButton style={{minWidth: 20}} onClick={() => {
+						<FlatButton style={{minWidth: 20, lineHeight: 0, height: 30}} onClick={() => {
 							this.props.removeQuoteAudienceInterest(idx)
 						}} icon={<FaClose />} />
 					</div>

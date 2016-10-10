@@ -1,8 +1,9 @@
 import Immutable from 'immutable';
+import { combineReducers } from 'redux-immutable';
 
 const initialState = Immutable.fromJS({});
 
-const quoteDataReducer = (state = initialState, action) => {
+const quoteReducer = (state = initialState, action) => {
 	switch(action.type) {
 		case 'SET_QUOTE_DEMO_GENDER':
 			return state.setIn(['audience', 'demographics', 'gender', action.payload.gender], action.payload.value);
@@ -66,4 +67,8 @@ const quoteDataReducer = (state = initialState, action) => {
 	}
 }
 
-export default quoteDataReducer;
+const dataReducer = combineReducers({
+	quote: quoteReducer,
+});
+
+export default dataReducer;
