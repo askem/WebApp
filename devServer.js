@@ -8,6 +8,7 @@ new WebpackDevServer(webpack(config), {
 	contentBase: 'dist',
 	publicPath: config.output.publicPath,
 	hot: true,
+	host: '0.0.0.0',
 	historyApiFallback: true,
 	quiet: true
 }).listen(port, 'localhost', (err, result) => {

@@ -5,8 +5,8 @@ module.exports = {
 	devtool: 'source-map',
 
 	entry: {
-		bundle: path.resolve(__dirname, 'src/app.js'),
-		quote:  path.resolve(__dirname, 'src/quote.js')
+		bundle: ['babel-polyfill', path.resolve(__dirname, 'src/app.js')],
+		quote:  ['babel-polyfill', path.resolve(__dirname, 'src/quote.js')]
 	},
 
 	output: {
@@ -34,6 +34,9 @@ module.exports = {
 			'process.env':{
 				'NODE_ENV': JSON.stringify('production')
 			}
+		}),
+		new webpack.ProvidePlugin({
+			'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
 		}),
 		new webpack.optimize.UglifyJsPlugin({
 			compress:{
