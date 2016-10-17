@@ -751,6 +751,7 @@ h1,h2,h3,h4 {
 }
 
 .quote-location {
+	padding: 5px;
 	display: flex;
 }
 
@@ -767,4 +768,25 @@ h1,h2,h3,h4 {
 .quote-uneditable-select .resizable-input {
 	/* hide edit box */
 	display: none;
+}
+
+
+.survey-creator .questions-grid {
+	display: flex;
+	overflow-y: scroll;
+}
+.survey-creator .mini-question {
+	cursor: pointer;
+	font-size: 10px;
+	text-align: center;
+	padding: 10px;
+}
+.survey-creator .mini-question.selected {
+	cursor: default;
+	background-color: aliceblue;
+	border-radius: 3px;
+}
+.survey-creator .mini-question img {
+	width: 70px;
+	height: 70px;
 }

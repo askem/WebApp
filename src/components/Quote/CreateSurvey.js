@@ -17,13 +17,13 @@ class QuestionCreator extends React.Component {
 		}
 	}
 	deleteQuestion() {
-		if (this.props.surveyMetadata.questions.length === 1) {
-			this.setState({
-				errorMessage: `⚠️Survey must contain at least 1 question`
-			});
-			console.warn(`⚠️Survey must contain at least 1 question`);
-			return;
-		}
+		// if (this.props.surveyMetadata.questions.length === 1) {
+		// 	this.setState({
+		// 		errorMessage: `⚠️Survey must contain at least 1 question`
+		// 	});
+		// 	console.warn(`⚠️Survey must contain at least 1 question`);
+		// 	return;
+		// }
 		this.props.deleteQuoteQuestion(this.props.question.questionID);
 	}
 	changeQTextValue() {
@@ -85,24 +85,73 @@ QuestionCreator.propTypes = {
 
 };
 
+const MiniQuestion = (props) => (
+	<div className={`mini-question ${props.selected ? 'selected' : ''}`}
+		onClick={props.selected ? null : ()=> {props.onQuestionClick(props.question.questionID)}}>
+		<img
+			src={props.question.questionImageURL || '/images/emptyMediaID.png'}
+			alt={`Question #${props.question.questionID + 1} Image`} />
+		<div>Question #{props.question.questionID + 1}</div>
+	</div>
+);
+
 class CreateSurvey extends React.Component {
 	constructor(props) {
     	super(props);
 		this.addQuestion = this.addQuestion.bind(this);
+		this.onQuestionClick = this.onQuestionClick.bind(this);
 		this.state = {
-			errorMessage: ''
+			errorMessage: '',
+			selectedQuestion: null
 		};
+	}
+	componentWillReceiveProps(nextProps) {
+		const nextQuestionsCount = nextProps.surveyMetadata.questions.length
+		if (nextQuestionsCount === 0) {
+			this.setState({
+				selectedQuestion: null
+			});
+		} else if (nextQuestionsCount > this.props.surveyMetadata.questions.length) {
+			this.setState({
+				selectedQuestion: nextQuestionsCount - 1
+			});
+		} else if (nextQuestionsCount < this.props.surveyMetadata.questions.length) {
+			let selectedQuestion = this.state.selectedQuestion;
+			if (selectedQuestion) {
+				selectedQuestion--;
+			} else {
+				selectedQuestion = 0;
+			}
+			this.setState({selectedQuestion});
+		}
 	}
 	addQuestion() {
 		this.props.addQuoteQuestion();
 	}
+	onQuestionClick(questionID) {
+		this.setState({
+			selectedQuestion: questionID
+		});
+	}
 	render() {
+		let currentQ;
+		if (this.state.selectedQuestion !== null) {
+			currentQ = <QuestionCreator
+				question={this.props.surveyMetadata.questions[this.state.selectedQuestion]}
+				{...this.props} />;
+		}
 		return (
-			<div>
-				{this.props.surveyMetadata.questions.map(q => <div key={`q${q.questionID}`}>
-					<QuestionCreator question={q} {...this.props} />
+			<div className="survey-creator">
+				<div className="questions-grid">
+					{this.props.surveyMetadata.questions.map(q => <div key={`miniq${q.questionID}`}>
+						<MiniQuestion
+							question={q}
+							selected={this.state.selectedQuestion === q.questionID}
+							onQuestionClick={this.onQuestionClick} />
+					</div>)}
+				</div>
 
-				</div>)}
+				{currentQ}
 
 				<button onClick={this.addQuestion}>Add Question</button>
 
