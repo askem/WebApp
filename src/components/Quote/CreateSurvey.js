@@ -1,5 +1,6 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
+import XButton from 'components/Common/XButton';
 
 const maxPossibleAnswers = 5;
 const maxQuestions = 8;
@@ -59,23 +60,34 @@ class QuestionCreator extends React.Component {
 	render() {
 		if (this.state.errorMessage) {
 		}
+		const imageURL = this.props.question.mediaID ? blobURL(this.props.question.mediaID) : '/images/emptyMediaID.png';
+		const imageButtonLabel = this.props.question.mediaID ? 'Upload Image' : 'Change Image';
 		return (
-			<div>
-				<h1>Question #{this.props.question.questionID+1}</h1>
+			<div className="question-creator">
+				<div style={{display: 'flex'}}>
+					<h1>Question #{this.props.question.questionID+1}</h1>
+					<XButton onClick={this.deleteQuestion} />
+				</div>
 				<TextField value={this.props.question.textValue} ref="questionText"
 						id={`qvalue-${this.props.question.questionID}`}
 						hintText="Question Text"
+						style={{fontWeight: 'bold'}}
 						onChange={this.changeQTextValue} />
-				<button onClick={this.deleteQuestion}>x</button>
+
 				{this.props.question.possibleAnswers.map(pa =>
 					<div key={pa.possibleAnswerID}>
 						<TextField value={pa.textValue} ref={`pavalue-${pa.possibleAnswerID}`}
 							id={`pavalue-${pa.possibleAnswerID}`}
 							hintText={`Answer #${pa.possibleAnswerID + 1}`}
 							onChange={() => this.changePATextValue(pa.possibleAnswerID)} />
-						<button onClick={() => this.deletePA(pa.possibleAnswerID)}>x</button>
+						<XButton onClick={() => this.deletePA(pa.possibleAnswerID)} />
 					</div>)}
-				<button onClick={this.addPA}>Add Answer</button>
+				<button onClick={this.addPA} className="askem-button">Add Answer</button>
+				<div className="image-upload">
+					<img src={imageURL} alt="Question Image" />
+					<button className="askem-button">{imageButtonLabel}</button>
+				</div>
+
 			</div>
 		)
 	}
@@ -149,11 +161,14 @@ class CreateSurvey extends React.Component {
 							selected={this.state.selectedQuestion === q.questionID}
 							onQuestionClick={this.onQuestionClick} />
 					</div>)}
+					<div className="button-container">
+						<button onClick={this.addQuestion} className="askem-button">Add Question</button>
+					</div>
 				</div>
 
 				{currentQ}
 
-				<button onClick={this.addQuestion}>Add Question</button>
+
 
 				{/*<button onClick={this.props.onCancel}>Cancel</button>*/}
 			</div>

@@ -67,6 +67,7 @@ class QuoteInterests extends React.Component {
 		let interestSelector;
 		if (this.state.adding) {
 			interestSelector = <ReactSelectize.SimpleSelect ref="interestSelector"
+				style={{marginRight: 10}}
 				open={true} autofocus={true} hideResetButton={true}
 				renderNoResultsFound={() => <div className="no-results-found">Start typing an interest</div>}
 				search={this.state.searchString}
@@ -93,9 +94,10 @@ class QuoteInterests extends React.Component {
 				)}
 				<div style={{display: 'flex'}}>
 					{interestSelector}
-					<FlatButton
-						label={this.state.adding ? 'Cancel' : 'Add Interest'}
-						onClick={this.toggleAdding} />
+					<button onClick={this.toggleAdding} className="askem-button">
+						{this.state.adding ? 'Cancel' : 'Add Interest'}
+					</button>
+
 				</div>
 			</div>
 		)
