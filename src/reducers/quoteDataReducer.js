@@ -62,6 +62,8 @@ const quoteReducer = (state = initialState, action) => {
 		case 'SET_QUOTE_POSSIBLE_ANSER_TEXT':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
 				'possibleAnswers', action.payload.possibleAnswerID, 'textValue'], action.payload.textValue);
+		case 'SET_QUOTE_SAMPLE_SIZE':
+			return state.setIn(['sample', 'sampleSize'], action.payload.sampleSize);
 		default:
 			return state;
 	}

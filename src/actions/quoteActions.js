@@ -129,10 +129,20 @@ const setQuotePossibleAnswerText = (questionID, possibleAnswerID, textValue) => 
 	}
 }
 
+const setQuoteSampleSize = (sampleSize) => {
+	return {
+		type: 'SET_QUOTE_SAMPLE_SIZE',
+		payload: {
+			sampleSize
+		}
+	}
+}
+
 export {
 	setQuoteDemoGender, toggleQuoteDemoAgeGroup,
 	addQuoteAudiencePage, toggleQuoteAudiencePageConnected, removeQuoteAudiencePage,
 	addQuoteAudienceInterest, removeQuoteAudienceInterest,
 	addQuoteQuestion, deleteQuoteQuestion, setQuoteQuestionText, setQuoteQuestionImage,
-	addQuotePossibleAnswer, deleteQuotePossibleAnswer, setQuotePossibleAnswerText
+	addQuotePossibleAnswer, deleteQuotePossibleAnswer, setQuotePossibleAnswerText,
+	setQuoteSampleSize
 };

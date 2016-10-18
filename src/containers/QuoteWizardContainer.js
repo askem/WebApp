@@ -8,10 +8,13 @@ const QuoteWizardContainer = connect(
 		if (audience) { audience = audience.toJS(); }
 		let surveyMetadata = state.getIn(['data', 'quote', 'surveyMetadata']);
 		if (surveyMetadata) { surveyMetadata = surveyMetadata.toJS(); }
+		let sample = state.getIn(['data', 'quote', 'sample']);
+		if (sample) { sample = sample.toJS(); }
 		return {
 			audience,
 			demographics: audience.demographics,
-			surveyMetadata
+			surveyMetadata,
+			sample
 		};
 	},
 	function mapDispatchToProps(dispatch) {
@@ -30,6 +33,7 @@ const QuoteWizardContainer = connect(
 			addQuotePossibleAnswer: (questionID) => dispatch(quoteActions.addQuotePossibleAnswer(questionID)),
 			deleteQuotePossibleAnswer: (questionID, possibleAnswerID) => dispatch(quoteActions.deleteQuotePossibleAnswer(questionID, possibleAnswerID)),
 			setQuotePossibleAnswerText: (questionID, possibleAnswerID, textValue) => dispatch(quoteActions.setQuotePossibleAnswerText(questionID, possibleAnswerID, textValue)),
+			setQuoteSampleSize: (sampleSize) => dispatch(quoteActions.setQuoteSampleSize(sampleSize)),
 		};
 	}
 )(QuoteWizard);

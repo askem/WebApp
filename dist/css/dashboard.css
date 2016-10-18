@@ -816,3 +816,32 @@ h1,h2,h3,h4 {
 	height: 120px;
 	margin-right: 20px;
 }
+
+.quote-sample-size-options {
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: space-around;
+}
+.quote-sample-size-options .option {
+	border: 0.5px solid #666;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	height: 350px;
+	width: 25%;
+	padding: 0 10px;
+	cursor: pointer;
+}
+.quote-sample-size-options .option h1 {
+	font-size: 70px;
+	margin-bottom: 0;
+}
+.quote-sample-size-options .option h3 {
+	margin-bottom: 0;
+}
+.quote-sample-size-options .option.selected {
+	background-color: #9665aa;
+	color: white;
+	cursor: default;
+}

@@ -41,7 +41,9 @@ class QuoteWizard extends React.Component {
 				stageComponent = <CreateSurvey {...this.props} />;
 				break;
 			case stages.SAMPLE_SIZE:
-				stageComponent = <SampleSize {...this.props} />;
+				stageComponent = <SampleSize
+					sampleSize={this.props.sample.sampleSize}
+					setSampleSize={this.props.setQuoteSampleSize} />;
 				break;
 			default:
 		}

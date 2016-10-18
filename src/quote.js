@@ -45,7 +45,7 @@ const initialState = Immutable.fromJS({
 	data: {
 		quote: {
 			sample: {
-				sampleSize: 400,
+				sampleSize: 600,
 				reach: 350000000
 			},
 
