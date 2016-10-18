@@ -622,6 +622,14 @@ h1,h2,h3,h4 {
     margin-left: 15px;
 }
 
+.askem-button {
+	background-color: #9665aa;
+	color: white;
+	border: none;
+	padding: 6px 10px;
+	font-size: 13px;
+	border-radius: 6px;
+}
 
 /*   Quote		 */
 .quote-wizard-header {
@@ -775,6 +783,15 @@ h1,h2,h3,h4 {
 	display: flex;
 	overflow-y: scroll;
 }
+.survey-creator .questions-grid .button-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.survey-creator .questions-grid .button-container:not(:first-child) {
+	margin-left: 20px;
+}
+
 .survey-creator .mini-question {
 	cursor: pointer;
 	font-size: 10px;
@@ -789,4 +806,13 @@ h1,h2,h3,h4 {
 .survey-creator .mini-question img {
 	width: 70px;
 	height: 70px;
+}
+.question-creator .image-upload {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+.question-creator .image-upload img {
+	width: 120px;
+	height: 120px;
+	margin-right: 20px;
 }
