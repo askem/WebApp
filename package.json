@@ -23,6 +23,7 @@
     "chart.js": "^2.1.6",
     "immutable": "^3.8.1",
     "material-ui": "^0.15.2",
+    "nlp_compromise": "^6.5.3",
     "react": "15.3.2",
     "react-bootstrap": "^0.30.3",
     "react-chartjs": "github:jhudson8/react-chartjs#chartjs-v2",
