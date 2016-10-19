@@ -69,8 +69,27 @@ const quoteReducer = (state = initialState, action) => {
 	}
 }
 
+const imageSuggestionsReducer = (state = initialState, action) => {
+	switch(action.type) {
+		case 'QUESTION_IMAGE_SUGGESTIONS_SUCCESS':
+			return state.setIn([action.payload.textValue], Immutable.fromJS({
+				suggestions: action.payload.suggestions,
+				searchTerm: action.payload.searchTerm,
+				fromQuestionID: action.payload.questionID
+			}));
+		case 'QUESTION_IMAGE_SUGGESTIONS_FAIL':
+			return state.setIn([action.payload.textValue], Immutable.fromJS({
+				loadingFail: true,
+				error: action.payload.error
+			}));
+		default:
+			return state;
+	}
+}
+
 const dataReducer = combineReducers({
 	quote: quoteReducer,
+	imageSuggestions: imageSuggestionsReducer
 });
 
 export default dataReducer;

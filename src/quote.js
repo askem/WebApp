@@ -11,8 +11,8 @@ import routingReducer from 'reducers/routingReducer';
 import quoteRouter from 'routers/quoteRouter';
 import logger from 'middleware/logger';
 
-// import { createLogicMiddleware } from 'redux-logic';
-// import logics from 'logic/index';
+import { createLogicMiddleware } from 'redux-logic';
+import quoteLogics from 'logic/quoteLogic';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -36,10 +36,10 @@ const api = new AskemAPI({
 // For console testing
 window.api = api;
 
-// const logicDeps = {
-// 	api,
-// };
-// const logicMiddleware = createLogicMiddleware(logics, logicDeps);
+const logicDeps = {
+//	api,
+};
+const logicMiddleware = createLogicMiddleware(quoteLogics, logicDeps);
 
 const initialState = Immutable.fromJS({
 	data: {
@@ -77,6 +77,9 @@ const initialState = Immutable.fromJS({
 
 				]
 			}
+		},
+		imageSuggestions: {
+
 		}
 	}
 });
@@ -92,8 +95,8 @@ const store = createStore(
 	initialState,
 	compose(
 		applyMiddleware(
-			logger
-			// logicMiddleware
+			logger,
+			logicMiddleware
 		),
 		window.devToolsExtension ? window.devToolsExtension() : f => f
 	)

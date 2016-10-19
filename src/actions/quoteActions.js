@@ -89,6 +89,16 @@ const setQuoteQuestionText = (questionID, textValue) => {
 	}
 }
 
+const finishedEditingQText = (questionID, textValue) => {
+	return {
+		type: 'FINISHED_EDITING_QUOTE_QUESTION_TEXT',
+		payload: {
+			questionID,
+			textValue
+		}
+	}
+}
+
 const setQuoteQuestionImage = (questionID, mediaID) => {
 	return {
 		type: 'SET_QUOTE_QUESTION_IMAGE',
@@ -142,7 +152,7 @@ export {
 	setQuoteDemoGender, toggleQuoteDemoAgeGroup,
 	addQuoteAudiencePage, toggleQuoteAudiencePageConnected, removeQuoteAudiencePage,
 	addQuoteAudienceInterest, removeQuoteAudienceInterest,
-	addQuoteQuestion, deleteQuoteQuestion, setQuoteQuestionText, setQuoteQuestionImage,
+	addQuoteQuestion, deleteQuoteQuestion, setQuoteQuestionText, finishedEditingQText, setQuoteQuestionImage,
 	addQuotePossibleAnswer, deleteQuotePossibleAnswer, setQuotePossibleAnswerText,
 	setQuoteSampleSize
 };

@@ -13,6 +13,7 @@ class QuestionCreator extends React.Component {
 		this.deleteQuestion = this.deleteQuestion.bind(this);
 		this.addPA = this.addPA.bind(this);
 		this.changeQTextValue = this.changeQTextValue.bind(this);
+		this.handleBlurQText = this.handleBlurQText.bind(this);
 		this.state = {
 			errorMessage: ''
 		}
@@ -31,6 +32,10 @@ class QuestionCreator extends React.Component {
 		const textValue = this.refs.questionText.input.value;
 		if (textValue.length > maxQuestionTextLength) { return; }
 		this.props.setQuoteQuestionText(this.props.question.questionID, textValue);
+	}
+	handleBlurQText() {
+		const textValue = this.refs.questionText.input.value;
+		this.props.finishedEditingQText(this.props.question.questionID, textValue);
 	}
 	addPA() {
 		if (this.props.question.possibleAnswers.length >= maxPossibleAnswers) {
@@ -62,6 +67,19 @@ class QuestionCreator extends React.Component {
 		}
 		const imageURL = this.props.question.mediaID ? blobURL(this.props.question.mediaID) : '/images/emptyMediaID.png';
 		const imageButtonLabel = this.props.question.mediaID ? 'Upload Image' : 'Change Image';
+		let imageSuggestionsPicker;
+		const imageSuggestions = this.props.imageSuggestions[this.props.question.textValue];
+		if (imageSuggestions && imageSuggestions.suggestions && imageSuggestions.suggestions.length > 0) {
+			imageSuggestionsPicker = <div style={{marginTop: 20}}>
+				<div>Suggested Images:</div>
+				{imageSuggestions.suggestions.map((suggestion, idx) => <img
+					src={suggestion.previewURL}
+					key={`imgsuggest-${idx}`}
+					alt="Image Suggestion, powered by Pixabay"
+					style={{width: 70, height: 70, objectFit: 'cover'}}
+					/>)}
+			</div>
+		}
 		return (
 			<div className="question-creator">
 				<div style={{display: 'flex'}}>
@@ -72,6 +90,7 @@ class QuestionCreator extends React.Component {
 						id={`qvalue-${this.props.question.questionID}`}
 						hintText="Question Text"
 						style={{fontWeight: 'bold'}}
+						onBlur={this.handleBlurQText}
 						onChange={this.changeQTextValue} />
 
 				{this.props.question.possibleAnswers.map(pa =>
@@ -86,6 +105,7 @@ class QuestionCreator extends React.Component {
 				<div className="image-upload">
 					<img src={imageURL} alt="Question Image" />
 					<button className="askem-button">{imageButtonLabel}</button>
+					{imageSuggestionsPicker}
 				</div>
 
 			</div>
