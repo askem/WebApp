@@ -29,8 +29,8 @@ injectTapEventPlugin();
 
 const api = new AskemAPI({
 	baseURI: 'https://3po.askem.com/0/',
-	accessToken: '2d5a3b3cef67422db402273506fa9152',
-	loginURI: 'https://r2d2.askem.com/0/login'
+	//accessToken: '2d5a3b3cef67422db402273506fa9152',
+	//loginURI: 'https://r2d2.askem.com/0/login'
 });
 
 // For console testing

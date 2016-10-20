@@ -124,17 +124,29 @@ class AskemAPI {
 				"facebookID" : "NA"
 			});
 		}
-		
+
 		if (audience.demographics.ageGroups.length !== AGE_GROUPS.length) {
 			attributes = attributes.concat(AGE_GROUPS
 			.filter(group => audience.demographics.ageGroups.includes(group.id))
 			.map(group => group.attribute));
 		}
 
+		attributes = attributes.concat(audience.interests);
+
 		const phrase = {
 			attributes
 		};
 		return this.fetchEndpoint('segments/reach', phrase);
+	}
+
+	searchTargetingInterests(searchQuery = "", limit = 20) {
+		return this.fetchEndpoint(`attributes/search?q=${encodeURIComponent(searchQuery)}&type=interests&limit=${limit}`);
+	}
+	searchTargetingFBPages(searchQuery = "", limit = 10) {
+		return this.fetchEndpoint(`attributes/search?q=${encodeURIComponent(searchQuery)}&type=page&limit=${limit}`);
+	}
+	searchTargetingBehaviors(searchQuery = "", limit = 20) {
+		return this.fetchEndpoint(`attributes/search?q=${encodeURIComponent(searchQuery)}&type=behaviors&limit=${limit}`);
 	}
 
 	/* API - Not yet implemented */

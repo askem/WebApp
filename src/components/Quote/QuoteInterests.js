@@ -6,8 +6,8 @@ import FaClose from 'react-icons/lib/fa/close';
 import numeral from 'numeral';
 
 const FBInterest = (props) => <div className="quote-interest">
-	<div className="name">{props.name}</div>
-	<div className="topic">{props.topic}</div>
+	<div className="name">{props.value}</div>
+	<div className="topic">{props.description}</div>
 	{/*<div className="reach">{numeral(props.reach).format('0[.]0a')} people</div>*/}
 </div>
 
@@ -38,18 +38,16 @@ class QuoteInterests extends React.Component {
 			});
 			return;
 		}
-		// TODO: abort previous request
 		const self = this;
-		fetch(`https://graph.facebook.com/v2.8/search?locale=en_US&q=${searchString.replace(/ /g, '+')}&type=adinterest&access_token=1160541464012998|iQI7gMB2GTQ-3oO4A07lzjjgNWE`)
-		.then((response) => {
-			return response.json();
-		}).then((json) => {
-			let searchResults = json.data.map(interest => ({
-				facebookID: interest.id,
-				name: interest.name,
-				topic: interest.topic,
-				reach: interest.audience_size
-			}));
+		window.api.searchTargetingInterests(searchString)
+		.then((results) => {
+			// let searchResults = json.data.map(interest => ({
+			// 	facebookID: interest.id,
+			// 	name: interest.name,
+			// 	topic: interest.topic,
+			// 	reach: interest.audience_size
+			// }));
+			let searchResults = results.attributes;
 			searchResults.sort((p1, p2) => p2.reach - p1.reach);
 			self.setState({
 				searchResults

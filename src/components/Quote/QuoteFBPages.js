@@ -7,9 +7,9 @@ import FaClose from 'react-icons/lib/fa/close';
 import numeral from 'numeral';
 
 const FBPage = (props) => <div className="quote-fbpage">
-	<div className="icon"><img src={props.iconURL} /></div>
-	<div className="name">{props.name}</div>
-	<div className="fans">{numeral(props.fans).format('0[.]0a')} fans</div>
+	<div className="icon"><img src={props.imageURL} /></div>
+	<div className="name">{props.value}</div>
+	<div className="fans">{numeral(props.reach).format('0[.]0a')} fans</div>
 </div>
 
 class QuoteFBPages extends React.Component {
@@ -34,19 +34,22 @@ class QuoteFBPages extends React.Component {
 			searchString
 		});
 		if (searchString.length === 0) { return; }
-		// TODO: abort previous request
 		const self = this;
-		fetch(`https://graph.facebook.com/v2.8/search?q=${searchString.replace(/ /g, '+')}&type=page&fields=picture.type(large),name,fan_count&access_token=1160541464012998|iQI7gMB2GTQ-3oO4A07lzjjgNWE`)
-		.then((response) => {
-			return response.json();
-		}).then((json) => {
-			let searchResults = json.data.map(page => ({
-				facebookID: page.id,
-				name: page.name,
-				iconURL: page.picture.data.url,
-				fans: page.fan_count
-			}));
-			searchResults.sort((p1, p2) => p2.fans - p1.fans);
+
+		// fetch(`https://graph.facebook.com/v2.8/search?q=${searchString.replace(/ /g, '+')}&type=page&fields=picture.type(large),name,fan_count&access_token=1160541464012998|iQI7gMB2GTQ-3oO4A07lzjjgNWE`)
+		// .then((response) => {
+		// 	return response.json();
+		// }).then((json) => {
+		// 	let searchResults = json.data.map(page => ({
+		// 		facebookID: page.id,
+		// 		name: page.name,
+		// 		iconURL: page.picture.data.url,
+		// 		fans: page.fan_count
+		// 	}));
+		window.api.searchTargetingFBPages(searchString)
+		.then(results => {
+			let searchResults = results.attributes;
+			searchResults.sort((p1, p2) => p2.reach - p1.reach);
 			self.setState({
 				searchResults
 			}, () => {
@@ -55,7 +58,6 @@ class QuoteFBPages extends React.Component {
 		});
 	}
 	handlePageSelect(page) {
-		console.info(page);
 		if (!page || !page.facebookID) { return; }
 		page.targetConnected = true;
 		this.props.addQuoteAudiencePage(page);
