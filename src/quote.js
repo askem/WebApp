@@ -37,16 +37,18 @@ const api = new AskemAPI({
 window.api = api;
 
 const logicDeps = {
-//	api,
+	api,
 };
 const logicMiddleware = createLogicMiddleware(quoteLogics, logicDeps);
 
 const initialState = Immutable.fromJS({
 	data: {
+		reachEstimate: {
+			reach: null
+		},
 		quote: {
 			sample: {
 				sampleSize: 600,
-				reach: 350000000
 			},
 
 			audience: {

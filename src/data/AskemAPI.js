@@ -1,3 +1,5 @@
+import AGE_GROUPS from 'constants/AGE_GROUPS';
+
 const defaultModelData = {
 	"modelID": "dce",
 	"modelVersion": "0.1",
@@ -34,6 +36,13 @@ class AskemAPI {
 				throw Error(response.statusText);
 			}
 			return response.json();
+		})
+		.then(results => {
+			// Askem errors
+			if (results.errorCode !== 200) {
+				throw Error(results.error);
+			}
+			return results;
 		});
 	}
 
@@ -81,11 +90,51 @@ class AskemAPI {
 		});
 	}
 	createResearchCampaign(name, description, modelData = defaultModelData) {
-		return this.fetchEndpoint(`researchCampaigns`, {
+		return this.fetchEndpoint('researchCampaigns', {
 			name,
 			description,
 			modelData: JSON.stringify(modelData)
 		});
+	}
+
+	fetchReach(audience) {
+		let attributes = [];
+		attributes.push({
+			"ID" : 0,
+			"type" : "countries",
+			"value" : "US",
+			"description" : null,
+			"facebookID" : "NA"
+		});
+		if (audience.demographics.gender.female) {
+			attributes.push({
+				"ID" : 0,
+				"type" : "gender",
+				"value" : "Female",
+				"description" : null,
+				"facebookID" : "NA"
+			});
+		}
+		if (audience.demographics.gender.male) {
+			attributes.push({
+				"ID" : 0,
+				"type" : "gender",
+				"value" : "Male",
+				"description" : null,
+				"facebookID" : "NA"
+			});
+		}
+		
+		if (audience.demographics.ageGroups.length !== AGE_GROUPS.length) {
+			attributes = attributes.concat(AGE_GROUPS
+			.filter(group => audience.demographics.ageGroups.includes(group.id))
+			.map(group => group.attribute));
+		}
+
+		const phrase = {
+			attributes
+		};
+		return this.fetchEndpoint('segments/reach', phrase);
 	}
 
 	/* API - Not yet implemented */

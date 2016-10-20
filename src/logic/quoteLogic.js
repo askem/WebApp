@@ -1,6 +1,31 @@
 import { createLogic } from 'redux-logic';
 import nlp_compromise from 'nlp_compromise/src/index';
 
+const reachInvalidationLogic = createLogic({
+	type: [
+		'REACH_ESTIMATE_EXPLICIT_FETCH',	// request a fetch explicitly, or any of the data changes:
+		'SET_QUOTE_DEMO_GENDER', 'TOGGLE_QUOTE_DEMO_AGE_GROUP',
+		'ADD_QUOTE_AUDIENCE_PAGE', 'TOGGLE_QUOTE_AUDIENCE_PAGE_CONNECTED', 'REMOVE_QUOTE_AUDIENCE_PAGE',
+		'ADD_QUOTE_AUDIENCE_INTEREST', 'REMOVE_QUOTE_AUDIENCE_INTEREST'],
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({ type: 'REACH_ESTIMATE_FETCH' }, { allowMore: true });
+		const audience = getState().getIn(['data', 'quote', 'audience']).toJS();
+		return api.fetchReach(audience)
+		.then(results => {
+			dispatch({
+				type: 'REACH_ESTIMATE_FETCH_SUCCESS',
+				payload: {
+					reach: results.size
+				}
+			});
+		})
+		.catch(error => dispatch({ type: 'REACH_ESTIMATE_FETCH_FAIL', payload: {
+			error
+		}, error: true }));
+	}
+});
+
 const imageSuggestionsLogic = createLogic({
 	type: 'FINISHED_EDITING_QUOTE_QUESTION_TEXT',
 	latest: true,
@@ -57,5 +82,6 @@ const imageSuggestionsLogic = createLogic({
 });
 
 export default [
+	reachInvalidationLogic,
 	imageSuggestionsLogic
 ];

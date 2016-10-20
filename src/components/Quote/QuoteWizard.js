@@ -23,6 +23,9 @@ class QuoteWizard extends React.Component {
 			stage: stages.AUDIENCE
 		};
 	}
+	componentDidMount() {
+		this.props.requestReach();
+	}
 	handleStageClick(stage) {
 		if (this.state.stage === stage) {
 			return;
@@ -64,7 +67,7 @@ class QuoteWizard extends React.Component {
 						{stageComponent}
 					</div>
 					<div className="quote-wizard-side">
-						<QuoteReach reach={300000} />
+						<QuoteReach reach={this.props.reachEstimate.reach} />
 					</div>
 				</div>
 

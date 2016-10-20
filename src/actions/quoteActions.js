@@ -1,4 +1,10 @@
 /* Audience */
+const requestReach = () => {
+	return {
+		type: 'REACH_ESTIMATE_EXPLICIT_FETCH'
+	};
+};
+
 const setQuoteDemoGender = (gender, value) => {
 	return {
 		type: 'SET_QUOTE_DEMO_GENDER',
@@ -149,6 +155,7 @@ const setQuoteSampleSize = (sampleSize) => {
 }
 
 export {
+	requestReach,
 	setQuoteDemoGender, toggleQuoteDemoAgeGroup,
 	addQuoteAudiencePage, toggleQuoteAudiencePageConnected, removeQuoteAudiencePage,
 	addQuoteAudienceInterest, removeQuoteAudienceInterest,

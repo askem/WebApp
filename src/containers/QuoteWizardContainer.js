@@ -12,16 +12,20 @@ const QuoteWizardContainer = connect(
 		if (sample) { sample = sample.toJS(); }
 		let imageSuggestions = state.getIn(['data', 'imageSuggestions']);
 		if (imageSuggestions) { imageSuggestions = imageSuggestions.toJS(); }
+		let reachEstimate = state.getIn(['data', 'reachEstimate']);
+		if (reachEstimate) { reachEstimate = reachEstimate.toJS(); }
 		return {
 			audience,
 			demographics: audience.demographics,
 			surveyMetadata,
 			sample,
-			imageSuggestions
+			imageSuggestions,
+			reachEstimate
 		};
 	},
 	function mapDispatchToProps(dispatch) {
 		return {
+			requestReach: () => dispatch(quoteActions.requestReach()),
 			setQuoteDemoGender: (gender, value) => dispatch(quoteActions.setQuoteDemoGender(gender, value)),
 			toggleQuoteDemoAgeGroup: group => dispatch(quoteActions.toggleQuoteDemoAgeGroup(group)),
 			addQuoteAudiencePage: fbPage => dispatch(quoteActions.addQuoteAudiencePage(fbPage)),

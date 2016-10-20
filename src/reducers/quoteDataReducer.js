@@ -69,6 +69,31 @@ const quoteReducer = (state = initialState, action) => {
 	}
 }
 
+const reachEstimateReducer = (state = initialState, action) => {
+	switch(action.type) {
+		case 'REACH_ESTIMATE_FETCH':
+			return state.merge({
+				reach: null,
+				error: false,
+				fetching: true
+			});
+		case 'REACH_ESTIMATE_FETCH_SUCCESS':
+			return state.merge({
+				reach: action.payload.reach,
+				error: false,
+				fetching: false
+			});
+		case 'REACH_ESTIMATE_FETCH_FAIL':
+			return state.merge({
+				reach: null,
+				error: true,
+				fetching: false
+			});
+		default:
+			return state;
+	}
+};
+
 const imageSuggestionsReducer = (state = initialState, action) => {
 	switch(action.type) {
 		case 'QUESTION_IMAGE_SUGGESTIONS_SUCCESS':
@@ -89,6 +114,7 @@ const imageSuggestionsReducer = (state = initialState, action) => {
 
 const dataReducer = combineReducers({
 	quote: quoteReducer,
+	reachEstimate: reachEstimateReducer,
 	imageSuggestions: imageSuggestionsReducer
 });
 
