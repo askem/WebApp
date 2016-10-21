@@ -7,6 +7,7 @@ import ReactSelectize from 'react-selectize';
 require('react-selectize/themes/index.css');
 import QuoteFBPages from 'components/Quote/QuoteFBPages';
 import QuoteInterests from 'components/Quote/QuoteInterests';
+import QuoteBehaviors from 'components/Quote/QuoteBehaviors';
 
 const getFacebookPages = (input) => {
 	return fetch(`https://graph.facebook.com/v2.7/search?q=${input.replace(/ /g, '+')}&type=page&fields=picture.type(large),name,fan_count&access_token=1160541464012998|iQI7gMB2GTQ-3oO4A07lzjjgNWE`)
@@ -102,6 +103,13 @@ class QuoteDemographics extends React.Component {
 					<div className="title">Interests</div>
 					<div className="value" style={{width: 500}}>
 						<QuoteInterests {...this.props} />
+					</div>
+				</div>
+
+				<div className="quote-audience">
+					<div className="title">Behaviors</div>
+					<div className="value" style={{width: 500}}>
+						<QuoteBehaviors {...this.props} />
 					</div>
 				</div>
 

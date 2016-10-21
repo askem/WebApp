@@ -132,6 +132,7 @@ class AskemAPI {
 		}
 
 		attributes = attributes.concat(audience.interests);
+		attributes = attributes.concat(audience.behaviors);
 
 		const phrase = {
 			attributes

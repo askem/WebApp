@@ -69,6 +69,24 @@ const removeQuoteAudienceInterest = (interestIndex) => {
 	}
 }
 
+const addQuoteAudienceBehavior = (behavior) => {
+	return {
+		type: 'ADD_QUOTE_AUDIENCE_BEHAVIOR',
+		payload: {
+			behavior
+		}
+	}
+}
+
+const removeQuoteAudienceBehavior = (behaviorIndex) => {
+	return {
+		type: 'REMOVE_QUOTE_AUDIENCE_BEHAVIOR',
+		payload: {
+			behaviorIndex
+		}
+	}
+}
+
 /* Survey */
 const addQuoteQuestion = () => {
 	return {
@@ -159,6 +177,7 @@ export {
 	setQuoteDemoGender, toggleQuoteDemoAgeGroup,
 	addQuoteAudiencePage, toggleQuoteAudiencePageConnected, removeQuoteAudiencePage,
 	addQuoteAudienceInterest, removeQuoteAudienceInterest,
+	addQuoteAudienceBehavior, removeQuoteAudienceBehavior,
 	addQuoteQuestion, deleteQuoteQuestion, setQuoteQuestionText, finishedEditingQText, setQuoteQuestionImage,
 	addQuotePossibleAnswer, deleteQuotePossibleAnswer, setQuotePossibleAnswerText,
 	setQuoteSampleSize
