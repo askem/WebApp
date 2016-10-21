@@ -630,6 +630,10 @@ h1,h2,h3,h4 {
 	font-size: 13px;
 	border-radius: 6px;
 }
+.askem-button.selected {
+	background-color: white;
+	color: #9665aa;
+}
 
 /*   Quote		 */
 .quote-wizard-header {
@@ -690,8 +694,9 @@ h1,h2,h3,h4 {
 }
 
 .quote-estimated-reach {
-	font-family: 'Bebas Neue';
-	font-size: 70px;
+	/*font-family: 'Bebas Neue';*/
+	font-size: 90px;
+	font-weight: bold;
 }
 
 .quote-estimated-reach-description {
