@@ -1,6 +1,8 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import XButton from 'components/Common/XButton';
+import blobURL from 'utils/Askem/blobURL';
+import UploadButton from 'components/Common/UploadButton';
 
 const maxPossibleAnswers = 5;
 const maxQuestions = 8;
@@ -14,6 +16,7 @@ class QuestionCreator extends React.Component {
 		this.addPA = this.addPA.bind(this);
 		this.changeQTextValue = this.changeQTextValue.bind(this);
 		this.handleBlurQText = this.handleBlurQText.bind(this);
+		this.uploadImage = this.uploadImage.bind(this);
 		this.state = {
 			errorMessage: ''
 		}
@@ -62,21 +65,28 @@ class QuestionCreator extends React.Component {
 		if (textValue.length > maxPossibleAnswerTextLength) { return; }
 		this.props.setQuotePossibleAnswerText(this.props.question.questionID, possibleAnswerID, textValue);
 	}
+	handleSuggestionClick(suggestion) {
+		this.props.setQuoteQuestionImage(this.props.question.questionID, suggestion.imageURL);
+	}
+	uploadImage(dataURI) {
+		this.props.setQuoteQuestionImage(this.props.question.questionID, dataURI);
+	}
 	render() {
 		if (this.state.errorMessage) {
 		}
-		const imageURL = this.props.question.mediaID ? blobURL(this.props.question.mediaID) : '/images/emptyMediaID.png';
-		const imageButtonLabel = this.props.question.mediaID ? 'Upload Image' : 'Change Image';
+		const imageURL = blobURL(this.props.question.mediaID);
+		const imageButtonLabel = this.props.question.mediaID ? 'Change Image' : 'Upload Image';
 		let imageSuggestionsPicker;
 		const imageSuggestions = this.props.imageSuggestions[this.props.question.textValue];
-		if (imageSuggestions && imageSuggestions.suggestions && imageSuggestions.suggestions.length > 0) {
+		if (!this.props.question.mediaID && imageSuggestions && imageSuggestions.suggestions && imageSuggestions.suggestions.length > 0) {
 			imageSuggestionsPicker = <div style={{marginTop: 20}}>
 				<div>Suggested Images:</div>
 				{imageSuggestions.suggestions.map((suggestion, idx) => <img
+					onClick={() => this.handleSuggestionClick(suggestion)}
 					src={suggestion.previewURL}
 					key={`imgsuggest-${idx}`}
 					alt="Image Suggestion, powered by Pixabay"
-					style={{width: 70, height: 70, objectFit: 'cover'}}
+					style={{width: 70, height: 70, objectFit: 'cover', cursor: 'pointer'}}
 					/>)}
 			</div>
 		}
@@ -103,8 +113,12 @@ class QuestionCreator extends React.Component {
 					</div>)}
 				<button onClick={this.addPA} className="askem-button">Add Answer</button>
 				<div className="image-upload">
-					<img src={imageURL} alt="Question Image" />
-					<button className="askem-button">{imageButtonLabel}</button>
+					<img src={imageURL} alt="Question Image" style={{objectFit: 'cover'}}
+						onClick={() => this.refs.imageUploadButton.openUploadDialog()} />
+					<UploadButton ref="imageUploadButton"
+						label={imageButtonLabel}
+						accept="image/jpeg, image/png"
+						onFileUpload={this.uploadImage} />
 					{imageSuggestionsPicker}
 				</div>
 
@@ -121,7 +135,8 @@ const MiniQuestion = (props) => (
 	<div className={`mini-question ${props.selected ? 'selected' : ''}`}
 		onClick={props.selected ? null : ()=> {props.onQuestionClick(props.question.questionID)}}>
 		<img
-			src={props.question.questionImageURL || '/images/emptyMediaID.png'}
+			style={{objectFit: 'cover'}}
+			src={blobURL(props.question.mediaID)}
 			alt={`Question #${props.question.questionID + 1} Image`} />
 		<div>Question #{props.question.questionID + 1}</div>
 	</div>
@@ -131,7 +146,7 @@ class CreateSurvey extends React.Component {
 	constructor(props) {
     	super(props);
 		this.addQuestion = this.addQuestion.bind(this);
-		this.onQuestionClick = this.onQuestionClick.bind(this);
+		this.selectQuestion = this.selectQuestion.bind(this);
 		this.state = {
 			errorMessage: '',
 			selectedQuestion: null
@@ -140,13 +155,9 @@ class CreateSurvey extends React.Component {
 	componentWillReceiveProps(nextProps) {
 		const nextQuestionsCount = nextProps.surveyMetadata.questions.length
 		if (nextQuestionsCount === 0) {
-			this.setState({
-				selectedQuestion: null
-			});
+			this.selectQuestion(null);
 		} else if (nextQuestionsCount > this.props.surveyMetadata.questions.length) {
-			this.setState({
-				selectedQuestion: nextQuestionsCount - 1
-			});
+			this.selectQuestion(nextQuestionsCount - 1);
 		} else if (nextQuestionsCount < this.props.surveyMetadata.questions.length) {
 			let selectedQuestion = this.state.selectedQuestion;
 			if (selectedQuestion) {
@@ -154,16 +165,15 @@ class CreateSurvey extends React.Component {
 			} else {
 				selectedQuestion = 0;
 			}
-			this.setState({selectedQuestion});
+			this.selectQuestion(selectedQuestion);
 		}
 	}
 	addQuestion() {
 		this.props.addQuoteQuestion();
 	}
-	onQuestionClick(questionID) {
-		this.setState({
-			selectedQuestion: questionID
-		});
+	selectQuestion(selectedQuestion) {
+		this.setState({selectedQuestion});
+		this.props.onChangeSelectedQuestion(selectedQuestion);
 	}
 	render() {
 		let currentQ;
@@ -179,7 +189,7 @@ class CreateSurvey extends React.Component {
 						<MiniQuestion
 							question={q}
 							selected={this.state.selectedQuestion === q.questionID}
-							onQuestionClick={this.onQuestionClick} />
+							onQuestionClick={this.selectQuestion} />
 					</div>)}
 					<div className="button-container">
 						<button onClick={this.addQuestion} className="askem-button">Add Question</button>

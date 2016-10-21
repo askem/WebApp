@@ -28,11 +28,17 @@ const quoteReducer = (state = initialState, action) => {
 			return state.updateIn(['audience', 'facebookPages'], pages =>
 			pages.delete(action.payload.pageIndex));
 		case 'ADD_QUOTE_AUDIENCE_INTEREST':
-			return state.updateIn(['audience', 'interests'], pages =>
-			pages.push(Immutable.fromJS(action.payload.interest)));
+			return state.updateIn(['audience', 'interests'], interests =>
+			interests.push(Immutable.fromJS(action.payload.interest)));
 		case 'REMOVE_QUOTE_AUDIENCE_INTEREST':
-			return state.updateIn(['audience', 'interests'], pages =>
-			pages.delete(action.payload.interestIndex));
+			return state.updateIn(['audience', 'interests'], interests =>
+			interests.delete(action.payload.interestIndex));
+		case 'ADD_QUOTE_AUDIENCE_BEHAVIOR':
+			return state.updateIn(['audience', 'behaviors'], behaviors =>
+			behaviors.push(Immutable.fromJS(action.payload.behavior)));
+		case 'REMOVE_QUOTE_AUDIENCE_BEHAVIOR':
+			return state.updateIn(['audience', 'behaviors'], behaviors =>
+			behaviors.delete(action.payload.behaviorIndex));
 
 		case 'ADD_QUOTE_QUESTION':
 			return state.updateIn(['surveyMetadata', 'questions'], questions =>

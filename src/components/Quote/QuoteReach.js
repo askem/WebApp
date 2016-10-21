@@ -11,7 +11,7 @@ class QuoteReach extends React.Component {
 		if (this.props.reach) {
 			reach = <div>
 				<div className="quote-estimated-reach">
-					{numeral(this.props.reach).format()}
+					{numeral(this.props.reach).format('a')}
 				</div>
 				<div className="quote-estimated-reach-description">
 					monthly active people
