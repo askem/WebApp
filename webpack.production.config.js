@@ -1,6 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
-
+const extractTextPlugin = require('extract-text-webpack-plugin');
+const distPath = path.resolve(__dirname, 'dist');
+console.log(distPath);
 module.exports = {
 	devtool: 'source-map',
 
@@ -10,7 +12,7 @@ module.exports = {
 	},
 
 	output: {
-		path: path.resolve(__dirname, 'dist'),
+		path: distPath,
 		filename: '[name].js'
 	},
 
@@ -21,6 +23,10 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: 'babel',
 				query: { presets: [ 'es2015', 'react' ] }
+			},
+			{
+				test: /\.scss$/,
+				loader: extractTextPlugin.extract('css!sass')
 			},
 			{
 				test: /\.css$/,
@@ -37,6 +43,10 @@ module.exports = {
 		}),
 		new webpack.ProvidePlugin({
 			'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+		}),
+		//new extractTextPlugin(`${distPath}/css/quote.css`, {
+		new extractTextPlugin('css/[name].css', {
+			allChunks: true
 		}),
 		new webpack.optimize.UglifyJsPlugin({
 			compress:{

@@ -9,28 +9,6 @@ import QuoteFBPages from 'components/Quote/QuoteFBPages';
 import QuoteInterests from 'components/Quote/QuoteInterests';
 import QuoteBehaviors from 'components/Quote/QuoteBehaviors';
 
-const getFacebookPages = (input) => {
-	return fetch(`https://graph.facebook.com/v2.7/search?q=${input.replace(/ /g, '+')}&type=page&fields=picture.type(large),name,fan_count&access_token=1160541464012998|iQI7gMB2GTQ-3oO4A07lzjjgNWE`)
-	.then((response) => {
-		return response.json();
-	}).then((json) => {
-		const options = json.data.map(page => ({
-			value: page.id,
-			label: page.name,
-			iconURL: page.picture.data.url,
-			fans: page.fan_count
-		}));
-		return {
-			options
-		};
-	});
-}
-const renderFacebookPageOption = (option) => <div>
-	<img src={option.iconURL} style={{width:30, height: 30}}/>
-	<strong>{option.label}</strong>
-	{option.fans} fans
-</div>;
-
 class QuoteDemographics extends React.Component {
 	constructor(props) {
     	super(props);

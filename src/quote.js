@@ -1,4 +1,6 @@
 import 'babel-polyfill';
+require('sass/quote.scss');
+
 import React from 'react';
 import { render } from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
