@@ -1,8 +1,7 @@
 import React from 'react';
 import AGE_GROUPS from 'constants/AGE_GROUPS';
 import consolidateAgeGroups from 'utils/array/consolidateAgeGroups';
-import Toggle from 'react-input-toggle/dist/react-input-toggle';
-require('react-input-toggle/dist/react-input-toggle.css');
+import Checkbox from 'components/Common/Checkbox/Checkbox';
 import ReactSelectize from 'react-selectize';
 require('react-selectize/themes/index.css');
 import QuoteFBPages from 'components/Quote/QuoteFBPages';
@@ -60,7 +59,7 @@ class QuoteDemographics extends React.Component {
 					<div className="title">Ages</div>
 					<div className="value" style={{display: 'flex'}}>
 						{AGE_GROUPS.map(g => <div key={g.id}>
-							<Toggle data-group={g.id} label={g.title} effect="echo" labelPosition="left"
+							<Checkbox data-group={g.id} label={g.title}
 								onChange={this.onAgeGroupChange}
 								checked={this.props.demographics.ageGroups.indexOf(g.id) > -1} />
 						</div>)}
@@ -70,9 +69,9 @@ class QuoteDemographics extends React.Component {
 				<div className="quote-audience">
 					<div className="title">Gender</div>
 					<div className="value">
-						<Toggle data-gender="female" label="Female" effect="echo" labelPosition="left"
+						<Checkbox data-gender="female" label="Female"
 							onChange={this.onGenderChange} checked={this.props.demographics.gender.female} />
-						<Toggle data-gender="male" label="Male" effect="echo" labelPosition="left"
+						<Checkbox data-gender="male" label="Male"
 							onChange={this.onGenderChange} checked={this.props.demographics.gender.male}/>
 					</div>
 				</div>

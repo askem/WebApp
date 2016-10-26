@@ -1,0 +1,62 @@
+.icheckbox_askem,
+.iradio_askem {
+    display: inline-block;
+    *display: inline;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+    width: 22px;
+    height: 22px;
+    background: url(askem-check.png) no-repeat;
+    border: none;
+    cursor: pointer;
+}
+
+.icheckbox_askem {
+    background-position: 0 0;
+}
+    .icheckbox_askem.hover {
+        background-position: -24px 0;
+    }
+    .icheckbox_askem.checked {
+        background-position: -48px 0;
+    }
+    .icheckbox_askem.disabled {
+        background-position: -72px 0;
+        cursor: default;
+    }
+    .icheckbox_askem.checked.disabled {
+        background-position: -96px 0;
+    }
+
+.iradio_askem {
+    background-position: -120px 0;
+}
+    .iradio_askem.hover {
+        background-position: -144px 0;
+    }
+    .iradio_askem.checked {
+        background-position: -168px 0;
+    }
+    .iradio_askem.disabled {
+        background-position: -192px 0;
+        cursor: default;
+    }
+    .iradio_askem.checked.disabled {
+        background-position: -216px 0;
+    }
+
+	.icheckbox_askem+span {
+		padding-left: 8px;
+		padding-right: 22px;
+	}
+
+/* HiDPI support */
+@media (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+    .icheckbox_askem,
+    .iradio_askem {
+        background-image: url(askem-check@2x.png);
+        -webkit-background-size: 240px 24px;
+        background-size: 240px 24px;
+    }
+}

@@ -53,25 +53,38 @@
 
 .quote-estimated-reach-title {
 	font-weight: bold;
-	font-size: 22px;
+	font-size: 16px;
+	color: #33bb95;
+	text-transform: uppercase;
+}
+
+.reach-estimate-loading {
+	.spinner.three-bounce .bounce1, .spinner.three-bounce .bounce2, .spinner.three-bounce .bounce3 {
+		background-color: #33bb95;
+	}
 }
 
 .quote-estimated-reach {
-	/*font-family: 'Bebas Neue';*/
-	font-size: 90px;
+	font-size: 80px;
+	line-height: 80px;
 	font-weight: bold;
+	color: #33bb95;
 }
 
 .quote-estimated-reach-description {
-	font-size: 12px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #9ea8ba;
 }
 
 .quote-audience {
 	padding-bottom: 20px;
 
 	.title {
-		font-weight: bold;
-		font-size: 22px;
+		font-weight: 400;
+		font-size: 16px;
+		color: #261f53;
+		padding-bottom: 10px;
 	}
 }
 

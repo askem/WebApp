@@ -626,9 +626,10 @@ h1,h2,h3,h4 {
 	background-color: #9665aa;
 	color: white;
 	border: none;
-	padding: 6px 10px;
-	font-size: 13px;
-	border-radius: 6px;
+	padding: 10px 14px;
+	font-size: 14px;
+	border-radius: 3px;
+	box-shadow: 1px 1px 6px 0px #858585;
 }
 .askem-button.selected {
 	background-color: white;

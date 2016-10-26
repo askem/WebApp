@@ -18,7 +18,7 @@ class QuoteReach extends React.Component {
 				</div>
 			</div>
 		} else {
-			reach = <Loading className="" />;
+			reach = <Loading className="reach-estimate-loading" />;
 		}
 		return (
 			<div>
