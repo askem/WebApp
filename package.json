@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --debug",
     "dist": "NODE_ENV=production webpack -p --config webpack.production.config.js --optimize-minimize",
+    "quote": "NODE_ENV=production ENTRY_POINT=quote webpack -p --config webpack.production.config.js --optimize-minimize",
     "start": "node devServer.js"
   },
   "repository": {
@@ -23,6 +24,7 @@
     "chart.js": "^2.1.6",
     "icheck": "^1.0.2",
     "immutable": "^3.8.1",
+    "inline-style-prefixer": "^2.0.4",
     "material-ui": "^0.15.2",
     "nlp_compromise": "^6.5.3",
     "react": "15.3.2",
@@ -52,6 +54,7 @@
     "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-0": "^6.16.0",
     "css-loader": "^0.25.0",
     "exports-loader": "^0.6.3",
     "extract-text-webpack-plugin": "^1.0.1",

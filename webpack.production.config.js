@@ -1,9 +1,10 @@
+'use strict';
 const path = require('path');
 const webpack = require('webpack');
 const extractTextPlugin = require('extract-text-webpack-plugin');
 const distPath = path.resolve(__dirname, 'dist');
-console.log(distPath);
-module.exports = {
+
+let config = {
 	devtool: 'source-map',
 
 	entry: {
@@ -20,7 +21,7 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.js$/,
-				exclude: /node_modules/,
+				//exclude: /node_modules/,
 				loader: 'babel',
 				query: { presets: [ 'es2015', 'react' ] }
 			},
@@ -75,3 +76,13 @@ module.exports = {
 		]
 	}
 };
+
+const entryPoint = process.env.ENTRY_POINT;
+if (entryPoint) {
+	console.info(`Only using entry point: ${entryPoint}`);
+	config.entry = {
+		[entryPoint]: config.entry[entryPoint]
+	}
+};
+
+module.exports = config;
