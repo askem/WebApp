@@ -13,10 +13,6 @@ class QuoteDemographics extends React.Component {
     	super(props);
 		this.onGenderChange = this.onGenderChange.bind(this);
 		this.onAgeGroupChange = this.onAgeGroupChange.bind(this);
-		this.toggleEditingDemo = this.toggleEditingDemo.bind(this);
-		this.state = {
-			customizing: true
-		}
 	}
 	onGenderChange(e) {
 		const gender = e.target.dataset.gender;
@@ -26,18 +22,13 @@ class QuoteDemographics extends React.Component {
 		const group = e.target.dataset.group;
 		this.props.toggleQuoteDemoAgeGroup(group);
 	}
-	toggleEditingDemo() {
-		this.setState({
-			customizing: !this.state.customizing
-		});
-	}
+
 	render() {
-		let demoView;
-		if (this.state.customizing) {
-			const renderUS = (location) => <div className="quote-location">
-				<div className="title">United States</div>
-			</div>;
-			demoView = <div>
+		const renderUS = (location) => <div className="quote-location">
+			<div className="title">United States</div>
+		</div>;
+		return (
+			<div>
 				<div className="quote-audience">
 					<div className="title">
 						Location
@@ -77,7 +68,7 @@ class QuoteDemographics extends React.Component {
 
 				<div className="quote-audience">
 					<div className="title">Interests</div>
-					<div className="value" style={{width: 500}}>
+					<div className="value">
 						<QuoteInterests {...this.props} />
 					</div>
 				</div>
@@ -96,51 +87,6 @@ class QuoteDemographics extends React.Component {
 					</div>
 				</div>*/}
 
-			</div>;
-		} else {
-			let genderText = '';
-			if (this.props.demographics.gender.female) {
-				genderText += 'Famale';
-			}
-			if (this.props.demographics.gender.male) {
-				if (genderText) {
-					genderText += ' and ';
-				}
-				genderText += 'Male';
-			}
-
-
-
-			demoView = <div>
-				<div>
-					United States
-				</div>
-
-				<div className="quote-demo">
-					<div className="title">Ages: </div>
-					<div className="value">
-						{consolidateAgeGroups(this.props.demographics.ageGroups)}
-					</div>
-				</div>
-
-				<div className="quote-demo">
-					<div className="title">Gender: </div>
-					<div className="value">
-						{genderText}
-					</div>
-				</div>
-
-
-
-			</div>;
-		}
-		const editButton =
-			<button onClick={this.toggleEditingDemo}>
-				{this.state.customizing ? 'Done' : 'Edit'}
-			</button>;
-		return (
-			<div>
-				{demoView}
 			</div>
 		)
 	}

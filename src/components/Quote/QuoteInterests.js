@@ -5,10 +5,19 @@ import Toggle from 'react-input-toggle/dist/react-input-toggle';
 import FaClose from 'react-icons/lib/fa/close';
 import numeral from 'numeral';
 
+const InteresTopic = (props) =>
+	props.description === props.value ? null : <div className="topic">{props.description}</div>;
+
 const FBInterest = (props) => <div className="quote-interest">
 	<div className="name">{props.value}</div>
-	<div className="topic">{props.description}</div>
+	<InteresTopic {...props} />
 	{/*<div className="reach">{numeral(props.reach).format('0[.]0a')} people</div>*/}
+</div>
+
+const FBInterestSelected = (props) => <div onClick={props.onClick} className="quote-interest-selected">
+	<div className="name">{props.value}</div>
+	<InteresTopic {...props} />
+	<FaClose style={{height: 30}} />
 </div>
 
 class QuoteInterests extends React.Component {
@@ -30,15 +39,19 @@ class QuoteInterests extends React.Component {
 	}
 	handleSearchChange(searchString) {
 		this.setState({
-			searchString
+			searchString,
+			searching: true
 		});
 		if (searchString.length === 0) {
 			this.setState({
-				searchResults: null
+				searchResults: null,
+				searching: false
 			});
 			return;
 		}
 		const self = this;
+		const existingInterestsIDs = this.props.audience.interests.map(i => i.facebookID);
+		console.info(existingInterestsIDs);
 		window.api.searchTargetingInterests(searchString)
 		.then((results) => {
 			// let searchResults = json.data.map(interest => ({
@@ -48,9 +61,11 @@ class QuoteInterests extends React.Component {
 			// 	reach: interest.audience_size
 			// }));
 			let searchResults = results.attributes;
+			searchResults = searchResults.filter(i => !existingInterestsIDs.includes(i.facebookID));
 			searchResults.sort((p1, p2) => p2.reach - p1.reach);
 			self.setState({
-				searchResults
+				searchResults,
+				searching: false
 			}, () => {
 				self.refs.interestSelector.highlightFirstSelectableOption();
 			})
@@ -67,7 +82,17 @@ class QuoteInterests extends React.Component {
 			interestSelector = <ReactSelectize.SimpleSelect ref="interestSelector"
 				style={{marginRight: 10}}
 				open={true} autofocus={true} hideResetButton={true}
-				renderNoResultsFound={() => <div className="no-results-found">Start typing an interest</div>}
+				renderNoResultsFound={(item, search) => {
+					let label;
+					if (this.state.searching) {
+						label = '';
+					} else {
+						label = search === '' ? 'Start typing an interest': 'No results found';
+					}
+					return <div className="no-results-found">
+						{label}
+					</div>
+				}}
 				search={this.state.searchString}
 				onSearchChange={this.handleSearchChange}
 				options={this.state.searchResults}
@@ -82,19 +107,20 @@ class QuoteInterests extends React.Component {
 		}
 		return (
 			<div>
-				{this.props.audience.interests.map((interest, idx) =>
-					<div key={interest.facebookID} className="quote-interest-container">
-						<FBInterest {...interest} />
-						<FlatButton style={{minWidth: 20, lineHeight: 0, height: 30}} onClick={() => {
-							this.props.removeQuoteAudienceInterest(idx)
-						}} icon={<FaClose />} />
-					</div>
-				)}
+				<div className="quote-interests-selection">
+					{this.props.audience.interests.map((interest, idx) =>
+						<div key={interest.facebookID} className="quote-interest-container">
+							<FBInterestSelected {...interest} onClick={() => {
+								this.props.removeQuoteAudienceInterest(idx)
+							}} />
+						</div>
+					)}
+				</div>
 				<div style={{display: 'flex'}}>
 					{interestSelector}
-					<button onClick={this.toggleAdding} className="askem-button">
-						{this.state.adding ? 'Cancel' : 'Add Interest'}
-					</button>
+					<FlatButton onClick={this.toggleAdding}>
+						{this.state.adding ? 'Cancel' : '+ Add Interest'}
+					</FlatButton>
 
 				</div>
 			</div>

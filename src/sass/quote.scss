@@ -116,8 +116,34 @@
 	}
 }
 
+.quote-interests-selection {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+}
+
+.quote-interest-selected {
+	cursor: pointer;
+	color: white;
+	background-color: #9665aa;
+	white-space: nowrap;
+	border-radius: 3px;
+	line-height: 30px;
+	padding: 0 10px;
+	display: flex;
+	margin-right: 10px;
+	.name {
+		font-weight: bold;
+		padding-right: 7px;
+	}
+	.topic {
+		padding-right: 7px;
+	}
+}
+
 .quote-interest-container {
 	display: flex;
+	padding-bottom: 10px;
 }
 
 .quote-interest {
