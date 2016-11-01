@@ -51,7 +51,6 @@ class QuoteInterests extends React.Component {
 		}
 		const self = this;
 		const existingInterestsIDs = this.props.audience.interests.map(i => i.facebookID);
-		console.info(existingInterestsIDs);
 		window.api.searchTargetingInterests(searchString)
 		.then((results) => {
 			// let searchResults = json.data.map(interest => ({
@@ -69,6 +68,11 @@ class QuoteInterests extends React.Component {
 			}, () => {
 				self.refs.interestSelector.highlightFirstSelectableOption();
 			})
+		}).catch(error => {
+			self.setState({
+				searchResults: [],
+				searching: false
+			});
 		});
 	}
 	handleInterestSelect(interest) {

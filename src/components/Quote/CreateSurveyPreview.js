@@ -4,6 +4,7 @@ import AutoArrangement from 'utils/Askem/AutoArrangement';
 import blobURL from 'utils/Askem/blobURL';
 
 const questionFromSurveyMetadata = (meta) => {
+	if (!meta) return null;
 	let q = JSON.parse(JSON.stringify(meta));
 
 	const arrangement = meta._popupsArrangement || AutoArrangement.POPUP_ARRANGEMENT_TYPE.CIRCLE;

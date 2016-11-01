@@ -24,9 +24,6 @@ class QuoteDemographics extends React.Component {
 	}
 
 	render() {
-		const renderUS = (location) => <div className="quote-location">
-			<div className="title">United States</div>
-		</div>;
 		return (
 			<div>
 				<div className="quote-audience">
@@ -37,10 +34,10 @@ class QuoteDemographics extends React.Component {
 						<ReactSelectize.SimpleSelect ref="locationSelector"
 							hideResetButton={true}
 							filterOptions={(options, search) => options}
-							options={['genpop_US']}
-							renderOption={renderUS}
-							renderValue={renderUS}
-							value={'genpop_US'}
+							options={['US']}
+							renderOption={()=><span style={{marginLeft: 5}}>United States</span>}
+							renderValue={()=><span>United States</span>}
+							value={'US'}
 						/>
 					</div>
 				</div>

@@ -65,5 +65,9 @@ AnswerPopup.propTypes = {
 	onCheck: React.PropTypes.func,
 	onUncheck: React.PropTypes.func,
 };
+AnswerPopup.defaultProps = {
+	uiTypeID: 0,
+	isMultiAnswerQuestion: false
+};
 
 export default AnswerPopup;

@@ -1,6 +1,7 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import XButton from 'components/Common/XButton';
+import FlatButton from 'material-ui/FlatButton';
 import blobURL from 'utils/Askem/blobURL';
 import UploadButton from 'components/Common/UploadButton';
 
@@ -93,8 +94,8 @@ class QuestionCreator extends React.Component {
 		return (
 			<div className="question-creator">
 				<div style={{display: 'flex'}}>
-					<h1>Question #{this.props.question.questionID+1}</h1>
-					<XButton onClick={this.deleteQuestion} />
+					<h1>Question {this.props.question.questionID+1}</h1>
+					<FlatButton label="Delete Question" onClick={this.deleteQuestion} />
 				</div>
 				<TextField value={this.props.question.textValue} ref="questionText"
 						id={`qvalue-${this.props.question.questionID}`}
@@ -107,7 +108,7 @@ class QuestionCreator extends React.Component {
 					<div key={pa.possibleAnswerID}>
 						<TextField value={pa.textValue} ref={`pavalue-${pa.possibleAnswerID}`}
 							id={`pavalue-${pa.possibleAnswerID}`}
-							hintText={`Answer #${pa.possibleAnswerID + 1}`}
+							hintText={`Answer ${pa.possibleAnswerID + 1}`}
 							onChange={() => this.changePATextValue(pa.possibleAnswerID)} />
 						<XButton onClick={() => this.deletePA(pa.possibleAnswerID)} />
 					</div>)}
@@ -137,8 +138,8 @@ const MiniQuestion = (props) => (
 		<img
 			style={{objectFit: 'cover'}}
 			src={blobURL(props.question.mediaID)}
-			alt={`Question #${props.question.questionID + 1} Image`} />
-		<div>Question #{props.question.questionID + 1}</div>
+			alt={`Question ${props.question.questionID + 1} Image`} />
+		<div>Question {props.question.questionID + 1}</div>
 	</div>
 );
 
@@ -148,18 +149,19 @@ class CreateSurvey extends React.Component {
 		this.addQuestion = this.addQuestion.bind(this);
 		this.selectQuestion = this.selectQuestion.bind(this);
 		this.state = {
-			errorMessage: '',
-			selectedQuestion: null
+			errorMessage: ''
 		};
 	}
 	componentWillReceiveProps(nextProps) {
-		const nextQuestionsCount = nextProps.surveyMetadata.questions.length
+		const nextQuestionsCount = nextProps.surveyMetadata.questions.length;
+		const currentQuestionsCount = this.props.surveyMetadata.questions.length;
+		if (nextQuestionsCount === currentQuestionsCount) { return; }
 		if (nextQuestionsCount === 0) {
 			this.selectQuestion(null);
-		} else if (nextQuestionsCount > this.props.surveyMetadata.questions.length) {
+		} else if (nextQuestionsCount > currentQuestionsCount) {
 			this.selectQuestion(nextQuestionsCount - 1);
-		} else if (nextQuestionsCount < this.props.surveyMetadata.questions.length) {
-			let selectedQuestion = this.state.selectedQuestion;
+		} else if (nextQuestionsCount < currentQuestionsCount) {
+			let selectedQuestion = this.props.selectedQuestion;
 			if (selectedQuestion) {
 				selectedQuestion--;
 			} else {
@@ -172,28 +174,30 @@ class CreateSurvey extends React.Component {
 		this.props.addQuoteQuestion();
 	}
 	selectQuestion(selectedQuestion) {
-		this.setState({selectedQuestion});
 		this.props.onChangeSelectedQuestion(selectedQuestion);
 	}
 	render() {
 		let currentQ;
-		if (this.state.selectedQuestion !== null) {
-			currentQ = <QuestionCreator
-				question={this.props.surveyMetadata.questions[this.state.selectedQuestion]}
-				{...this.props} />;
+		if (this.props.selectedQuestion !== null) {
+			const q = this.props.surveyMetadata.questions[this.props.selectedQuestion];
+			if (q) {
+				currentQ = <QuestionCreator
+					question={q}
+					{...this.props} />;
+			}
 		}
 		return (
 			<div className="survey-creator">
+				<div className="add-button-container">
+					<button onClick={this.addQuestion} className="askem-button">Add Question</button>
+				</div>
 				<div className="questions-grid">
-					{this.props.surveyMetadata.questions.map(q => <div key={`miniq${q.questionID}`}>
-						<MiniQuestion
+					{this.props.surveyMetadata.questions.map(q => <MiniQuestion
+							key={`miniq${q.questionID}`}
 							question={q}
-							selected={this.state.selectedQuestion === q.questionID}
+							selected={this.props.selectedQuestion === q.questionID}
 							onQuestionClick={this.selectQuestion} />
-					</div>)}
-					<div className="button-container">
-						<button onClick={this.addQuestion} className="askem-button">Add Question</button>
-					</div>
+					)}
 				</div>
 
 				{currentQ}

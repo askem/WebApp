@@ -62,6 +62,11 @@ class QuoteBehaviors extends React.Component {
 			}, () => {
 				self.refs.behaviorSelector.highlightFirstSelectableOption();
 			})
+		}).catch(error => {
+			self.setState({
+				searchResults: [],
+				searching: false
+			});
 		});
 	}
 	handleBehaviorSelect(behavior) {
