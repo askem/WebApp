@@ -35,7 +35,7 @@ class QuoteSummary extends React.Component {
 		const surveyDescription = numberOfQuestions > 0 ? `${numberOfQuestions} questions` : 'Not defined';
 		return (
 			<div>
-				<div className="quote-estimated-reach-title">
+				<div className="quote-wizard-side-title">
 					Summary
 				</div>
 				<ul style={{padding: '10px 20px'}}>

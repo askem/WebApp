@@ -1,9 +1,10 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import XButton from 'components/Common/XButton';
+import MdAdd from 'react-icons/lib/md/add';
 import FlatButton from 'material-ui/FlatButton';
 import blobURL from 'utils/Askem/blobURL';
-import UploadButton from 'components/Common/UploadButton';
+import UploadHiddenControl from 'components/Common/UploadHiddenControl';
 
 const maxPossibleAnswers = 5;
 const maxQuestions = 8;
@@ -80,49 +81,62 @@ class QuestionCreator extends React.Component {
 		let imageSuggestionsPicker;
 		const imageSuggestions = this.props.imageSuggestions[this.props.question.textValue];
 		if (!this.props.question.mediaID && imageSuggestions && imageSuggestions.suggestions && imageSuggestions.suggestions.length > 0) {
-			imageSuggestionsPicker = <div style={{marginTop: 20}}>
-				<div>Suggested Images:</div>
+			imageSuggestionsPicker = <div className="image-suggestions">
+				<div>Suggested Images</div>
 				{imageSuggestions.suggestions.map((suggestion, idx) => <img
 					onClick={() => this.handleSuggestionClick(suggestion)}
 					src={suggestion.previewURL}
 					key={`imgsuggest-${idx}`}
 					alt="Image Suggestion, powered by Pixabay"
-					style={{width: 70, height: 70, objectFit: 'cover', cursor: 'pointer'}}
 					/>)}
 			</div>
 		}
+		const possibleAnswersCount = this.props.question.possibleAnswers.length;
 		return (
 			<div className="question-creator">
-				<div style={{display: 'flex'}}>
-					<h1>Question {this.props.question.questionID+1}</h1>
+				<div className="question-title">
+					Question {this.props.question.questionID+1}
 					<FlatButton label="Delete Question" onClick={this.deleteQuestion} />
 				</div>
-				<TextField value={this.props.question.textValue} ref="questionText"
-						id={`qvalue-${this.props.question.questionID}`}
-						hintText="Question Text"
-						style={{fontWeight: 'bold'}}
-						onBlur={this.handleBlurQText}
-						onChange={this.changeQTextValue} />
-
-				{this.props.question.possibleAnswers.map(pa =>
-					<div key={pa.possibleAnswerID}>
-						<TextField value={pa.textValue} ref={`pavalue-${pa.possibleAnswerID}`}
-							id={`pavalue-${pa.possibleAnswerID}`}
-							hintText={`Answer ${pa.possibleAnswerID + 1}`}
-							onChange={() => this.changePATextValue(pa.possibleAnswerID)} />
-						<XButton onClick={() => this.deletePA(pa.possibleAnswerID)} />
-					</div>)}
-				<button onClick={this.addPA} className="askem-button">Add Answer</button>
-				<div className="image-upload">
-					<img src={imageURL} alt="Question Image" style={{objectFit: 'cover'}}
-						onClick={() => this.refs.imageUploadButton.openUploadDialog()} />
-					<UploadButton ref="imageUploadButton"
-						label={imageButtonLabel}
-						accept="image/jpeg, image/png"
-						onFileUpload={this.uploadImage} />
-					{imageSuggestionsPicker}
+				<div className="question-inputs">
+					<div className="image-upload">
+						<UploadHiddenControl ref="imageUploadControl"
+							accept="image/jpeg, image/png"
+							onFileUpload={this.uploadImage}	/>
+						<img src={imageURL} alt={imageButtonLabel} title={imageButtonLabel} style={{objectFit: 'cover'}}
+							onClick={() => this.refs.imageUploadControl.openUploadDialog()} />
+					</div>
+					<div className="text-inputs">				
+						<TextField value={this.props.question.textValue} ref="questionText"
+								id={`qvalue-${this.props.question.questionID}`}
+								hintText="Question Text"
+								inputStyle={{color: 'black'}}
+								style={{fontWeight: 'bold'}}
+								fullWidth={true}
+								onBlur={this.handleBlurQText}
+								onChange={this.changeQTextValue} />
+						{this.props.question.possibleAnswers.map(pa =>
+							<div key={pa.possibleAnswerID} className="possible-answer-input">
+								<TextField value={pa.textValue} ref={`pavalue-${pa.possibleAnswerID}`}
+									id={`pavalue-${pa.possibleAnswerID}`}
+									inputStyle={{color: 'black'}}
+									fullWidth={true}
+									hintText={`Answer ${pa.possibleAnswerID + 1}`}
+									onChange={() => this.changePATextValue(pa.possibleAnswerID)}>
+								</TextField>
+								{possibleAnswersCount === 1 ? null :
+								<div className="possible-answer-delete">
+									<XButton onClick={() => this.deletePA(pa.possibleAnswerID)} />
+								</div>
+								}
+								
+							</div>)}
+						<FlatButton onClick={this.addPA}
+							label="Add Answer"
+							icon={<MdAdd />} />
+					</div>
 				</div>
-
+				{imageSuggestionsPicker}
 			</div>
 		)
 	}
@@ -177,6 +191,7 @@ class CreateSurvey extends React.Component {
 		this.props.onChangeSelectedQuestion(selectedQuestion);
 	}
 	render() {
+		const hasQuestions = this.props.surveyMetadata.questions.length > 0;
 		let currentQ;
 		if (this.props.selectedQuestion !== null) {
 			const q = this.props.surveyMetadata.questions[this.props.selectedQuestion];
@@ -186,25 +201,24 @@ class CreateSurvey extends React.Component {
 					{...this.props} />;
 			}
 		}
+		let questionsGrid;
+		if (hasQuestions) {
+			questionsGrid = <div className="questions-grid">
+				{this.props.surveyMetadata.questions.map(q => <MiniQuestion
+					key={`miniq${q.questionID}`}
+					question={q}
+					selected={this.props.selectedQuestion === q.questionID}
+					onQuestionClick={this.selectQuestion} />
+				)}
+			</div>
+		}
 		return (
 			<div className="survey-creator">
-				<div className="add-button-container">
-					<button onClick={this.addQuestion} className="askem-button">Add Question</button>
+				<div className="quote-audience">
+					<button onClick={this.addQuestion} className="askem-button-white">Add Question</button>
 				</div>
-				<div className="questions-grid">
-					{this.props.surveyMetadata.questions.map(q => <MiniQuestion
-							key={`miniq${q.questionID}`}
-							question={q}
-							selected={this.props.selectedQuestion === q.questionID}
-							onQuestionClick={this.selectQuestion} />
-					)}
-				</div>
-
+				{questionsGrid}
 				{currentQ}
-
-
-
-				{/*<button onClick={this.props.onCancel}>Cancel</button>*/}
 			</div>
 		)
 	}

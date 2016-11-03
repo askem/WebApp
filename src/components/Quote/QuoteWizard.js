@@ -1,6 +1,5 @@
 import React from 'react';
-import CreateSurvey from 'components/Quote/CreateSurvey';
-import CreateSurveyPreview from 'components/Quote/CreateSurveyPreview';
+import QuoteSurvey from 'components/Quote/QuoteSurvey';
 import QuoteAudience from 'components/Quote/QuoteAudience';
 import SampleSize from 'components/Quote/SampleSize';
 import QuoteReach from 'components/Quote/QuoteReach';
@@ -25,10 +24,8 @@ class QuoteWizard extends React.Component {
 	constructor(props) {
     	super(props);
 		this.nextStage = this.nextStage.bind(this);
-		this.setSelectedQuestion = this.setSelectedQuestion.bind(this);
 		this.state = {
-			stage: stages.AUDIENCE,
-			selectedQuestion: null	// Coordinate selection between sub-components
+			stage: stages.AUDIENCE
 		};
 	}
 	componentDidMount() {
@@ -39,21 +36,15 @@ class QuoteWizard extends React.Component {
 			return;
 		}
 		this.setState({
-			stage,
-			selectedQuestion: null
+			stage
 		});
 	}
 	nextStage() {
 		this.setState({
 			stage: this.state.stage + 1,
-			selectedQuestion: null
 		});
 	}
-	setSelectedQuestion(selectedQuestion) {
-		this.setState({
-			selectedQuestion
-		});
-	}
+	
 	render() {
 		let stageComponent;
 		let sideComponent;
@@ -66,9 +57,7 @@ class QuoteWizard extends React.Component {
 				break;
 			case stages.SURVEY:
 				advanceButtonTitle = 'Set Sample Size';
-				stageComponent = <CreateSurvey
-					selectedQuestion={this.state.selectedQuestion}
-					onChangeSelectedQuestion={this.setSelectedQuestion}
+				stageComponent = <QuoteSurvey
 					{...this.props} />;
 				// sideComponent = <CreateSurveyPreview
 				// 	selectedQuestion={this.state.selectedQuestion}
@@ -111,9 +100,7 @@ class QuoteWizard extends React.Component {
 				</div>
 			</div>;
 		} else {
-			mainComponent = <div className="quote-wizard-main">
-				{stageComponent}
-			</div>;
+			mainComponent = stageComponent;
 		}
 		let advanceButton = advanceButtonTitle ?
 			<button onClick={this.nextStage} className="askem-button">

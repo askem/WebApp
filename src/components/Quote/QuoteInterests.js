@@ -3,6 +3,7 @@ import FlatButton from 'material-ui/FlatButton';
 import ReactSelectize from 'react-selectize';
 import Toggle from 'react-input-toggle/dist/react-input-toggle';
 import FaClose from 'react-icons/lib/fa/close';
+import MdAdd from 'react-icons/lib/md/add';
 import numeral from 'numeral';
 
 const InteresTopic = (props) =>
@@ -122,10 +123,10 @@ class QuoteInterests extends React.Component {
 				</div>
 				<div style={{display: 'flex'}}>
 					{interestSelector}
-					<FlatButton onClick={this.toggleAdding}>
-						{this.state.adding ? 'Cancel' : '+ Add Interest'}
-					</FlatButton>
-
+					<FlatButton onClick={this.toggleAdding}
+						label={this.state.adding ? 'Cancel' : 'Add Interest'}
+						icon={this.state.adding ? null : <MdAdd size={20}/>}
+					/>
 				</div>
 			</div>
 		)

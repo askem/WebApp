@@ -22,7 +22,7 @@ class QuoteReach extends React.Component {
 		}
 		return (
 			<div>
-				<div className="quote-estimated-reach-title">
+				<div className="quote-wizard-side-title">
 					Estimated Reach
 				</div>
 				{reach}

@@ -91,9 +91,27 @@ const rootReducer = combineReducers({
 	routing: routingReducer,
 	// commits: commitsReducer,
 });
+//const mainReducer = rootReducer;
+
+/* For debugging only */
+window.s = () => {
+	localStorage.state = JSON.stringify(store.getState().toJS());
+}
+window.l = () => {
+	store.dispatch({type: 'DEBUG_REPLACE_STORE', payload: JSON.parse(localStorage.state)});
+}
+const debugReducer = (state, action) => {
+	switch (action.type) {
+		case 'DEBUG_REPLACE_STORE':
+			return Immutable.fromJS(action.payload);			
+		default:
+			return rootReducer(state, action);
+	}
+}
+const mainReducer = debugReducer;
 
 const store = createStore(
-	rootReducer,
+	mainReducer,
 	initialState,
 	compose(
 		applyMiddleware(

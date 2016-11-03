@@ -19,22 +19,26 @@ class CreateSurveyPreview extends React.Component {
 	}
 
 	render() {
-		if (this.props.selectedQuestion === null || this.props.questions.length === 0) {
-			return null;
-		}
+		// if (this.props.selectedQuestion === null || this.props.questions.length === 0) {
+		// 	return null;
+		// }
+		let preview;
 		const q = questionFromSurveyMetadata(this.props.questions[this.props.selectedQuestion]);
-		if (!q) { return null; }
+		if (q) {
+			preview = <div className="preview">
+				<Question question={q}
+				onSingleVote={()=>{}}
+				onMultiVote={()=>{}} />
+			</div>;
+		} else {
+			preview = <div className="empty-preview" />
+		}
 		return (
 			<div>
-				<div className="quote-estimated-reach-title">
+				<div className="quote-wizard-side-title">
 					Preview
 				</div>
-				<div className="preview animated fadeIn"
-				style={{animationDuration: '4s'}}>
-					<Question question={q}
-					onSingleVote={()=>{}}
-					onMultiVote={()=>{}} />
-				</div>
+				{preview}
 			</div>
 		)
 	}

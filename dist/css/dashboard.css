@@ -621,17 +621,3 @@ h1,h2,h3,h4 {
     left: 100%;
     margin-left: 15px;
 }
-
-.askem-button {
-	background-color: #9665aa;
-	color: white;
-	border: none;
-	padding: 10px 14px;
-	font-size: 14px;
-	border-radius: 3px;
-	box-shadow: 1px 1px 6px 0px #858585;
-}
-.askem-button.selected {
-	background-color: white;
-	color: #9665aa;
-}
