@@ -1,7 +1,7 @@
 import React from 'react';
 import CreateSurvey from 'components/Quote/CreateSurvey';
 import CreateSurveyPreview from 'components/Quote/CreateSurveyPreview';
-import QuoteDemographics from 'components/Quote/QuoteDemographics';
+import QuoteAudience from 'components/Quote/QuoteAudience';
 import SampleSize from 'components/Quote/SampleSize';
 import QuoteReach from 'components/Quote/QuoteReach';
 import TextField from 'material-ui/TextField';
@@ -61,7 +61,7 @@ class QuoteWizard extends React.Component {
 		switch (this.state.stage) {
 			case stages.AUDIENCE:
 				advanceButtonTitle = 'Define Survey';
-				stageComponent = <QuoteDemographics {...this.props} />;
+				stageComponent = <QuoteAudience {...this.props} />;
 				sideComponent = <QuoteReach reach={this.props.reachEstimate.reach} />;
 				break;
 			case stages.SURVEY:
@@ -70,9 +70,9 @@ class QuoteWizard extends React.Component {
 					selectedQuestion={this.state.selectedQuestion}
 					onChangeSelectedQuestion={this.setSelectedQuestion}
 					{...this.props} />;
-				sideComponent = <CreateSurveyPreview
-					selectedQuestion={this.state.selectedQuestion}
-					questions={this.props.surveyMetadata.questions} />;
+				// sideComponent = <CreateSurveyPreview
+				// 	selectedQuestion={this.state.selectedQuestion}
+				// 	questions={this.props.surveyMetadata.questions} />;
 				break;
 			case stages.SAMPLE_SIZE:
 				advanceButtonTitle = 'Get Quote';
@@ -100,6 +100,21 @@ class QuoteWizard extends React.Component {
 			default:
 				break;
 		}
+		let mainComponent;
+		if (sideComponent) {
+			mainComponent = <div className="quote-wizard-main">
+				<div className="quote-wizard-maincontent">
+					{stageComponent}
+				</div>
+				<div className="quote-wizard-side">
+					{sideComponent}
+				</div>
+			</div>;
+		} else {
+			mainComponent = <div className="quote-wizard-main">
+				{stageComponent}
+			</div>;
+		}
 		let advanceButton = advanceButtonTitle ?
 			<button onClick={this.nextStage} className="askem-button">
 				{advanceButtonTitle} ➜
@@ -116,17 +131,10 @@ class QuoteWizard extends React.Component {
 						</div>
 					})}
 				</div>
-				<div className="quote-wizard-main">
-					<div style={{width: '70%', marginRight: 'auto', marginLeft: 'auto'}}>
-						<div className="quote-wizard-maincontent" style={{width: '100%'}}>
-							{stageComponent}
-						</div>
-						<div style={{textAlign: 'right', marginTop: 10}}>
-							{advanceButton}
-						</div>
-					</div>
-					<div className="quote-wizard-side">
-						{sideComponent}
+				<div className="quote-wizard-border">
+					{mainComponent}
+					<div className="button-container">
+						{advanceButton}
 					</div>
 				</div>
 

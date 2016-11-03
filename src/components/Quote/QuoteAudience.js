@@ -8,7 +8,7 @@ import QuoteFBPages from 'components/Quote/QuoteFBPages';
 import QuoteInterests from 'components/Quote/QuoteInterests';
 import QuoteBehaviors from 'components/Quote/QuoteBehaviors';
 
-class QuoteDemographics extends React.Component {
+class QuoteAudience extends React.Component {
 	constructor(props) {
     	super(props);
 		this.onGenderChange = this.onGenderChange.bind(this);
@@ -89,8 +89,8 @@ class QuoteDemographics extends React.Component {
 	}
 }
 
-QuoteDemographics.propTypes = {
+QuoteAudience.propTypes = {
 
 };
 
-export default QuoteDemographics;
+export default QuoteAudience;

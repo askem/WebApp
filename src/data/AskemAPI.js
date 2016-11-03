@@ -23,7 +23,9 @@ class AskemAPI {
 	setHeaders() {
 		const headers = new Headers();
 		headers.append('Content-Type', 'application/json; charset=utf-8');
-		headers.append('Authorization', `Bearer ${this._accessToken}`);
+		if (this._accessToken) {
+			headers.append('Authorization', `Bearer ${this._accessToken}`);
+		}
 		this._headers = headers;
 	}
 
