@@ -27,6 +27,10 @@ body {
   background: #ecebea;
   font-family: 'Open Sans', Helvetica, Arial, sans-serif; }
 
+body ul li {
+	list-style: none;
+}
+
 .askem-header {
   margin-bottom: 5px;
   background: #c56895;
