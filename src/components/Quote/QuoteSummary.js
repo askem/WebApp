@@ -1,5 +1,6 @@
 import React from 'react';
 import consolidateAgeGroups from 'utils/array/consolidateAgeGroups';
+import numeral from 'numeral';
 
 class QuoteSummary extends React.Component {
 	constructor(props) {
@@ -8,7 +9,10 @@ class QuoteSummary extends React.Component {
 	render() {
 		let sampleSize;
 		if (this.props.displaySampleSize) {
-			sampleSize = <li><strong>Sample Size:</strong> {this.props.sample.sampleSize}</li>;
+			sampleSize = <div>
+				<div className="title">Sample Size</div>
+				<div className="value">{this.props.sample.sampleSize}</div>
+			</div>;
 		}
 		let genderDescription;
 		if (this.props.audience.demographics.gender.female && this.props.audience.demographics.gender.male) {
@@ -23,30 +27,40 @@ class QuoteSummary extends React.Component {
 		if (this.props.audience.interests.length > 0) {
 			const interestsDescription = this.props.audience.interests
 				.map(interest => interest.value).join(', ');
-			interests = <li><strong>Interests:</strong> {interestsDescription}</li>
+			interests = <div>
+				<div className="title">Interests</div>
+				<div className="value">{interestsDescription}</div>
+			</div>;
 		}
 		let behaviors;
 		if (this.props.audience.behaviors.length > 0) {
 			const behaviorsDescription = this.props.audience.behaviors
 				.map(behavior => behavior.value).join(', ');
-			behaviors = <li><strong>Behaviors:</strong> {behaviorsDescription}</li>
+			behaviors = <div>
+				<div className="title">Behaviors</div>
+				<div className="value">{behaviorsDescription}</div>
+			</div>;
 		}
 		const numberOfQuestions = this.props.surveyMetadata.questions.length;
-		const surveyDescription = numberOfQuestions > 0 ? `${numberOfQuestions} questions` : 'Not defined';
+		const surveyDescription = numberOfQuestions === 1 ? '1 question' : numberOfQuestions > 0 ? `${numberOfQuestions} questions` : 'Not defined';
+		const reachDescription = this.props.reachEstimate.reach ? 
+			numeral(this.props.reachEstimate.reach).format('a') : 'N/A';
 		return (
-			<div>
+			<div className="quote-summary">
 				<div className="quote-wizard-side-title">
 					Summary
 				</div>
-				<ul style={{padding: '10px 20px'}}>
-					<li><strong>Location:</strong> U.S.</li>
-					<li><strong>Demographics:</strong> {genderDescription}, {ageDescription}</li>
-					{interests}
-					{behaviors}
-					<li><strong>Estimated Reach:</strong> {this.props.reachEstimate.reach || 'N/A'}</li>
-					<li><strong>Survey:</strong> {surveyDescription}</li>
-					{sampleSize}
-				</ul>
+				<div className="title">Location</div>
+				<div className="value">United States</div>
+				<div className="title">Demographics</div>
+				<div className="value">{genderDescription}<br/>{ageDescription}</div>
+				{interests}
+				{behaviors}
+				<div className="title">Estimated Reach</div>
+				<div className="value">{reachDescription}</div>
+				<div className="title">Survey</div>
+				<div className="value">{surveyDescription}</div>
+				{sampleSize}
 			</div>
 		)
 	}

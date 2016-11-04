@@ -91,7 +91,10 @@ class QuestionCreator extends React.Component {
 					/>)}
 			</div>
 		}
+
 		const possibleAnswersCount = this.props.question.possibleAnswers.length;
+		const addPAButton = possibleAnswersCount === maxPossibleAnswers ? null :
+			<FlatButton onClick={this.addPA} label="Add Answer" icon={<MdAdd />} />;
 		return (
 			<div className="question-creator">
 				<div className="question-title">
@@ -103,7 +106,9 @@ class QuestionCreator extends React.Component {
 						<UploadHiddenControl ref="imageUploadControl"
 							accept="image/jpeg, image/png"
 							onFileUpload={this.uploadImage}	/>
-						<img src={imageURL} alt={imageButtonLabel} title={imageButtonLabel} style={{objectFit: 'cover'}}
+						<div title={imageButtonLabel}
+							style={{backgroundImage: `url('${imageURL}')`}}
+							className={this.props.question.mediaID ? "image-preview" : "image-preview empty-overlay"}
 							onClick={() => this.refs.imageUploadControl.openUploadDialog()} />
 					</div>
 					<div className="text-inputs">				
@@ -131,9 +136,7 @@ class QuestionCreator extends React.Component {
 								}
 								
 							</div>)}
-						<FlatButton onClick={this.addPA}
-							label="Add Answer"
-							icon={<MdAdd />} />
+							{addPAButton}
 					</div>
 				</div>
 				{imageSuggestionsPicker}

@@ -118,7 +118,7 @@ class QuoteBehaviors extends React.Component {
 				<div style={{display: 'flex'}}>
 					{behaviorSelector}
 					<FlatButton onClick={this.toggleAdding}
-						label={this.state.adding ? 'Cancel' : 'Add Interest'}
+						label={this.state.adding ? 'Cancel' : 'Add Behavior'}
 						icon={this.state.adding ? null : <MdAdd size={20}/>}
 					/>
 				</div>

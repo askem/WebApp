@@ -3,8 +3,10 @@ import QuoteSurvey from 'components/Quote/QuoteSurvey';
 import QuoteAudience from 'components/Quote/QuoteAudience';
 import SampleSize from 'components/Quote/SampleSize';
 import QuoteReach from 'components/Quote/QuoteReach';
-import TextField from 'material-ui/TextField';
 import QuoteSummary from 'components/Quote/QuoteSummary';
+import QuoteLeadForm from 'components/Quote/QuoteLeadForm';
+import MdArrowForward from 'react-icons/lib/md/arrow-forward';
+import MdCheck from 'react-icons/lib/md/check';
 
 const stages = {
 	AUDIENCE: 0,
@@ -49,6 +51,7 @@ class QuoteWizard extends React.Component {
 		let stageComponent;
 		let sideComponent;
 		let advanceButtonTitle;
+		let advanceButton;
 		switch (this.state.stage) {
 			case stages.AUDIENCE:
 				advanceButtonTitle = 'Define Survey';
@@ -66,25 +69,18 @@ class QuoteWizard extends React.Component {
 			case stages.SAMPLE_SIZE:
 				advanceButtonTitle = 'Get Quote';
 				stageComponent = <SampleSize
-					advanceButton={<button onClick={this.nextStage} className="askem-button selected">
-						{advanceButtonTitle} ➜
-					</button>}
+					onAdvance={this.nextStage}
 					sampleSize={this.props.sample.sampleSize}
 					setSampleSize={this.props.setQuoteSampleSize} />;
 				sideComponent = <QuoteSummary {...this.props} />;
 				break;
 			case stages.GET_QUOTE:
-				stageComponent = <div>
-					<TextField floatingLabelText="First Name" /><br/>
-					<TextField floatingLabelText="Last Name" /><br/>
-					<TextField floatingLabelText="Phone Number" /><br/>
-					<TextField floatingLabelText="Email" /><br/>
-					<TextField floatingLabelText="Company" /><br/>
-					<button className="askem-button">
-						Submit
-					</button>
-				</div>;
+				stageComponent = <QuoteLeadForm {...this.props} />;
 				sideComponent = <QuoteSummary {...this.props} displaySampleSize={true} />;
+				advanceButton =
+						<button onClick={this.nextStage} className="askem-button confirmed">
+							Submit
+						</button>
 				break;
 			default:
 				break;
@@ -102,10 +98,10 @@ class QuoteWizard extends React.Component {
 		} else {
 			mainComponent = stageComponent;
 		}
-		let advanceButton = advanceButtonTitle ?
+		advanceButton = advanceButton || (advanceButtonTitle ?
 			<button onClick={this.nextStage} className="askem-button">
-				{advanceButtonTitle} ➜
-			</button> : null;
+				{advanceButtonTitle} <MdArrowForward size={16}/>
+			</button> : null);
 		return (
 			<div>
 				<div className="quote-wizard-header">
