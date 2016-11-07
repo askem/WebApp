@@ -46,32 +46,71 @@ $body-bgcolor: #f9fafc;
 	height: 34px;
 }
 
+header {
+	height: 130px;
+	background-image: url(/images/layout/header.jpg);
+	color: white;
+	
+	.main {
+		width: 80%;
+		padding-top: 10px;
+		margin: 0 auto;
+		display: flex;
+		justify-content: space-between;
+	}
+	
+	.title {
+		text-align: center;
+		font-size: 40px;
+		font-weight: bold;
+	}
+	img {
+		padding-top: 20px;
+	}
+}
+
 .quote-wizard-header {
-	font-family: 'Bebas Neue';
+	width: 80%;
+	top: -35px;
+	height: 70px;
+	position: relative;
+	margin: 0 auto;
+	border: 1px solid $border-gray;
+	border-radius: 3px;
+	
+	background-color: white;
 	display: flex;
 	color: #ECEBE9;
 
 	.stage {
 		display: flex;
-		align-items: center;
-		margin-right: 20px;
+		flex-direction: column;
+		padding-left: 20px;
 		cursor: pointer;
+		width: 25%;
+		color: #888;
+		text-transform: uppercase;
+		justify-content: center;
+		&:not(:last-child) {
+			border-right: 1px solid $border-gray;
+		}
+		&.active {
+			color: $askem-purple;
+			cursor: default;
+			border-bottom: 1px solid $askem-purple;
+			padding-top: 1px;
+		}
+		.number {
+			font-size: 12px;
+		}
+		.title {
+			
+		}
 	}
 
-	.active {
-		color: #383362;
-		cursor: default;
+	
 
-	}
-
-	.number {
-		font-size: 60px;
-		margin-right: 10px;
-	}
-
-	.title {
-		font-size: 26px;
-	}
+	
 }
 
 .quote-wizard-border {

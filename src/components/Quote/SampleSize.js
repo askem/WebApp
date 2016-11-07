@@ -8,9 +8,9 @@ class SampleSize extends React.Component {
 	}
 	render() {
 		const options = [
-			{ sampleSize: 200, moe: 0.082 },
-			{ sampleSize: 600, moe: 0.046 },
-			{ sampleSize: 2000, moe: 0.025 }
+			{ sampleSize: 200, moe: 0.069 },
+			{ sampleSize: 500, moe: 0.043 },
+			{ sampleSize: 2000, moe: 0.021 }
 		];
 		return (
 			<div className="quote-sample-size-options">

@@ -51,7 +51,7 @@ const initialState = Immutable.fromJS({
 		},
 		quote: {
 			sample: {
-				sampleSize: 600,
+				sampleSize: 500,
 			},
 
 			audience: {

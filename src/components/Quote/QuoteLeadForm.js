@@ -11,7 +11,7 @@ class QuoteLeadForm extends React.Component {
 				<TextField fullWidth={true} floatingLabelText="First Name" /><br/>
 				<TextField fullWidth={true} floatingLabelText="Last Name" /><br/>
 				<TextField fullWidth={true} floatingLabelText="Phone Number" /><br/>
-				<TextField fullWidth={true} floatingLabelText="Email" /><br/>
+				<TextField fullWidth={true} floatingLabelText="Email" type="email" /><br/>
 				<TextField fullWidth={true} floatingLabelText="Company" /><br/>
 			</div>
 		)

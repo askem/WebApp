@@ -16,8 +16,8 @@ const stages = {
 };
 
 const stageTitles = [
-	'Audience',
-	'Survey',
+	'Select Audience',
+	'Define Survey',
 	'Sample Size',
 	'Get Quote'
 ];
@@ -109,7 +109,7 @@ class QuoteWizard extends React.Component {
 						let className = (idx === this.state.stage) ? 'stage active' : 'stage';
 						return <div className={className} key={s}
 							onClick={()=> this.handleStageClick(idx)}>
-							<div className="number">0{idx+1}</div>
+							<div className="number">Step {idx+1}</div>
 							<div className="title">{s}</div>
 						</div>
 					})}
@@ -120,7 +120,6 @@ class QuoteWizard extends React.Component {
 						{advanceButton}
 					</div>
 				</div>
-
 			</div>
 		)
 	}

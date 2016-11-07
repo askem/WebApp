@@ -2,17 +2,26 @@ import React from 'react';
 import NavBar from 'components/Base/NavBar';
 import Footer from 'components/Base/Footer';
 
+const QuoteHeader = () => <div>
+	<header>
+		<div className="main">
+			<div>
+				<img src="/images/layout/logo-white.png" alt="Askem"/>
+			</div>
+			<div className="title">Get Quote</div>
+			<div></div>
+		</div>
+		
+	</header>
+</div>;
+
 const noop = () => {};
 class QuoteFrame extends React.Component {
 	render() {
 		return <div>
 			<div className="dashboard-main">
-				<NavBar onLogout={noop} onLogin={noop}
-					title="Consumer Survey" name="Quote"
-					username="" loggedIn={false} />
-				<div className="dashboard-content">
-					{this.props.children}
-				</div>
+				<QuoteHeader />
+				{this.props.children}
 			</div>
 			<Footer />
 		</div>;
