@@ -12,7 +12,7 @@ const QuoteWizardContainer = connect(
 		if (sample) { sample = sample.toJS(); }
 		let imageSuggestions = state.getIn(['data', 'imageSuggestions']);
 		if (imageSuggestions) { imageSuggestions = imageSuggestions.toJS(); }
-		let reachEstimate = state.getIn(['data', 'reachEstimate']);
+		let reachEstimate = state.getIn(['data', 'quote', 'reachEstimate']);
 		if (reachEstimate) { reachEstimate = reachEstimate.toJS(); }
 		return {
 			audience,
@@ -43,7 +43,7 @@ const QuoteWizardContainer = connect(
 			addQuotePossibleAnswer: (questionID) => dispatch(quoteActions.addQuotePossibleAnswer(questionID)),
 			deleteQuotePossibleAnswer: (questionID, possibleAnswerID) => dispatch(quoteActions.deleteQuotePossibleAnswer(questionID, possibleAnswerID)),
 			setQuotePossibleAnswerText: (questionID, possibleAnswerID, textValue) => dispatch(quoteActions.setQuotePossibleAnswerText(questionID, possibleAnswerID, textValue)),
-			setQuoteSampleSize: (sampleSize) => dispatch(quoteActions.setQuoteSampleSize(sampleSize)),
+			setQuoteSampleSize: (sampleSize, moe) => dispatch(quoteActions.setQuoteSampleSize(sampleSize, moe)),
 		};
 	}
 )(QuoteWizard);

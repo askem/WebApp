@@ -23,7 +23,7 @@ class SampleSize extends React.Component {
 					//const selectButton = isSelected ? <div style={{height:30}} /> : <button className="askem-button">Select</button>;
 					const selectButton = isSelected ? <button className="askem-button-white selected" onClick={this.props.onAdvance}>Get Quote</button> : <button className="askem-button-white">Select</button>;
 					return <div className={className}
-						onClick={()=> {this.props.setSampleSize(opt.sampleSize)}}
+						onClick={()=> {this.props.setSampleSize(opt.sampleSize, opt.moe)}}
 						key={`ssopt-${opt.sampleSize}`} >
 						<div>
 							<div className="sample-size">{opt.sampleSize}</div>

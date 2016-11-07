@@ -12,6 +12,8 @@ class QuoteSummary extends React.Component {
 			sampleSize = <div>
 				<div className="title">Sample Size</div>
 				<div className="value">{this.props.sample.sampleSize}</div>
+				<div className="title">Margin of Error</div>
+				<div className="value">Approx. {numeral(this.props.sample.moe).format('0[.]0a%')}</div>
 			</div>;
 		}
 		let genderDescription;

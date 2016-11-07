@@ -163,11 +163,12 @@ const setQuotePossibleAnswerText = (questionID, possibleAnswerID, textValue) => 
 	}
 }
 
-const setQuoteSampleSize = (sampleSize) => {
+const setQuoteSampleSize = (sampleSize, moe) => {
 	return {
 		type: 'SET_QUOTE_SAMPLE_SIZE',
 		payload: {
-			sampleSize
+			sampleSize,
+			moe
 		}
 	}
 }

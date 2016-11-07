@@ -15,7 +15,7 @@ const FBInterest = (props) => <div className="quote-interest">
 	{/*<div className="reach">{numeral(props.reach).format('0[.]0a')} people</div>*/}
 </div>
 
-const FBInterestSelected = (props) => <div onClick={props.onClick} className="quote-interest-selected">
+const FBInterestSelected = (props) => <div onClick={props.onClick} title="Remove" className="quote-interest-selected">
 	<div className="name">{props.value}</div>
 	<InteresTopic {...props} />
 	<FaClose style={{height: 30}} />

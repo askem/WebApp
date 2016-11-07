@@ -46,12 +46,14 @@ const logicMiddleware = createLogicMiddleware(quoteLogics, logicDeps);
 
 const initialState = Immutable.fromJS({
 	data: {
-		reachEstimate: {
-			reach: null
-		},
 		quote: {
+			reachEstimate: {
+				reach: null
+			},
+			
 			sample: {
 				sampleSize: 500,
+				moe: 0.043
 			},
 
 			audience: {

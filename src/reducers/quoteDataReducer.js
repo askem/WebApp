@@ -5,6 +5,25 @@ const initialState = Immutable.fromJS({});
 
 const quoteReducer = (state = initialState, action) => {
 	switch(action.type) {
+		case 'REACH_ESTIMATE_FETCH':
+			return state.mergeIn(['reachEstimate'], {
+				reach: null,
+				error: false,
+				fetching: true
+			});
+		case 'REACH_ESTIMATE_FETCH_SUCCESS':
+			return state.mergeIn(['reachEstimate'], {
+				reach: action.payload.reach,
+				error: false,
+				fetching: false
+			});
+		case 'REACH_ESTIMATE_FETCH_FAIL':
+			return state.mergeIn(['reachEstimate'], {
+				reach: null,
+				error: true,
+				fetching: false
+			});
+			
 		case 'SET_QUOTE_DEMO_GENDER':
 			return state.setIn(['audience', 'demographics', 'gender', action.payload.gender], action.payload.value);
 		case 'TOGGLE_QUOTE_DEMO_AGE_GROUP':
@@ -69,36 +88,14 @@ const quoteReducer = (state = initialState, action) => {
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
 				'possibleAnswers', action.payload.possibleAnswerID, 'textValue'], action.payload.textValue);
 		case 'SET_QUOTE_SAMPLE_SIZE':
-			return state.setIn(['sample', 'sampleSize'], action.payload.sampleSize);
+			return state.set('sample', Immutable.fromJS({
+				sampleSize: action.payload.sampleSize,
+				moe: action.payload.moe
+			}));
 		default:
 			return state;
 	}
 }
-
-const reachEstimateReducer = (state = initialState, action) => {
-	switch(action.type) {
-		case 'REACH_ESTIMATE_FETCH':
-			return state.merge({
-				reach: null,
-				error: false,
-				fetching: true
-			});
-		case 'REACH_ESTIMATE_FETCH_SUCCESS':
-			return state.merge({
-				reach: action.payload.reach,
-				error: false,
-				fetching: false
-			});
-		case 'REACH_ESTIMATE_FETCH_FAIL':
-			return state.merge({
-				reach: null,
-				error: true,
-				fetching: false
-			});
-		default:
-			return state;
-	}
-};
 
 const imageSuggestionsReducer = (state = initialState, action) => {
 	switch(action.type) {
@@ -120,7 +117,6 @@ const imageSuggestionsReducer = (state = initialState, action) => {
 
 const dataReducer = combineReducers({
 	quote: quoteReducer,
-	reachEstimate: reachEstimateReducer,
 	imageSuggestions: imageSuggestionsReducer
 });
 
