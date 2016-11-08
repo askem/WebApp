@@ -1,10 +1,14 @@
 import Immutable from 'immutable';
 import { combineReducers } from 'redux-immutable';
+import emptyQuote from 'data/emptyQuote';
 
 const initialState = Immutable.fromJS({});
 
 const quoteReducer = (state = initialState, action) => {
 	switch(action.type) {
+		case 'CREATE_NEW_QUOTE':
+			return Immutable.fromJS(emptyQuote);
+		
 		case 'REACH_ESTIMATE_FETCH':
 			return state.mergeIn(['reachEstimate'], {
 				reach: null,
@@ -97,6 +101,18 @@ const quoteReducer = (state = initialState, action) => {
 	}
 }
 
+const leadReducer = (state = initialState, action) => {
+	switch(action.type) {
+	case 'CREATE_NEW_QUOTE':
+		return state.set('quoteID', action.payload.quoteID);
+	case 'LOAD_QUOTE':
+		return state.set('quoteID', action.payload.quoteID);
+	default:
+		return state;
+	}
+}
+		
+
 const imageSuggestionsReducer = (state = initialState, action) => {
 	switch(action.type) {
 		case 'QUESTION_IMAGE_SUGGESTIONS_SUCCESS':
@@ -117,7 +133,8 @@ const imageSuggestionsReducer = (state = initialState, action) => {
 
 const dataReducer = combineReducers({
 	quote: quoteReducer,
-	imageSuggestions: imageSuggestionsReducer
+	imageSuggestions: imageSuggestionsReducer,
+	lead: leadReducer
 });
 
 export default dataReducer;

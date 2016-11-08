@@ -16,7 +16,6 @@ const QuoteWizardContainer = connect(
 		if (reachEstimate) { reachEstimate = reachEstimate.toJS(); }
 		return {
 			audience,
-			demographics: audience.demographics,
 			surveyMetadata,
 			sample,
 			imageSuggestions,

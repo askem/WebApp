@@ -7,6 +7,7 @@ import QuoteSummary from 'components/Quote/QuoteSummary';
 import QuoteLeadForm from 'components/Quote/QuoteLeadForm';
 import MdArrowForward from 'react-icons/lib/md/arrow-forward';
 import MdCheck from 'react-icons/lib/md/check';
+import Loading from 'components/Common/Loading';
 
 const stages = {
 	AUDIENCE: 0,
@@ -48,6 +49,12 @@ class QuoteWizard extends React.Component {
 	}
 	
 	render() {
+		if (!this.props.audience) {
+			return <div className="quote-wizard-loading">
+				<Loading className="loading-3bounce-green loading-3bounce-lg" />
+			</div>;
+		}
+		
 		let stageComponent;
 		let sideComponent;
 		let advanceButtonTitle;

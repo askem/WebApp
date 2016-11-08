@@ -9,8 +9,17 @@ new WebpackDevServer(webpack(config), {
 	publicPath: config.output.publicPath,
 	hot: true,
 	host: '0.0.0.0',
-	historyApiFallback: true,
-	quiet: true
+	historyApiFallback: {
+		index: '/quote.html'
+	},
+	quiet: true,
+	
+	// For corrupt file watchers
+	watchOptions: {
+	    poll: 1000 
+	},
+	
+	
 }).listen(port, 'localhost', (err, result) => {
 	if (err) {
 		return console.log(err);

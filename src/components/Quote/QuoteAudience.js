@@ -48,7 +48,7 @@ class QuoteAudience extends React.Component {
 						{AGE_GROUPS.map(g => <div key={g.id}>
 							<Checkbox data-group={g.id} label={g.title}
 								onChange={this.onAgeGroupChange}
-								checked={this.props.demographics.ageGroups.indexOf(g.id) > -1} />
+								checked={this.props.audience.demographics.ageGroups.indexOf(g.id) > -1} />
 						</div>)}
 					</div>
 				</div>
@@ -57,9 +57,9 @@ class QuoteAudience extends React.Component {
 					<div className="title">Gender</div>
 					<div className="value">
 						<Checkbox data-gender="female" label="Female"
-							onChange={this.onGenderChange} checked={this.props.demographics.gender.female} />
+							onChange={this.onGenderChange} checked={this.props.audience.demographics.gender.female} />
 						<Checkbox data-gender="male" label="Male"
-							onChange={this.onGenderChange} checked={this.props.demographics.gender.male}/>
+							onChange={this.onGenderChange} checked={this.props.audience.demographics.gender.male}/>
 					</div>
 				</div>
 

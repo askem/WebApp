@@ -5,11 +5,11 @@ import Footer from 'components/Base/Footer';
 const QuoteHeader = () => <div>
 	<header>
 		<div className="main">
-			<div>
+			<div className="side-anchor">
 				<img src="/images/layout/logo-white.png" alt="Askem"/>
 			</div>
 			<div className="title">Get Quote</div>
-			<div></div>
+			<div className="side-anchor"></div>
 		</div>
 		
 	</header>

@@ -10,8 +10,10 @@ const reachInvalidationLogic = createLogic({
 		'ADD_QUOTE_AUDIENCE_BEHAVIOR', 'REMOVE_QUOTE_AUDIENCE_BEHAVIOR'],
 	latest: true,
 	process({ getState, action, api }, dispatch) {
+		let audience = getState().getIn(['data', 'quote', 'audience']);
+		if (!audience) { return; }
+		audience = audience.toJS();
 		dispatch({ type: 'REACH_ESTIMATE_FETCH' }, { allowMore: true });
-		const audience = getState().getIn(['data', 'quote', 'audience']).toJS();
 		return api.fetchReach(audience)
 		.then(results => {
 			dispatch({
