@@ -8,6 +8,8 @@ const quoteReducer = (state = initialState, action) => {
 	switch(action.type) {
 		case 'CREATE_NEW_QUOTE':
 			return Immutable.fromJS(emptyQuote);
+		case 'LOAD_QUOTE_REQUEST_SUCCESS':
+			return Immutable.fromJS(action.payload.quote);
 		
 		case 'REACH_ESTIMATE_FETCH':
 			return state.mergeIn(['reachEstimate'], {
@@ -88,7 +90,7 @@ const quoteReducer = (state = initialState, action) => {
 				pas
 				.delete(action.payload.possibleAnswerID)
 				.map((pa, idx) => pa.set('possibleAnswerID', idx)));
-		case 'SET_QUOTE_POSSIBLE_ANSER_TEXT':
+		case 'SET_QUOTE_POSSIBLE_ANSWER_TEXT':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
 				'possibleAnswers', action.payload.possibleAnswerID, 'textValue'], action.payload.textValue);
 		case 'SET_QUOTE_SAMPLE_SIZE':

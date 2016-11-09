@@ -154,7 +154,7 @@ const deleteQuotePossibleAnswer = (questionID, possibleAnswerID) => {
 
 const setQuotePossibleAnswerText = (questionID, possibleAnswerID, textValue) => {
 	return {
-		type: 'SET_QUOTE_POSSIBLE_ANSER_TEXT',
+		type: 'SET_QUOTE_POSSIBLE_ANSWER_TEXT',
 		payload: {
 			questionID,
 			possibleAnswerID,

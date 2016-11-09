@@ -152,6 +152,29 @@ class AskemAPI {
 		return this.fetchEndpoint(`attributes/search?q=${encodeURIComponent(searchQuery)}&type=behaviors&limit=${limit}`);
 	}
 
+	createQuote(quoteID, quote) {
+		return this.fetchEndpoint('external/leads', {
+			ID: quoteID,
+			metadata: JSON.stringify(quote)
+		});
+	}
+	updateQuote(quoteID, quote) {
+		return this.fetchEndpoint(`external/leads/${quoteID}`, {
+			ID: quoteID,
+			metadata: JSON.stringify(quote)
+		});
+	}
+	getQuoteByID(quoteID) {
+		return this.fetchEndpoint(`external/leads/${quoteID}`)
+		.then(results => {
+			if (results && results.lead && results.lead.metadata) {
+				return JSON.parse(results.lead.metadata)
+			} else {
+				return null;
+			}
+		});
+	}
+
 	/* API - Not yet implemented */
 	fetchMediaPlan(researchID) {
 		return this.fetchURL(`/mockdata/${researchID}/mediaPlan.json`)

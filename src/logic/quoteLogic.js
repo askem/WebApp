@@ -1,9 +1,90 @@
 import { createLogic } from 'redux-logic';
 import nlp_compromise from 'nlp_compromise/src/index';
 
+const createQuoteLogic = createLogic({
+	type: 'CREATE_NEW_QUOTE',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = action.payload.quoteID;
+		let quote = getState().getIn(['data', 'quote']);
+		if (quote) {
+			quote = quote.toJS();
+		} else {
+			quote = {};
+		}
+		dispatch({ type: 'CREATE_NEW_QUOTE_REQUEST_START' }, { allowMore: true });
+		return api.createQuote(quoteID, quote)
+		.then(() => {
+			dispatch({ type: 'CREATE_NEW_QUOTE_REQUEST_SUCCESS' }, { allowMore: true });
+		})
+		.catch(error => dispatch({ type: 'CREATE_NEW_QUOTE_REQUEST_FAIL', payload: {
+			error
+		}, error: true }));
+	}
+});
+
+const autoSaveLogic = createLogic({
+	type: [
+		'SET_QUOTE_DEMO_GENDER', 'TOGGLE_QUOTE_DEMO_AGE_GROUP',
+		'ADD_QUOTE_AUDIENCE_PAGE', 'TOGGLE_QUOTE_AUDIENCE_PAGE_CONNECTED', 'REMOVE_QUOTE_AUDIENCE_PAGE',
+		'ADD_QUOTE_AUDIENCE_INTEREST', 'REMOVE_QUOTE_AUDIENCE_INTEREST',
+		'ADD_QUOTE_AUDIENCE_BEHAVIOR', 'REMOVE_QUOTE_AUDIENCE_BEHAVIOR',
+		'ADD_QUOTE_QUESTION', 'DELETE_QUOTE_QUESTION',
+		'FINISHED_EDITING_QUOTE_QUESTION_TEXT', 'SET_QUOTE_QUESTION_IMAGE',
+		'ADD_QUOTE_POSSIBLE_ANSWER', 'DELETE_QUOTE_POSSIBLE_ANSWER', 'SET_QUOTE_POSSIBLE_ANSWER_TEXT',
+		'SET_QUOTE_SAMPLE_SIZE'
+	],
+	process({ getState, action, api }, dispatch) {
+		dispatch({type: 'AUTO_SAVE_QUOTE'});
+	}
+});
+
+const updateQuoteLogic = createLogic({
+	debounce: 2000,
+	type: 'AUTO_SAVE_QUOTE',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = getState().getIn(['data', 'lead', 'quoteID']);
+		let quote = getState().getIn(['data', 'quote']);
+		if (!quoteID || !quote) { return; }
+		quote = quote.toJS();
+		dispatch({ type: 'UPDATE_QUOTE_REQUEST_START' }, { allowMore: true });
+		return api.updateQuote(quoteID, quote)
+		.then(() => {
+			console.info('Quote changes saved');
+			dispatch({ type: 'UPDATE_QUOTE_REQUEST_SUCCESS' }, { allowMore: true });
+		})
+		.catch(error => {
+			console.error(error);
+			dispatch({ type: 'UPDATE_QUOTE_REQUEST_FAIL', payload: {
+				error
+			}, error: true });
+		});
+	}
+});
+
+const loadQuoteLogic = createLogic({
+	type: 'LOAD_QUOTE',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = action.payload.quoteID;
+		dispatch({ type: 'LOAD_QUOTE_REQUEST_START' }, { allowMore: true });
+		return api.getQuoteByID(quoteID)
+		.then((quote) => {
+			dispatch({
+				type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+				payload: {
+					quote
+				}				
+			}, { allowMore: true });
+		})
+		.catch(error => dispatch({ type: 'LOAD_QUOTE_REQUEST_FAIL', payload: {
+			error
+		}, error: true }));
+	}
+});
+
 const reachInvalidationLogic = createLogic({
 	type: [
 		'REACH_ESTIMATE_EXPLICIT_FETCH',	// request a fetch explicitly, or any of the data changes:
+		'LOAD_QUOTE_REQUEST_SUCCESS',
 		'SET_QUOTE_DEMO_GENDER', 'TOGGLE_QUOTE_DEMO_AGE_GROUP',
 		'ADD_QUOTE_AUDIENCE_PAGE', 'TOGGLE_QUOTE_AUDIENCE_PAGE_CONNECTED', 'REMOVE_QUOTE_AUDIENCE_PAGE',
 		'ADD_QUOTE_AUDIENCE_INTEREST', 'REMOVE_QUOTE_AUDIENCE_INTEREST',
@@ -85,6 +166,10 @@ const imageSuggestionsLogic = createLogic({
 });
 
 export default [
+	createQuoteLogic,
+	autoSaveLogic,
+	updateQuoteLogic,
+	loadQuoteLogic,
 	reachInvalidationLogic,
 	imageSuggestionsLogic
 ];
