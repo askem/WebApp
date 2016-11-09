@@ -14,7 +14,10 @@ const QuoteWizardContainer = connect(
 		if (imageSuggestions) { imageSuggestions = imageSuggestions.toJS(); }
 		let reachEstimate = state.getIn(['data', 'quote', 'reachEstimate']);
 		if (reachEstimate) { reachEstimate = reachEstimate.toJS(); }
+		let lead = state.getIn(['data', 'lead']);
+		if (lead) { lead = lead.toJS(); }
 		return {
+			lead,
 			audience,
 			surveyMetadata,
 			sample,

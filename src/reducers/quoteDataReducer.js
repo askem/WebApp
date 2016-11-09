@@ -109,6 +109,10 @@ const leadReducer = (state = initialState, action) => {
 		return state.set('quoteID', action.payload.quoteID);
 	case 'LOAD_QUOTE':
 		return state.set('quoteID', action.payload.quoteID);
+	case 'LOAD_QUOTE_REQUEST_START':
+		return state.set('loadingFail', false);
+	case 'LOAD_QUOTE_REQUEST_FAIL':
+		return state.set('loadingFail', true);
 	default:
 		return state;
 	}

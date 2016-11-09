@@ -50,6 +50,11 @@ class QuoteWizard extends React.Component {
 	
 	render() {
 		if (!this.props.audience) {
+			if (this.props.lead && this.props.lead.loadingFail) {
+				return <div className="quote-wizard-loading">
+					<strong>Error: Quote could not load</strong>
+				</div>;
+			}
 			return <div className="quote-wizard-loading">
 				<Loading className="loading-3bounce-green loading-3bounce-lg" />
 			</div>;
