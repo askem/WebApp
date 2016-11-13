@@ -106,18 +106,40 @@ const quoteReducer = (state = initialState, action) => {
 const leadReducer = (state = initialState, action) => {
 	switch(action.type) {
 	case 'CREATE_NEW_QUOTE':
-		return state.set('quoteID', action.payload.quoteID);
+		return Immutable.fromJS({
+			quoteID: action.payload.quoteID
+		});
 	case 'LOAD_QUOTE':
 		return state.set('quoteID', action.payload.quoteID);
 	case 'LOAD_QUOTE_REQUEST_START':
 		return state.set('loadingFail', false);
 	case 'LOAD_QUOTE_REQUEST_FAIL':
 		return state.set('loadingFail', true);
+	case 'SUBMIT_LEAD_REQUEST_START':
+		return state.set('submitInProgress', true);
+	case 'SUBMIT_LEAD_REQUEST_SUCCESS':
+		return state.set('submitSuccess', true).set('submitInProgress', false);
+	case 'SUBMIT_LEAD_REQUEST_FAIL':
+		return state.set('submitFail', true).set('submitInProgress', false);
+	case 'SUBMIT_LEAD_CLOSE_SUCCESS':
+		return state.delete('submitSuccess');
+	case 'SUBMIT_LEAD_CANCEL_FAILED':
+		return state.delete('submitFail');
 	default:
 		return state;
 	}
 }
-		
+
+const contactReducer = (state = initialState, action) => {
+	switch(action.type) {
+	case 'SET_QUOTE_CONTACT_VALUE':
+		return state.set(action.payload.field, action.payload.value);
+	case 'CREATE_NEW_QUOTE':
+		return initialState;
+	default:
+		return state;
+	}
+}
 
 const imageSuggestionsReducer = (state = initialState, action) => {
 	switch(action.type) {
@@ -140,7 +162,8 @@ const imageSuggestionsReducer = (state = initialState, action) => {
 const dataReducer = combineReducers({
 	quote: quoteReducer,
 	imageSuggestions: imageSuggestionsReducer,
-	lead: leadReducer
+	lead: leadReducer,
+	contact: contactReducer
 });
 
 export default dataReducer;

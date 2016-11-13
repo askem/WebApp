@@ -47,9 +47,8 @@ const logicMiddleware = createLogicMiddleware(quoteLogics, logicDeps);
 const initialState = Immutable.fromJS({
 	data: {
 		quote: {},
-		imageSuggestions: {
-
-		}
+		contact: {},
+		imageSuggestions: {}
 	}
 });
 

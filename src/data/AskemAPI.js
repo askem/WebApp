@@ -1,4 +1,5 @@
 import AGE_GROUPS from 'constants/AGE_GROUPS';
+import quoteContactFields from 'constants/quoteContactFields';
 
 const defaultModelData = {
 	"modelID": "dce",
@@ -158,11 +159,13 @@ class AskemAPI {
 			metadata: JSON.stringify(quote)
 		});
 	}
-	updateQuote(quoteID, quote) {
-		return this.fetchEndpoint(`external/leads/${quoteID}`, {
+	updateQuote(quoteID, quote, contact) {
+		let quoteUpdate = {
 			ID: quoteID,
 			metadata: JSON.stringify(quote)
-		});
+		};
+		quoteUpdate = Object.assign({}, quoteUpdate, contact);
+		return this.fetchEndpoint(`external/leads/${quoteID}`, quoteUpdate);
 	}
 	getQuoteByID(quoteID) {
 		return this.fetchEndpoint(`external/leads/${quoteID}`)

@@ -5,6 +5,7 @@ import SampleSize from 'components/Quote/SampleSize';
 import QuoteReach from 'components/Quote/QuoteReach';
 import QuoteSummary from 'components/Quote/QuoteSummary';
 import QuoteLeadForm from 'components/Quote/QuoteLeadForm';
+import QuoteSubmitDialog from 'components/Quote/QuoteSubmitDialog';
 import MdArrowForward from 'react-icons/lib/md/arrow-forward';
 import MdCheck from 'react-icons/lib/md/check';
 import Loading from 'components/Common/Loading';
@@ -27,12 +28,11 @@ class QuoteWizard extends React.Component {
 	constructor(props) {
     	super(props);
 		this.nextStage = this.nextStage.bind(this);
+		this.submitLead = this.submitLead.bind(this);
+		this.onNewSubmission = this.onNewSubmission.bind(this);
 		this.state = {
 			stage: stages.AUDIENCE
 		};
-	}
-	componentDidMount() {
-		this.props.requestReach();
 	}
 	handleStageClick(stage) {
 		if (this.state.stage === stage) {
@@ -47,7 +47,17 @@ class QuoteWizard extends React.Component {
 			stage: this.state.stage + 1,
 		});
 	}
-	
+	submitLead() {
+		const valid = this.refs.leadForm.onSubmit();
+		if (!valid) { return; }
+		this.props.submitLead();
+	}
+	onNewSubmission() {
+		this.setState({
+			stage: 0
+		});
+		this.props.newSubmission();
+	}
 	render() {
 		if (!this.props.audience) {
 			if (this.props.lead && this.props.lead.loadingFail) {
@@ -87,10 +97,10 @@ class QuoteWizard extends React.Component {
 				sideComponent = <QuoteSummary {...this.props} />;
 				break;
 			case stages.GET_QUOTE:
-				stageComponent = <QuoteLeadForm {...this.props} />;
+				stageComponent = <QuoteLeadForm {...this.props} ref="leadForm"/>;
 				sideComponent = <QuoteSummary {...this.props} displaySampleSize={true} />;
 				advanceButton =
-						<button onClick={this.nextStage} className="askem-button confirmed">
+						<button onClick={this.submitLead} className="askem-button confirmed">
 							Submit
 						</button>
 				break;
@@ -116,6 +126,8 @@ class QuoteWizard extends React.Component {
 			</button> : null);
 		return (
 			<div>
+				<QuoteSubmitDialog {...this.props}
+					onNewSubmission={this.onNewSubmission} />
 				<div className="quote-wizard-header">
 					{stageTitles.map((s, idx) => {
 						let className = (idx === this.state.stage) ? 'stage active' : 'stage';

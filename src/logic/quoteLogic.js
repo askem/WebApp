@@ -1,5 +1,6 @@
 import { createLogic } from 'redux-logic';
 import nlp_compromise from 'nlp_compromise/src/index';
+import genGUID from 'utils/Askem/genGUID';
 
 const createQuoteLogic = createLogic({
 	type: 'CREATE_NEW_QUOTE',
@@ -12,6 +13,7 @@ const createQuoteLogic = createLogic({
 			quote = {};
 		}
 		dispatch({ type: 'CREATE_NEW_QUOTE_REQUEST_START' }, { allowMore: true });
+		dispatch({ type: 'REACH_ESTIMATE_EXPLICIT_FETCH' }, { allowMore: true });
 		return api.createQuote(quoteID, quote)
 		.then(() => {
 			dispatch({ type: 'CREATE_NEW_QUOTE_REQUEST_SUCCESS' }, { allowMore: true });
@@ -19,6 +21,21 @@ const createQuoteLogic = createLogic({
 		.catch(error => dispatch({ type: 'CREATE_NEW_QUOTE_REQUEST_FAIL', payload: {
 			error
 		}, error: true }));
+	}
+});
+
+const newSubmissionLogic = createLogic({
+	type: 'NEW_SUBMISSION',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = genGUID();
+		console.info(`Redirecting to new quote ${quoteID}`);
+		window.history.pushState(null, '', `/${quoteID}`);
+		dispatch({
+			type: 'CREATE_NEW_QUOTE',
+			payload: {
+				quoteID
+			}
+		});		
 	}
 });
 
@@ -31,7 +48,8 @@ const autoSaveLogic = createLogic({
 		'ADD_QUOTE_QUESTION', 'DELETE_QUOTE_QUESTION',
 		'FINISHED_EDITING_QUOTE_QUESTION_TEXT', 'SET_QUOTE_QUESTION_IMAGE',
 		'ADD_QUOTE_POSSIBLE_ANSWER', 'DELETE_QUOTE_POSSIBLE_ANSWER', 'SET_QUOTE_POSSIBLE_ANSWER_TEXT',
-		'SET_QUOTE_SAMPLE_SIZE'
+		'SET_QUOTE_SAMPLE_SIZE',
+		'FINISHED_EDITING_QUOTE_CONTACT_VALUE'
 	],
 	process({ getState, action, api }, dispatch) {
 		dispatch({type: 'AUTO_SAVE_QUOTE'});
@@ -46,8 +64,10 @@ const updateQuoteLogic = createLogic({
 		let quote = getState().getIn(['data', 'quote']);
 		if (!quoteID || !quote) { return; }
 		quote = quote.toJS();
+		let contact = getState().getIn(['data', 'contact']);
+		if (contact) { contact = contact.toJS(); } else { contact = {}; }
 		dispatch({ type: 'UPDATE_QUOTE_REQUEST_START' }, { allowMore: true });
-		return api.updateQuote(quoteID, quote)
+		return api.updateQuote(quoteID, quote, contact)
 		.then(() => {
 			console.info('Quote changes saved');
 			dispatch({ type: 'UPDATE_QUOTE_REQUEST_SUCCESS' }, { allowMore: true });
@@ -55,6 +75,29 @@ const updateQuoteLogic = createLogic({
 		.catch(error => {
 			console.error(error);
 			dispatch({ type: 'UPDATE_QUOTE_REQUEST_FAIL', payload: {
+				error
+			}, error: true });
+		});
+	}
+});
+
+const submitQuoteLogic = createLogic({
+	type: 'SUBMIT_LEAD',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = getState().getIn(['data', 'lead', 'quoteID']);
+		let quote = getState().getIn(['data', 'quote']);
+		if (!quoteID || !quote) { return; }
+		quote = quote.toJS();
+		let contact = getState().getIn(['data', 'contact']);
+		if (contact) { contact = contact.toJS(); } else { contact = {}; }
+		dispatch({ type: 'SUBMIT_LEAD_REQUEST_START' }, { allowMore: true });
+		return api.updateQuote(quoteID, quote, contact)
+		.then(() => {
+			dispatch({ type: 'SUBMIT_LEAD_REQUEST_SUCCESS' }, { allowMore: true });
+		})
+		.catch(error => {
+			console.error(error);
+			dispatch({ type: 'SUBMIT_LEAD_REQUEST_FAIL', payload: {
 				error
 			}, error: true });
 		});
@@ -167,8 +210,10 @@ const imageSuggestionsLogic = createLogic({
 
 export default [
 	createQuoteLogic,
+	newSubmissionLogic,
 	autoSaveLogic,
 	updateQuoteLogic,
+	submitQuoteLogic,
 	loadQuoteLogic,
 	reachInvalidationLogic,
 	imageSuggestionsLogic

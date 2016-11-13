@@ -173,6 +173,51 @@ const setQuoteSampleSize = (sampleSize, moe) => {
 	}
 }
 
+const setQuoteContactValue = (field, value) => {
+	return {
+		type: 'SET_QUOTE_CONTACT_VALUE',
+		payload: {
+			field,
+			value
+		}
+	}
+}
+
+const finishedEditingContactValue = (field, value) => {
+	return {
+		type: 'FINISHED_EDITING_QUOTE_CONTACT_VALUE',
+		payload: {
+			field,
+			value
+		}
+	}
+}
+
+const submitLead = () => {
+	return {
+		type: 'SUBMIT_LEAD'
+	}
+}
+
+const closeSuccessSubmitLead = () => {
+	return {
+		type: 'SUBMIT_LEAD_CLOSE_SUCCESS'
+	}
+}
+
+const newSubmission = () => {
+	return {
+		type: 'NEW_SUBMISSION'
+	}
+}
+
+
+const cancelFailedSubmitLead = () => {
+	return {
+		type: 'SUBMIT_LEAD_CANCEL_FAILED'
+	}
+}
+
 export {
 	requestReach,
 	setQuoteDemoGender, toggleQuoteDemoAgeGroup,
@@ -181,5 +226,7 @@ export {
 	addQuoteAudienceBehavior, removeQuoteAudienceBehavior,
 	addQuoteQuestion, deleteQuoteQuestion, setQuoteQuestionText, finishedEditingQText, setQuoteQuestionImage,
 	addQuotePossibleAnswer, deleteQuotePossibleAnswer, setQuotePossibleAnswerText,
-	setQuoteSampleSize
+	setQuoteSampleSize,
+	setQuoteContactValue, finishedEditingContactValue,
+	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead
 };

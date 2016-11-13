@@ -16,13 +16,16 @@ const QuoteWizardContainer = connect(
 		if (reachEstimate) { reachEstimate = reachEstimate.toJS(); }
 		let lead = state.getIn(['data', 'lead']);
 		if (lead) { lead = lead.toJS(); }
+		let contact = state.getIn(['data', 'contact']);
+		if (contact) { contact = contact.toJS(); }
 		return {
 			lead,
 			audience,
 			surveyMetadata,
 			sample,
 			imageSuggestions,
-			reachEstimate
+			reachEstimate,
+			contact
 		};
 	},
 	function mapDispatchToProps(dispatch) {
@@ -46,6 +49,12 @@ const QuoteWizardContainer = connect(
 			deleteQuotePossibleAnswer: (questionID, possibleAnswerID) => dispatch(quoteActions.deleteQuotePossibleAnswer(questionID, possibleAnswerID)),
 			setQuotePossibleAnswerText: (questionID, possibleAnswerID, textValue) => dispatch(quoteActions.setQuotePossibleAnswerText(questionID, possibleAnswerID, textValue)),
 			setQuoteSampleSize: (sampleSize, moe) => dispatch(quoteActions.setQuoteSampleSize(sampleSize, moe)),
+			setQuoteContactValue: (field, value) => dispatch(quoteActions.setQuoteContactValue(field, value)),
+			finishedEditingContactValue: (field, value) => dispatch(quoteActions.finishedEditingContactValue(field, value)),
+			submitLead: () => dispatch(quoteActions.submitLead()),
+			newSubmission: () => dispatch(quoteActions.newSubmission()),
+			closeSuccessSubmitLead: () => dispatch(quoteActions.closeSuccessSubmitLead()),
+			cancelFailedSubmitLead: () => dispatch(quoteActions.cancelFailedSubmitLead()),
 		};
 	}
 )(QuoteWizard);
