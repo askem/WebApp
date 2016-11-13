@@ -16,15 +16,21 @@ const quoteRouter = (store) =>  {
 	const enterWithoutID = (nextState, replace) => {
 		const existingQuoteID = store.getState().getIn(['data', 'lead', 'quoteID']);
 		if (!existingQuoteID) {
-			const quoteID = genGUID();
-			console.info(`Redirecting to new quote ${quoteID}`);
-			replace(`/${quoteID}`);
-			store.dispatch({
-				type: 'CREATE_NEW_QUOTE',
-				payload: {
-					quoteID
-				}
-			});
+			let quoteID = localStorage.inProgressQuoteID;
+			if (quoteID) {
+				replace(`/${quoteID}`);
+			} else {
+				quoteID = genGUID();
+				localStorage.inProgressQuoteID = quoteID;
+				console.info(`Redirecting to new quote ${quoteID}`);
+				replace(`/${quoteID}`);
+				store.dispatch({
+					type: 'CREATE_NEW_QUOTE',
+					payload: {
+						quoteID
+					}
+				});
+			}
 		}
 	}
 	

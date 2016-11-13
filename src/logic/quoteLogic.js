@@ -28,6 +28,7 @@ const newSubmissionLogic = createLogic({
 	type: 'NEW_SUBMISSION',
 	process({ getState, action, api }, dispatch) {
 		const quoteID = genGUID();
+		localStorage.inProgressQuoteID = quoteID;
 		console.info(`Redirecting to new quote ${quoteID}`);
 		window.history.pushState(null, '', `/${quoteID}`);
 		dispatch({
@@ -93,6 +94,7 @@ const submitQuoteLogic = createLogic({
 		dispatch({ type: 'SUBMIT_LEAD_REQUEST_START' }, { allowMore: true });
 		return api.updateQuote(quoteID, quote, contact)
 		.then(() => {
+			localStorage.removeItem('inProgressQuoteID');
 			dispatch({ type: 'SUBMIT_LEAD_REQUEST_SUCCESS' }, { allowMore: true });
 		})
 		.catch(error => {
