@@ -53,6 +53,10 @@ module.exports = {
 		new webpack.ProvidePlugin({
 			'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
 		}),
+		new webpack.DefinePlugin({
+			__DEV__: true,
+			__PRODUCTION__: false
+		}),
 		new DashboardPlugin(dashboard.setData),
 		new webpack.HotModuleReplacementPlugin()
 	],

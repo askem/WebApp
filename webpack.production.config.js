@@ -5,7 +5,7 @@ const extractTextPlugin = require('extract-text-webpack-plugin');
 const distPath = path.resolve(__dirname, 'dist');
 
 let config = {
-	devtool: 'source-map',
+	devtool: 'cheap-module-source-map',
 
 	entry: {
 		bundle: ['babel-polyfill', path.resolve(__dirname, 'src/app.js')],
@@ -44,7 +44,9 @@ let config = {
 	    new webpack.DefinePlugin({
 			'process.env':{
 				'NODE_ENV': JSON.stringify('production')
-			}
+			},
+			__DEV__: false,
+			__PRODUCTION__: true
 		}),
 		new webpack.ProvidePlugin({
 			'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'

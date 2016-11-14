@@ -55,6 +55,7 @@ const QuoteWizardContainer = connect(
 			newSubmission: () => dispatch(quoteActions.newSubmission()),
 			closeSuccessSubmitLead: () => dispatch(quoteActions.closeSuccessSubmitLead()),
 			cancelFailedSubmitLead: () => dispatch(quoteActions.cancelFailedSubmitLead()),
+			quoteUIAction: (actionType, metadata) => dispatch(quoteActions.quoteUIAction(actionType, metadata)),
 		};
 	}
 )(QuoteWizard);

@@ -41,21 +41,28 @@ class QuoteWizard extends React.Component {
 		this.setState({
 			stage
 		});
+		this.props.quoteUIAction('WIZARD_CLICK_STAGE', stageTitles[stage]);
 	}
 	nextStage() {
 		this.setState({
 			stage: this.state.stage + 1,
 		});
+		this.props.quoteUIAction('WIZARD_CLICK_NEXT', stageTitles[stage]);
 	}
 	submitLead() {
+		this.props.quoteUIAction('WIZARD_CLICK_SUBMIT');
 		const valid = this.refs.leadForm.onSubmit();
-		if (!valid) { return; }
+		if (!valid) {
+			this.props.quoteUIAction('WIZARD_SUBMIT_MISSING_FIELDS');
+			return;
+		}
 		this.props.submitLead();
 	}
 	onNewSubmission() {
 		this.setState({
 			stage: 0
 		});
+		this.props.quoteUIAction('WIZARD_AFTER_SUBMIT_START_NEW');
 		this.props.newSubmission();
 	}
 	render() {

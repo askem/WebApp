@@ -218,6 +218,17 @@ const cancelFailedSubmitLead = () => {
 	}
 }
 
+// Generic action for reporting UI events. Caought by analytics logger
+const quoteUIAction = (actionType, metadata = '') => {
+	return {
+		type: 'QUOTE_UI_ACTION',
+		payload: {
+			actionType,
+			metadata
+		}
+	}
+}
+
 export {
 	requestReach,
 	setQuoteDemoGender, toggleQuoteDemoAgeGroup,
@@ -228,5 +239,6 @@ export {
 	addQuotePossibleAnswer, deleteQuotePossibleAnswer, setQuotePossibleAnswerText,
 	setQuoteSampleSize,
 	setQuoteContactValue, finishedEditingContactValue,
-	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead
+	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead,
+	quoteUIAction
 };
