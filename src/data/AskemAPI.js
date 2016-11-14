@@ -74,6 +74,30 @@ class AskemAPI {
 	}
 
 	/* API */
+	
+	uploadMedia(mediaBlob, bypassProcessing) {
+		const mimeType = mediaBlob.type;
+        if (mimeType !== 'image/jpeg' && mimeType !== 'video/mp4' && mimeType !== 'image/png') {
+            throw Error('Invalid mime type');
+        }
+        const fd = new FormData();
+        fd.append('file', mediaBlob);
+		let endpoint = 'media/upload';
+		if (bypassProcessing) {
+			endpoint = endpoint + '?processImage=0';
+		}
+		const headers = new Headers(this._headers);
+		headers.set('Content-Type', mimeType);
+		const options = {
+			headers,
+			cors: true,
+			method: 'POST',
+			body: fd
+		};		
+		return this.fetchURL(`${this._baseURI}${endpoint}`, options).
+		then(results => results.mediaID);
+	}
+	
 	fetchResearchCampaign(researchID) {
 		return this.fetchEndpoint(`researchCampaigns/${researchID}`)
 		.then(results => results.researchCampaign);
@@ -159,10 +183,11 @@ class AskemAPI {
 			metadata: JSON.stringify(quote)
 		});
 	}
-	updateQuote(quoteID, quote, contact) {
+	updateQuote(quoteID, quote = {}, contact, description = '') {
 		let quoteUpdate = {
 			ID: quoteID,
-			metadata: JSON.stringify(quote)
+			metadata: JSON.stringify(quote),
+			description
 		};
 		quoteUpdate = Object.assign({}, quoteUpdate, contact);
 		return this.fetchEndpoint(`external/leads/${quoteID}`, quoteUpdate);

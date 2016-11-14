@@ -1,5 +1,5 @@
 import React from 'react';
-import { blobURL } from 'utils/AskemUtils';
+import blobURL from 'utils/Askem/blobURL';
 import FaAngleDown from 'react-icons/lib/fa/angle-down';
 import FaBell from 'react-icons/lib/fa/bell';
 // import FaBellO from 'react-icons/lib/fa/bell-o';

@@ -82,6 +82,15 @@ const quoteReducer = (state = initialState, action) => {
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'textValue'], action.payload.textValue);
 		case 'SET_QUOTE_QUESTION_IMAGE':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'mediaID'], action.payload.mediaID);
+		case 'UPLOAD_IMAGE_REQUEST_SUCCESS':
+			const { originalMediaID, newMediaID } = action.payload;
+			return state.updateIn(['surveyMetadata', 'questions'], questions => {
+				const key = questions.findKey(q => q.get('mediaID') === originalMediaID);
+				if (key !== undefined) {
+					return questions.setIn([key, 'mediaID'], newMediaID);
+				}
+				return questions;
+			});	
 		case 'ADD_QUOTE_POSSIBLE_ANSWER':
 			return state.updateIn(['surveyMetadata', 'questions', action.payload.questionID, 'possibleAnswers'], pas =>
 				pas.push(Immutable.fromJS({textValue: '', possibleAnswerID: pas.size})));

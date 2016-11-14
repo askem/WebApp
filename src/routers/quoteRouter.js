@@ -21,7 +21,6 @@ const quoteRouter = (store) =>  {
 				replace(`/${quoteID}`);
 			} else {
 				quoteID = genGUID();
-				localStorage.inProgressQuoteID = quoteID;
 				console.info(`Redirecting to new quote ${quoteID}`);
 				replace(`/${quoteID}`);
 				store.dispatch({
