@@ -52,7 +52,7 @@ const GAQuoteLogger = store => next => action => {
 			break;
 		case 'SET_QUOTE_SAMPLE_SIZE':
 			eventLabel = `${action.payload.sampleSize},${action.payload.moe}`;
-			eventValue = action.payload.moe;
+			eventValue = action.payload.sampleSize;
 			break;
 		case 'FINISHED_EDITING_QUOTE_CONTACT_VALUE':
 			eventLabel = `${action.payload.field}:${action.payload.value}`;

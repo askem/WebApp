@@ -34,11 +34,7 @@ const api = new AskemAPI({
 	//accessToken: '2d5a3b3cef67422db402273506fa9152',
 	//loginURI: 'https://r2d2.askem.com/0/login'
 });
-
-if (__DEV__) {
-	// For console testing
-	window.api = api;
-}
+window.api = api;
 
 const logicDeps = {
 	api,
