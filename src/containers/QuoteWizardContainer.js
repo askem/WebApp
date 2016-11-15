@@ -42,6 +42,7 @@ const QuoteWizardContainer = connect(
 			removeQuoteAudienceBehavior: behaviorIndex => dispatch(quoteActions.removeQuoteAudienceBehavior(behaviorIndex)),
 			addQuoteQuestion: () => dispatch(quoteActions.addQuoteQuestion()),
 			deleteQuoteQuestion: (questionID) => dispatch(quoteActions.deleteQuoteQuestion(questionID)),
+			swapQuoteQuestions: (oldIndex, newIndex) => dispatch(quoteActions.swapQuoteQuestions(oldIndex, newIndex)),
 			setQuoteQuestionText: (questionID, textValue) => dispatch(quoteActions.setQuoteQuestionText(questionID, textValue)),
 			finishedEditingQText: (questionID, textValue) => dispatch(quoteActions.finishedEditingQText(questionID, textValue)),
 			setQuoteQuestionImage: (questionID, mediaID) => dispatch(quoteActions.setQuoteQuestionImage(questionID, mediaID)),

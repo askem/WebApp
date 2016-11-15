@@ -33,6 +33,9 @@ const GAQuoteLogger = store => next => action => {
 		case 'DELETE_QUOTE_QUESTION':
 			eventLabel = action.payload.questionID;
 			break;
+		case 'SWAP_QUOTE_QUESTION':
+			eventLabel = `${action.payload.oldIndex}->${action.payload.newIndex}`;
+			break;
 		case 'FINISHED_EDITING_QUOTE_QUESTION_TEXT':
 			eventLabel = action.payload.questionID;
 			break;

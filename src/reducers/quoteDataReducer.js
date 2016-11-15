@@ -33,15 +33,15 @@ const quoteReducer = (state = initialState, action) => {
 		case 'SET_QUOTE_DEMO_GENDER':
 			return state.setIn(['audience', 'demographics', 'gender', action.payload.gender], action.payload.value);
 		case 'TOGGLE_QUOTE_DEMO_AGE_GROUP':
-		return state.updateIn(['audience', 'demographics', 'ageGroups'], groups => {
-			const group = action.payload.ageGroup
-			const idx = groups.keyOf(group);
-			if (idx === undefined) {
-				return groups.push(group);
-			} else {
-				return groups.delete(idx);
-			}
-		});
+			return state.updateIn(['audience', 'demographics', 'ageGroups'], groups => {
+				const group = action.payload.ageGroup
+				const idx = groups.keyOf(group);
+				if (idx === undefined) {
+					return groups.push(group);
+				} else {
+					return groups.delete(idx);
+				}
+			});
 
 		case 'ADD_QUOTE_AUDIENCE_PAGE':
 			return state.updateIn(['audience', 'facebookPages'], pages =>
@@ -78,6 +78,14 @@ const quoteReducer = (state = initialState, action) => {
 				questions
 				.delete(action.payload.questionID)
 				.map((q, idx) => q.set('questionID', idx)));
+		case 'SWAP_QUOTE_QUESTION':
+			return state.updateIn(['surveyMetadata', 'questions'], questions => {
+				const item = questions.get(action.payload.oldIndex);
+				return questions
+					.delete(action.payload.oldIndex)
+					.insert(action.payload.newIndex, item)
+					.map((q, idx) => q.set('questionID', idx));
+			});
 		case 'SET_QUOTE_QUESTION_TEXT':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'textValue'], action.payload.textValue);
 		case 'SET_QUOTE_QUESTION_IMAGE':

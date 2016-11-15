@@ -60,6 +60,29 @@ $body-bgcolor: #f9fafc;
 	height: 34px;
 }
 
+.mini-question {
+	background-color: white;
+	border-right: 1px solid;
+	border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+	cursor: pointer;
+	font-size: 10px;
+	text-align: center;
+	padding: 10px 15px;
+	text-transform: uppercase;
+	img {
+		width: 70px;
+		height: 70px;
+	}
+	&.selected {
+		cursor: default;
+		border-bottom: 1px solid #9655aa;
+	}
+	&.dragging {
+		border: 1px solid;
+		border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+	}
+}
+
 header {
 	height: 130px;
 	background-image: url(/images/layout/header.jpg);
@@ -320,25 +343,6 @@ header {
 		}
 		.button-container:not(:first-child) {
 			margin-left: 20px;
-		}
-
-		.mini-question {
-			background-color: white;
-			border-right: 1px solid;
-			border-color: #e5e6e9 #dfe0e4 #d0d1d5;
-			cursor: pointer;
-			font-size: 10px;
-			text-align: center;
-			padding: 10px 15px;
-			text-transform: uppercase;
-			img {
-				width: 70px;
-				height: 70px;
-			}
-			&.selected {
-				cursor: default;
-				border-bottom: 1px solid #9655aa;
-			}
 		}
 	}
 }

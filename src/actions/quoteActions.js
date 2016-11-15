@@ -103,6 +103,16 @@ const deleteQuoteQuestion = (questionID) => {
 	}
 }
 
+const swapQuoteQuestions = (oldIndex, newIndex) => {
+	return {
+		type: 'SWAP_QUOTE_QUESTION',
+		payload: {
+			oldIndex,
+			newIndex
+		}
+	}
+}
+
 const setQuoteQuestionText = (questionID, textValue) => {
 	return {
 		type: 'SET_QUOTE_QUESTION_TEXT',
@@ -235,7 +245,7 @@ export {
 	addQuoteAudiencePage, toggleQuoteAudiencePageConnected, removeQuoteAudiencePage,
 	addQuoteAudienceInterest, removeQuoteAudienceInterest,
 	addQuoteAudienceBehavior, removeQuoteAudienceBehavior,
-	addQuoteQuestion, deleteQuoteQuestion, setQuoteQuestionText, finishedEditingQText, setQuoteQuestionImage,
+	addQuoteQuestion, deleteQuoteQuestion, swapQuoteQuestions, setQuoteQuestionText, finishedEditingQText, setQuoteQuestionImage,
 	addQuotePossibleAnswer, deleteQuotePossibleAnswer, setQuotePossibleAnswerText,
 	setQuoteSampleSize,
 	setQuoteContactValue, finishedEditingContactValue,
