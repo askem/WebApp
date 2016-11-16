@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import BaseHTTPServer
+import os
 
 PORT_NUMBER = 1235
 
@@ -19,7 +20,7 @@ class Handler( BaseHTTPServer.BaseHTTPRequestHandler ):
 		if filePath.endswith(".gif"):
 			mimetype='image/gif'
 			staticFile = True
-		if filePath.endswith(".js"):
+		if filePath.endswith(".js") or filePath.endswith(".map"):
 			mimetype='application/javascript'
 			staticFile = True
 		if filePath.endswith(".css"):
@@ -42,6 +43,7 @@ class Handler( BaseHTTPServer.BaseHTTPRequestHandler ):
 try:
 	print 'Serving on http://localhost:'+str(PORT_NUMBER)
 	httpd = BaseHTTPServer.HTTPServer( ('127.0.0.1', PORT_NUMBER), Handler )
+	os.system('open http://localhost:'+str(PORT_NUMBER))
 	httpd.serve_forever()
 	
 except KeyboardInterrupt:

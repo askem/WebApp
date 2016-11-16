@@ -55,7 +55,8 @@ module.exports = {
 		}),
 		new webpack.DefinePlugin({
 			__DEV__: true,
-			__PRODUCTION__: false
+			__PRODUCTION__: false,
+			__API_ROOT__: JSON.stringify('https://3po.askem.com/0/'),
 		}),
 		new DashboardPlugin(dashboard.setData),
 		new webpack.HotModuleReplacementPlugin()

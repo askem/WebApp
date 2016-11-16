@@ -46,7 +46,8 @@ let config = {
 				'NODE_ENV': JSON.stringify('production')
 			},
 			__DEV__: false,
-			__PRODUCTION__: true
+			__PRODUCTION__: true,
+			__API_ROOT__: JSON.stringify('https://api.askem.com/0/'),
 		}),
 		new webpack.ProvidePlugin({
 			'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
