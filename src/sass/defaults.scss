@@ -41,6 +41,12 @@ body ul li {margin: 0px; padding: 0px; list-style: none; float: none;}
 	}
 }
 
+.loading-3bounce-purple {
+	.spinner.three-bounce .bounce1, .spinner.three-bounce .bounce2, .spinner.three-bounce .bounce3 {
+		background-color: $askem-purple;
+	}
+}
+
 .loading-3bounce-green {
 	.spinner.three-bounce .bounce1, .spinner.three-bounce .bounce2, .spinner.three-bounce .bounce3 {
 		background-color: $askem-green;
@@ -58,4 +64,25 @@ body ul li {margin: 0px; padding: 0px; list-style: none; float: none;}
 	background-image: none;
 	background-color: white;
 	height: 34px;
+}
+
+.login {
+	width: 400px;
+	margin: 0 auto;
+	padding: 30px;
+	.error-message {
+		color: red;
+	}
+	div {
+		padding: 10px 0;
+	}
+	h1 {
+		text-align: center;
+	}
+	label {
+		width: 80px;
+	}
+	.button-container {
+		text-align: right;
+	}
 }

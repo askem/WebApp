@@ -1,5 +1,6 @@
 import AGE_GROUPS from 'constants/AGE_GROUPS';
 import quoteContactFields from 'constants/quoteContactFields';
+import Cookies from 'cookies-js';
 
 const defaultModelData = {
 	"modelID": "dce",
@@ -13,12 +14,20 @@ class AskemAPI {
 	constructor(props = {}) {
 		this._baseURI = props.baseURI || 'https://api.askem.com/0/';
 		this._loginURI = props.loginURI || 'https://askem.com/profile/login';
-		this._accessToken = props.accessToken;
+		this._accessToken = props.accessToken || Cookies.get('atoken');
 		this.setHeaders();
 	}
 	setAccessToken(accessToken) {
 		if (this._accessToken === accessToken) { return; }
 		this._accessToken = accessToken;
+		this.setHeaders();
+	}
+	loggedIn() {
+		return !!this._accessToken;
+	}
+	signOut() {
+		Cookies.expire('atoken');
+		this._accessToken = undefined;
 		this.setHeaders();
 	}
 	setHeaders() {
@@ -65,11 +74,30 @@ class AskemAPI {
 	getAccessToken(email, password) {
 		const headers = new Headers();
 		headers.append('Content-Type', 'application/json; charset=utf-8');
-		return this.fetchURL(this._loginURI, {
-			method: 'POST',
-			method: 'cors',
-			body: JSON.stringify({email, password}),
-			headers
+		let fetchAccessToken;
+		if (__PRODUCTION__) {
+			fetchAccessToken = this.fetchURL(this._loginURI, {
+				method: 'POST',
+				mode: 'cors',
+				body: JSON.stringify({email, password}),
+				headers
+			});
+		} else {
+			fetchAccessToken = Promise.resolve({"error":"","errorCode":200,"status":"ok","accessToken":"45158d44fcfa43208777d0f73f2cd8bc","accessTokenTTL":"Sat Feb 18 2017 15:29:12","refreshToken":"b9e14fbd3e244a7d88a52fd03125e4fa","refreshTokenTTL":"Sat Feb 18 2017 15:29:12"});
+		}
+		return fetchAccessToken
+		.then(results => {
+			Cookies.set('atoken', results.accessToken, {
+				expires: results.accessTokenTTL,
+				//domain: '.askem.com',
+				//secure: true
+			});
+			Cookies.set('rtoken', results.refreshToken, {
+				expires: results.refreshTokenTTL,
+				//domain: '.askem.com',
+				//secure: true
+			});
+			this.setAccessToken(results.accessToken);
 		});
 	}
 
@@ -193,7 +221,11 @@ class AskemAPI {
 		return this.fetchEndpoint(`external/leads/${quoteID}`, quoteUpdate);
 	}
 	getQuoteByID(quoteID) {
-		return this.fetchEndpoint(`external/leads/${quoteID}`)
+		let endpoint = `external/leads/${quoteID}`;
+		if (this.loggedIn()) {
+			endpoint = `leads/${quoteID}`;
+		}
+		return this.fetchEndpoint(endpoint)
 		.then(results => {
 			if (results && results.lead && results.lead.metadata) {
 				return JSON.parse(results.lead.metadata)
