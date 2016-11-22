@@ -1,8 +1,9 @@
-const GAQuoteLogger = store => next => action => {
+const quoteAnalytics = store => next => action => {
 	let eventAction = action.type;
 	let eventLabel = '';
 	let eventValue;
 	let sendEvent = true;
+	let isFacebookCustomEvent = true;
 	switch (eventAction) {
 		case 'SET_QUOTE_DEMO_GENDER':
 			eventLabel = `${action.payload.gender}:${action.payload.value}`;
@@ -66,6 +67,14 @@ const GAQuoteLogger = store => next => action => {
 		//'WIZARD_AFTER_SUBMIT_START_NEW'
 			eventAction = action.payload.actionType;
 			eventLabel = action.payload.metadata;
+			if (eventAction === 'WIZARD_CLICK_SUBMIT') {
+				isFacebookCustomEvent = false;
+				try {
+					fbq('track', 'Lead', {
+						label: eventLabel,
+					});
+				} catch (e) { }
+			}
 			break;
 		default:
 			sendEvent = false;
@@ -82,10 +91,18 @@ const GAQuoteLogger = store => next => action => {
 				eventValue
 			});
 		} catch (e) { }
+		if (isFacebookCustomEvent) {
+			try {
+				fbq('trackCustom', eventAction, {
+					label: eventLabel,
+					value: eventValue
+				});
+			} catch (e) { }
+		}
 	}
 	
 	const result = next(action)
 	return result
 }
 
-export default GAQuoteLogger;
+export default quoteAnalytics;

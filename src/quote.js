@@ -20,7 +20,7 @@ import quoteRoutingLogics from 'logic/quoteRoutingLogic';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import GAQuoteLogger from 'middleware/ga.quote';
+import quoteAnalytics from 'middleware/quoteAnalytics';
 
 import AskemAPI from 'data/AskemAPI';
 
@@ -84,7 +84,7 @@ let middleware = [
 	logicMiddleware
 ];
 if (__PRODUCTION__) {
-	middleware.push(GAQuoteLogger);
+	middleware.push(quoteAnalytics);
 }
 
 const store = createStore(
@@ -146,12 +146,12 @@ s.parentNode.insertBefore(t,s)}(window,document,'script',
 	
 	// Intercom
 	window.intercomSettings = {
-	  app_id: "p1iplum8"
+	  app_id: 'p1iplum8'
 	};
  	(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/p1iplum8';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
 	
 	// Linkedin
-	_linkedin_data_partner_id = "21993";
+	window._linkedin_data_partner_id = '21993';
 	(function(){var s = document.getElementsByTagName("script")[0];
 	var b = document.createElement("script");
 	b.type = "text/javascript";b.async = true;
