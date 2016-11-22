@@ -159,6 +159,17 @@ s.parentNode.insertBefore(t,s)}(window,document,'script',
 	s.parentNode.insertBefore(b, s);})();
 	
 	// Askem Pixel
-	
-	
+	const currentURL = location.href;
+	const referrerURL = document.referrer || '';
+	let aPixelURL = 'https://askem.com/pixel?pub=Askem&campaign=Quote&';
+	aPixelURL += 'currentURL=' + encodeURIComponent(currentURL);
+	aPixelURL += '&referrerURL=' + encodeURIComponent(referrerURL);
+	aPixelURL += '&userAgent=' + encodeURIComponent(navigator.userAgent);
+	const iframe = document.createElement('iframe');
+	iframe.src = aPixelURL;
+	iframe.width = '0';
+	iframe.height = '0';
+	iframe.style.display = 'none';
+	iframe.style.visibility = 'hidden';
+	document.body.appendChild(iframe);
 }
