@@ -126,6 +126,23 @@ class AskemAPI {
 		then(results => results.mediaID);
 	}
 	
+	uploadFileForLead(blob, leadID) {
+		const mimeType = blob.type;
+        const fd = new FormData();
+        fd.append('file', blob);
+		const endpoint = `external/leads/${leadID}/files`;
+		const headers = new Headers(this._headers);
+		headers.set('Content-Type', mimeType);
+		const options = {
+			headers,
+			cors: true,
+			method: 'POST',
+			body: fd
+		};		
+		return this.fetchURL(`${this._baseURI}${endpoint}`, options).
+		then(results => results.mediaID);
+	}
+	
 	fetchResearchCampaign(researchID) {
 		return this.fetchEndpoint(`researchCampaigns/${researchID}`)
 		.then(results => results.researchCampaign);

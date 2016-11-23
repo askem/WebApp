@@ -97,12 +97,14 @@ const updateQuoteLogic = createLogic({
 const uploadImageLogic = createLogic({
 	type: 'SET_QUOTE_QUESTION_IMAGE',
 	process({ getState, action, api }, dispatch) {
+		const quoteID = getState().getIn(['data', 'lead', 'quoteID']);
+		if (!quoteID) { return; }
 		const mediaID = action.payload.mediaID;
 		if (!mediaID.startsWith('data:')) { return; }
 		const questionID = action.payload.questionID;
 		const blob = dataURIToBlob(mediaID);
 		dispatch({ type: 'UPLOAD_IMAGE_REQUEST_START' }, { allowMore: true });
-		return api.uploadMedia(blob)
+		return api.uploadFileForLead(blob, quoteID)
 		.then(newMediaID => {
 			// Preload image to make visual transition seamless
 			const img = new Image();
