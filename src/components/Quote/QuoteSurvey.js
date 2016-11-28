@@ -1,5 +1,5 @@
 import React from 'react';
-import CreateSurvey from 'components/Quote/CreateSurvey';
+import SurveyEditor from 'components/Editor/SurveyEditor';
 import CreateSurveyPreview from 'components/Quote/CreateSurveyPreview';
 
 class QuoteSurvey extends React.Component {
@@ -19,7 +19,8 @@ class QuoteSurvey extends React.Component {
 		return (
 			<div className="quote-wizard-main">
 				<div className="quote-wizard-maincontent">
-					<CreateSurvey
+					<SurveyEditor
+					showAdvancedControls={this.props.showAdvancedControls}
 					selectedQuestion={this.state.selectedQuestion}
 					onChangeSelectedQuestion={this.setSelectedQuestion}
 					{...this.props} />

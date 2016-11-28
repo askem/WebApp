@@ -14,7 +14,8 @@ class Login extends React.Component {
 			errorMessage: ''
 		};
 	}
-	doLogin() {
+	doLogin(e) {
+		e.preventDefault();
 		if (!this.state.email || !this.state.password) {
 			this.setState({
 				errorMessage: 'Please provide valid email and password'
@@ -49,13 +50,14 @@ class Login extends React.Component {
 	render() {
 		let button;
 		if (!this.state.performingLogin) {
-			button = <button className="askem-button-white" onClick={this.doLogin}>Login</button>;
+			button = <button type="submit" className="askem-button-white">Login</button>;
 		} else {
 			button = <Loading className="loading-3bounce-purple" />;
 		}
 		return (
 			<div className="login">
 				<h1>Login</h1>
+				<form onSubmit={this.doLogin}>
 				<div>
 					<label htmlFor="email">Email</label>
 					<TextField value={this.state.email} type="email"
@@ -84,6 +86,7 @@ class Login extends React.Component {
 				<div className="button-container">
 					{button}
 				</div>
+				</form>
 			</div>
 		)
 	}

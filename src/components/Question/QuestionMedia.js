@@ -21,6 +21,7 @@ class QuestionMedia extends React.Component {
 		children.push(<canvas className="photo-canvas" style={canvasStyle} ref="imageCanvas" key="imageCanvas" />);
 		q.possibleAnswers.forEach((pa, paIndex) => {
 			children.push(<AnswerPopup
+				isMultiAnswerQuestion={!!q.isMultiAnswerQuestion}
 				key={`answer-${paIndex}`} ref={`answer-${paIndex}`}
 				paIndex={paIndex} questionID={q.questionID}
 				onSingleVote={this.props.onSingleVote}

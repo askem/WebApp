@@ -1,14 +1,14 @@
 import React from 'react';
 import Question from 'components/Question/Question';
-import AutoArrangement from 'utils/Askem/AutoArrangement';
+import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, calcLocations } from 'utils/Askem/AutoArrangement';
 import blobURL from 'utils/Askem/blobURL';
 
 const questionFromSurveyMetadata = (meta) => {
 	if (!meta) return null;
 	let q = JSON.parse(JSON.stringify(meta));
-
-	const arrangement = meta._popupsArrangement || AutoArrangement.POPUP_ARRANGEMENT_TYPE.CIRCLE;
-	q.popupLocations = AutoArrangement.calcLocations(q.possibleAnswers.length, arrangement);
+	const arrangement = q.autoArrangement || POPUP_ARRANGEMENT_DEFAULT;
+	const possibleAnswersCount = q.possibleAnswers.length;
+	q.popupLocations = calcLocations(possibleAnswersCount, arrangement);
 	q.questionImageURL = blobURL(q.mediaID);
 	return q;
 };

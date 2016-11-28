@@ -1,14 +1,16 @@
 import React from 'react';
 import blobURL from 'utils/Askem/blobURL';
-import QuestionCreator from 'components/Editor/QuestionCreator';
+import QuestionEditor from 'components/Editor/QuestionEditor';
 import QuestionsStrip from 'components/Editor/QuestionsStrip';
+import Checkbox from 'components/Common/Checkbox/Checkbox';
 
-class CreateSurvey extends React.Component {
+class SurveyEditor extends React.Component {
 	constructor(props) {
     	super(props);
 		this.addQuestion = this.addQuestion.bind(this);
 		this.selectQuestion = this.selectQuestion.bind(this);
 		this.state = {
+			advanced: false,
 			errorMessage: ''
 		};
 	}
@@ -42,8 +44,10 @@ class CreateSurvey extends React.Component {
 		if (this.props.selectedQuestion !== null) {
 			const q = this.props.surveyMetadata.questions[this.props.selectedQuestion];
 			if (q) {
-				currentQ = <QuestionCreator
+				currentQ = <QuestionEditor
+					advanced={this.state.advanced}
 					question={q}
+					questionsCount={this.props.surveyMetadata.questions.length}
 					{...this.props} />;
 			}
 		}
@@ -55,10 +59,17 @@ class CreateSurvey extends React.Component {
 				questions={this.props.surveyMetadata.questions}
 				selectedQuestion={this.props.selectedQuestion} />;
 		}
+		let advancedToggle;
+		if (this.props.showAdvancedControls) {
+			advancedToggle = <Checkbox label="Advanced"
+			checked={!!this.state.advanced}
+			onChange={() => this.setState({advanced: !this.state.advanced})} />;
+		}
 		return (
 			<div className="survey-creator">
-				<div className="quote-audience">
+				<div className="header-row">
 					<button onClick={this.addQuestion} className="askem-button-white">Add Question</button>
+					{advancedToggle}
 				</div>
 				{questionsGrid}
 				{currentQ}
@@ -67,8 +78,8 @@ class CreateSurvey extends React.Component {
 	}
 }
 
-CreateSurvey.propTypes = {
-
+SurveyEditor.propTypes = {
+	showAdvancedControls: React.PropTypes.bool,
 };
 
-export default CreateSurvey;
+export default SurveyEditor;
