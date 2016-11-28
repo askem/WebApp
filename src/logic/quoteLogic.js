@@ -14,9 +14,10 @@ const createQuoteLogic = createLogic({
 		} else {
 			quote = {};
 		}
+		const source = action.payload.source || 'quote.askem.com';
 		dispatch({ type: 'CREATE_NEW_QUOTE_REQUEST_START' }, { allowMore: true });
 		dispatch({ type: 'REACH_ESTIMATE_EXPLICIT_FETCH' }, { allowMore: true });
-		return api.createQuote(quoteID, quote)
+		return api.createQuote(quoteID, quote, source)
 		.then(() => {
 			localStorage.inProgressQuoteID = quoteID;
 			dispatch({ type: 'CREATE_NEW_QUOTE_REQUEST_SUCCESS' }, { allowMore: true });
@@ -36,7 +37,8 @@ const newSubmissionLogic = createLogic({
 		dispatch({
 			type: 'CREATE_NEW_QUOTE',
 			payload: {
-				quoteID
+				quoteID,
+				source: 'quote.askem.com:wizard/new submission'
 			}
 		});		
 	}

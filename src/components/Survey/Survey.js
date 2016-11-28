@@ -41,9 +41,16 @@ class Survey extends React.Component {
 		if (this.props.onMultiVote) {
 			this.props.onMultiVote(questionID, answers);
 		}
+		
+		const paID = this.props.questions[questionID].possibleAnswers[0].possibleAnswerID;
+		this.moveForwardFromPA(questionID, paID);
+		return;
+		
+		
 		// Temporary logic: get the next state according to an arbitrary possible answer (1st).
 		// This should be handled by ensuring Multi A Questions only have a connection from question level
-		const tempPAID = answers[0].sourcePossibleAnswerID;
+		const anyAnswer = answers.values().next().value;
+		const tempPAID = anyAnswer.sourcePossibleAnswerID;
 		this.moveForwardFromPA(questionID, tempPAID);
 	}
 	getDefaultEnding() {
@@ -74,6 +81,7 @@ class Survey extends React.Component {
 			case 'question':
 				const q = this.props.questions[entityID];
 				entity = <Question
+					inSurvey={true}
 					question={q}
 					onSingleVote={this.singleVote}
 					onMultiVote={this.multiVote} />;

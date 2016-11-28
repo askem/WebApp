@@ -1,6 +1,6 @@
 import React from 'react';
 import SurveyEditor from 'components/Editor/SurveyEditor';
-import CreateSurveyPreview from 'components/Quote/CreateSurveyPreview';
+import QuestionPreview from 'components/Quote/Preview/QuestionPreview';
 
 class QuoteSurvey extends React.Component {
 	constructor(props) {
@@ -26,7 +26,8 @@ class QuoteSurvey extends React.Component {
 					{...this.props} />
 				</div>
 				<div className="quote-wizard-side">
-					<CreateSurveyPreview
+					<QuestionPreview
+						title={this.props.showAdvancedControls ? 'Question Preview' : 'Preview'}
 						selectedQuestion={this.state.selectedQuestion}
 						questions={this.props.surveyMetadata.questions} />
 				</div>

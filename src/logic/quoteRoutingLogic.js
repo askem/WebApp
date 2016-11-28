@@ -17,7 +17,8 @@ const enterWithoutIDLogic = createLogic({
 				dispatch({
 					type: 'CREATE_NEW_QUOTE',
 					payload: {
-						quoteID
+						quoteID,
+						source: 'quote.askem.com:wizard'
 					}
 				});
 			}
@@ -40,7 +41,24 @@ const enterWithIDLogic = createLogic({
 	}
 });
 
+const manageCreateNewLogic = createLogic({
+	type: 'ROUTING_MANAGE_CREATE_NEW',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = genGUID();
+		console.info(`Redirecting to new quote ${quoteID}`);
+		browserHistory.replace(`/${quoteID}/manage`);
+		dispatch({
+			type: 'CREATE_NEW_QUOTE',
+			payload: {
+				quoteID,
+				source: `quote.askem.com/admin:@${api.username()}`
+			}
+		});
+	}
+});
+
 export default [
 	enterWithoutIDLogic,
 	enterWithIDLogic,
+	manageCreateNewLogic
 ];

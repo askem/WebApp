@@ -26,9 +26,13 @@
 }
 
 header {
-	height: 130px;
+	height: 90px;
 	background-image: url(/images/layout/header.jpg);
 	color: white;
+	
+	&.fullsize {
+		height: 130px;
+	}
 	
 	.main {
 		width: 80%;
@@ -459,4 +463,40 @@ header {
 		color: $askem-light-gray;
 		padding-bottom: 5px;
 	}
+}
+
+.quote-manage {
+	width: 1100px;
+	margin: 0 auto;
+	
+	a {
+		font-weight: normal;
+		color: $askem-purple;
+		padding: 0 10px;
+		text-transform: none;
+	}
+	
+	.title {
+		font-weight: 300;
+		color: $askem-purple;
+		
+	}
+	.value {
+		padding-bottom: 5px;
+	}
+	.edit-button {
+		margin-left: 5px;
+		padding: 2px 5px;
+	}
+	
+	.done-botton-container {
+		text-align: right;
+		padding: 10px 0;
+	}
+}
+
+.external-preview {
+	width: 400px;
+	height: 650px;
+	margin: 20px auto;
 }

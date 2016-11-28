@@ -25,9 +25,14 @@ class AskemAPI {
 	loggedIn() {
 		return !!this._accessToken;
 	}
+	username() {
+		if (!this.loggedIn()) { return ''; }
+		return localStorage.username || '';
+	}
 	signOut() {
 		Cookies.expire('atoken');
 		this._accessToken = undefined;
+		localStorage.removeItem('username');
 		this.setHeaders();
 	}
 	setHeaders() {
@@ -98,6 +103,10 @@ class AskemAPI {
 				//secure: true
 			});
 			this.setAccessToken(results.accessToken);
+			this.fetchEndpoint('user/me').then(meResults => {
+				localStorage.username = meResults.user.userName;
+				localStorage.userProfile = meResults.user.profileImageMediaID;
+			})
 		});
 	}
 
@@ -222,9 +231,10 @@ class AskemAPI {
 		return this.fetchEndpoint(`attributes/search?q=${encodeURIComponent(searchQuery)}&type=behaviors&limit=${limit}`);
 	}
 
-	createQuote(quoteID, quote) {
+	createQuote(quoteID, quote, source) {
 		return this.fetchEndpoint('external/leads', {
 			ID: quoteID,
+			source,
 			metadata: JSON.stringify(quote)
 		});
 	}

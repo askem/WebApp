@@ -2,25 +2,27 @@ import React from 'react';
 import NavBar from 'components/Base/NavBar';
 import Footer from 'components/Base/Footer';
 
-const QuoteHeader = () => <div>
-	<header>
+const QuoteHeader = (props) => <div>
+	<header className={props.fullSizeHeader ? 'fullsize' : ''}>
 		<div className="main">
 			<div className="side-anchor">
 				<img src="/images/layout/logo-white.png" alt="Askem"/>
 			</div>
-			<div className="title">Get Quote</div>
+			<div className="title">{props.title}</div>
 			<div className="side-anchor"></div>
-		</div>
-		
+		</div>	
 	</header>
 </div>;
 
 const noop = () => {};
 class QuoteFrame extends React.Component {
 	render() {
+		const lastRoute = this.props.routes[this.props.routes.length - 1];
+		const title = lastRoute.name || 'Get Quote';
+		const fullSizeHeader = lastRoute.fullSizeHeader;
 		return <div>
 			<div className="dashboard-main">
-				<QuoteHeader />
+				<QuoteHeader title={title} fullSizeHeader={fullSizeHeader} />
 				{this.props.children}
 			</div>
 			<Footer />

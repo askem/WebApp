@@ -5,6 +5,8 @@ import genGUID from 'utils/Askem/genGUID';
 import QuoteFrame from 'components/base/QuoteFrame';
 import QuoteWizardContainer from 'containers/QuoteWizardContainer';
 import ManageQuoteContainer from 'containers/ManageQuoteContainer';
+import QuoteAdminHomeContainer from 'containers/QuoteAdminHomeContainer';
+import QuoteExternalPreviewContainer from 'containers/QuoteExternalPreviewContainer';
 import Login from 'components/Base/Login';
 
 const quoteRouter = (store, api) =>  {
@@ -101,11 +103,12 @@ const quoteRouter = (store, api) =>  {
 	return <Router history={history}>
 		<Route component={QuoteFrame}>
 			<Route path="/" onEnter={enterWithoutID} />
-			<Route path="/login" component={Login} />
+			<Route path="/login" name="Login" component={Login} />
 			<Route path="/signout" onEnter={signOut} />
-			<Route path="/admin" onEnter={enterRestricted} />
-			<Route path="/:quoteID" component={QuoteWizardContainer} onEnter={enterWithID} />
-			<Route path="/:quoteID/manage" component={ManageQuoteContainer} onEnter={enterRestrictedWithID} />
+			<Route path="/admin" name="Quote Management" onEnter={enterRestricted} component={QuoteAdminHomeContainer} />
+			<Route path="/:quoteID" fullSizeHeader={true} component={QuoteWizardContainer} onEnter={enterWithID} />
+			<Route path="/:quoteID/manage" name="Manage Quote" component={ManageQuoteContainer} onEnter={enterRestrictedWithID} />
+			<Route path="/:quoteID/preview" name="Survey Preview" component={QuoteExternalPreviewContainer} onEnter={enterWithID} />
 		</Route>
 	</Router>;
 }

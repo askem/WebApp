@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ManageQuote from 'components/Quote/ManageQuote';
+import ManageQuote from 'components/Quote/Admin/ManageQuote';
 import * as quoteActions from 'actions/quoteActions';
 
 const ManageQuoteContainer = connect(
