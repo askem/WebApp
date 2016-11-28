@@ -88,6 +88,24 @@ const quoteReducer = (state = initialState, action) => {
 			});
 		case 'SET_QUOTE_QUESTION_TEXT':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'textValue'], action.payload.textValue);
+		case 'SET_QUOTE_QUESTION_IS_MULTI_ANSWER':
+			return state.updateIn(['surveyMetadata', 'questions', action.payload.questionID], q => {
+				if (action.payload.isMultiAnswer) {
+					return q.set('isMultiAnswerQuestion', true)
+					.set('minAnswers', 1)
+					.set('maxAnswers', q.get('possibleAnswers').size);
+				} else {
+					return q.delete('isMultiAnswerQuestion')
+					.delete('minAnswers')
+					.delete('maxAnswers');
+				}	
+			});
+		case 'SET_QUOTE_QUESTION_MIN_ANSWERS':
+			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'minAnswers'], action.payload.minAnswers);
+		case 'SET_QUOTE_QUESTION_MAX_ANSWERS':
+			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'maxAnswers'], action.payload.maxAnswers);
+		case 'SET_QUOTE_QUESTION_AUTO_ARRANGEMENT':
+			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'autoArrangement'], action.payload.autoArrangement);
 		case 'SET_QUOTE_QUESTION_IMAGE':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'mediaID'], action.payload.mediaID);
 		case 'UPLOAD_IMAGE_REQUEST_SUCCESS':
@@ -110,6 +128,33 @@ const quoteReducer = (state = initialState, action) => {
 		case 'SET_QUOTE_POSSIBLE_ANSWER_TEXT':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
 				'possibleAnswers', action.payload.possibleAnswerID, 'textValue'], action.payload.textValue);
+		case 'SET_QUOTE_POSSIBLE_ANSWER_RANDOM_LOCATION':
+			if (action.payload.randomLocation) {
+				return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
+					'possibleAnswers', action.payload.possibleAnswerID, 'randomLocation'], true);
+			} else {
+				return state.deleteIn(['surveyMetadata', 'questions', action.payload.questionID,
+					'possibleAnswers', action.payload.possibleAnswerID, 'randomLocation']);
+			}
+		case 'SET_QUOTE_POSSIBLE_ANSWER_CONNECTION':
+			const { entity } = action.payload;
+			if (entity) {
+				return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
+					'possibleAnswers', action.payload.possibleAnswerID, 'connection'], Immutable.fromJS(entity));
+			} else {
+				return state.deleteIn(['surveyMetadata', 'questions', action.payload.questionID,
+					'possibleAnswers', action.payload.possibleAnswerID, 'connection']);
+			}
+		case 'SET_QUOTE_POSSIBLE_ANSWER_MULTI_BEHAVIOR':
+			const { multiBehavior } = action.payload;
+			if (multiBehavior && multiBehavior !== 'regular') {
+				return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
+					'possibleAnswers', action.payload.possibleAnswerID, 'multiBehavior'], multiBehavior);
+			} else {
+				// Don't save 'regular' values
+				return state.deleteIn(['surveyMetadata', 'questions', action.payload.questionID,
+					'possibleAnswers', action.payload.possibleAnswerID, 'multiBehavior']);
+			}
 		case 'SET_QUOTE_SAMPLE_SIZE':
 			return state.set('sample', Immutable.fromJS({
 				sampleSize: action.payload.sampleSize,

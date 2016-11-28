@@ -40,6 +40,15 @@ const quoteAnalytics = store => next => action => {
 		case 'FINISHED_EDITING_QUOTE_QUESTION_TEXT':
 			eventLabel = action.payload.questionID;
 			break;
+		case 'SET_QUOTE_QUESTION_MIN_ANSWERS':
+			eventLabel = `${action.payload.questionID}-${action.payload.minAnswers}`;
+			break;
+		case 'SET_QUOTE_QUESTION_MAX_ANSWERS':
+			eventLabel = `${action.payload.questionID}-${action.payload.maxAnswers}`;
+			break;
+		case 'SET_QUOTE_QUESTION_AUTO_ARRANGEMENT':
+			eventLabel = `${action.payload.questionID}-${action.payload.autoArrangement}`;
+			break;
 		case 'SET_QUOTE_QUESTION_IMAGE':
 			eventLabel = action.payload.questionID;
 			break;
@@ -52,6 +61,15 @@ const quoteAnalytics = store => next => action => {
 			eventLabel = `${action.payload.questionID},${action.payload.possibleAnswerID}`;
 			break;
 		case 'SET_QUOTE_POSSIBLE_ANSWER_TEXT':
+			eventLabel = `${action.payload.questionID},${action.payload.possibleAnswerID}`;
+			break;
+		case 'SET_QUOTE_POSSIBLE_ANSWER_RANDOM_LOCATION':
+			eventLabel = `${action.payload.questionID},${action.payload.possibleAnswerID}-${action.payload.randomLocation}`;
+			break;
+		case 'SET_QUOTE_POSSIBLE_ANSWER_CONNECTION':
+			eventLabel = `${action.payload.questionID},${action.payload.possibleAnswerID}`;
+			break;
+		case 'SET_QUOTE_POSSIBLE_ANSWER_MULTI_BEHAVIOR':
 			eventLabel = `${action.payload.questionID},${action.payload.possibleAnswerID}`;
 			break;
 		case 'SET_QUOTE_SAMPLE_SIZE':

@@ -1,6 +1,9 @@
 import React from 'react';
 import AskemUserText from 'components/Common/AskemUserText';
 
+const PopupCheckmark = (props) => <div 
+	className={`checkmark${props.isChecked ? ' checked' : ''}`} />
+
 class AnswerPopup extends React.Component {
 	constructor(props) {
 		super(props);
@@ -39,7 +42,7 @@ class AnswerPopup extends React.Component {
 		let className = 'answer';
 		let checkmark = null;
 		if (this.props.isMultiAnswerQuestion) {
-			checkmark = <PopupCheckmark isChecked={this.props.isChecked} onClick={onPopupClick} />;
+			checkmark = <PopupCheckmark isChecked={this.props.isChecked} onClick={this.onPopupClick} />;
 			if (this.props.isChecked) {
 				className += ' checked';
 			}

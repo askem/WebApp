@@ -1,10 +1,11 @@
-import AutoArrangement from 'utils/Askem/AutoArrangement';
+import { POPUP_ARRANGEMENT_TYPE, calcLocations } from 'utils/Askem/AutoArrangement';
 import extractTemplateVars from 'utils/Askem/extractTemplateVars';
 import blobURL from 'utils/Askem/blobURL';
 
 const questionFromTemplate = (questionTemplate, vars, varValues) => {
 	let q = JSON.parse(JSON.stringify(questionTemplate)); //Object.assign({}, questionTemplate);
 	let possibleAnswersChanged = false;
+	let duplicatedPossibleAnswers = {};
 
 	vars.forEach((v, idx) => {
 		let value = varValues[idx];
@@ -50,8 +51,8 @@ const questionFromTemplate = (questionTemplate, vars, varValues) => {
 			pa.possibleAnswerID = q.questionID * 100 + paIdx;
 		})
 	}
-	const arrangement = q._popupsArrangement || AutoArrangement.POPUP_ARRANGEMENT_TYPE.CIRCLE;
-	q.popupLocations = AutoArrangement.calcLocations(q.possibleAnswers.length, arrangement);
+	const arrangement = q._popupsArrangement || POPUP_ARRANGEMENT_TYPE.CIRCLE;
+	q.popupLocations = calcLocations(q.possibleAnswers.length, arrangement);
 	q.questionImageURL = q.questionImageURL || '/images/emptyMediaID.png';
 	return q;
 }

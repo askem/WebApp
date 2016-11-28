@@ -4,9 +4,8 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import genGUID from 'utils/Askem/genGUID';
 import QuoteFrame from 'components/base/QuoteFrame';
 import QuoteWizardContainer from 'containers/QuoteWizardContainer';
+import ManageQuoteContainer from 'containers/ManageQuoteContainer';
 import Login from 'components/Base/Login';
-
-const QuoteManageContainer = () => <h1>Manage Quote</h1>;
 
 const quoteRouter = (store, api) =>  {
 	// Create an enhanced history that syncs navigation events with the store
@@ -106,7 +105,7 @@ const quoteRouter = (store, api) =>  {
 			<Route path="/signout" onEnter={signOut} />
 			<Route path="/admin" onEnter={enterRestricted} />
 			<Route path="/:quoteID" component={QuoteWizardContainer} onEnter={enterWithID} />
-			<Route path="/:quoteID/manage" component={QuoteManageContainer} onEnter={enterRestrictedWithID} />
+			<Route path="/:quoteID/manage" component={ManageQuoteContainer} onEnter={enterRestrictedWithID} />
 		</Route>
 	</Router>;
 }

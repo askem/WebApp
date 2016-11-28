@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 
 const POPUP_ARRANGEMENT_TYPE = {
+	CUSTOM: -1,
 	CIRCLE: 0,
 	OPEN_ARC: 1,
 	ALIGN_HORIZONTAL: 2,
@@ -9,13 +10,30 @@ const POPUP_ARRANGEMENT_TYPE = {
 	FLIP_HORIZONTAL: 100,
 	FLIP_VERTICAL: 101
 };
+const POPUP_ARRANGEMENT_DEFAULT = POPUP_ARRANGEMENT_TYPE.CIRCLE;
+
+const AutomaticPopupArrangementTypes = [
+	{id: POPUP_ARRANGEMENT_TYPE.CIRCLE, title: 'Circle'},
+	{id: POPUP_ARRANGEMENT_TYPE.OPEN_ARC, title: 'Open Arc'},
+	{id: POPUP_ARRANGEMENT_TYPE.ALIGN_HORIZONTAL, title: 'Horizontal'},
+	{id: POPUP_ARRANGEMENT_TYPE.ALIGN_VERTICAL, title: 'Vertical'},
+	{id: POPUP_ARRANGEMENT_TYPE.HUGGING, title: 'Hugging'},
+	{id: POPUP_ARRANGEMENT_TYPE.CUSTOM, title: 'Custom'},
+];
+
 const popupArranger = (numberOfPopups, arrangementType) => {
 	let step = 1.0;
 	const nPoints = numberOfPopups;
 	if (nPoints > 1) {
 		step = 1.0 / (nPoints - 1);
 	}
-
+	
+	if (numberOfPopups === 1) {
+		arrangementType = POPUP_ARRANGEMENT_TYPE.CIRCLE;
+	} else if (numberOfPopups < 3 && arrangementType === POPUP_ARRANGEMENT_TYPE.HUGGING) {
+		arrangementType = POPUP_ARRANGEMENT_TYPE.OPEN_ARC;
+	}
+	
 	let possibleAnswerArranger = pa => pa;
 	const flipper = val => 1.0 - val;
 	switch (arrangementType) {
@@ -79,6 +97,8 @@ const popupArranger = (numberOfPopups, arrangementType) => {
 			};
 			break;
 		default:
+			possibleAnswerArranger = pa => pa;
+			break;
 	}
 	return possibleAnswerArranger;
 };
@@ -103,4 +123,4 @@ const calcLocations = (numberOfLocations, arrangementType) => {
 	return locations.toJS();
 };
 
-export default { calcLocations, popupArranger, POPUP_ARRANGEMENT_TYPE };
+export { calcLocations, popupArranger, POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, AutomaticPopupArrangementTypes };
