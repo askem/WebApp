@@ -469,6 +469,14 @@ header {
 	width: 1100px;
 	margin: 0 auto;
 	
+	.manage-summary {
+		display: flex;
+		justify-content: space-around;
+		padding-top: 30px;
+		padding-left: 70px;
+		padding-right: 70px;
+	}
+	
 	a {
 		font-weight: normal;
 		color: $askem-purple;

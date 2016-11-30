@@ -2,6 +2,7 @@ import React from 'react';
 import Loading from 'components/Common/Loading';
 import QuoteSurvey from 'components/Quote/QuoteSurvey';
 import QuoteAudience from 'components/Quote/QuoteAudience';
+import QuoteReach from 'components/Quote/QuoteReach';
 import consolidateAgeGroups from 'utils/array/consolidateAgeGroups';
 import numeral from 'numeral';
 import quoteContactFields from 'constants/quoteContactFields';
@@ -36,10 +37,18 @@ class ManageQuote extends React.Component {
 			</div>;
 		} else if (this.state.editing === 'audience') {
 			return <div className="quote-manage">
-				<div style={{textAlign: 'right'}}>
-					<button onClick={()=>this.setState({editing: null})}>Done</button>
+				<div className="done-botton-container">
+					<button className="askem-button-white" onClick={()=>this.setState({editing: null})}>Done Editing</button>
 				</div>
-				<QuoteAudience {...this.props} />
+				<div className="quote-wizard-main">
+					<div className="quote-wizard-maincontent">
+						<QuoteAudience {...this.props} />
+					</div>
+					<div className="quote-wizard-side">
+						<QuoteReach reach={this.props.reachEstimate.reach} />
+					</div>
+				</div>
+				
 			</div>;
 		}
 		
@@ -79,39 +88,47 @@ class ManageQuote extends React.Component {
 		
 		return (
 			<div className="quote-manage">
-				<h1>Manage Quote</h1>
-				<div className="quote-wizard-side-title">
-					Audience <button className="askem-button-white edit-button"
-						onClick={()=>this.setState({editing: 'audience'})}>Edit</button>
+			<div className="manage-summary">
+				<div>
+					<div className="quote-wizard-side-title">
+						Audience <button className="askem-button-white edit-button"
+							onClick={()=>this.setState({editing: 'audience'})}>Edit</button>
+					</div>
+					<div className="title">Location</div>
+					<div className="value">United States</div>
+					<div className="title">Demographics</div>
+					<div className="value">{genderDescription}<br/>{ageDescription}</div>
+					{interests}
+					{behaviors}
+					<div className="title">Estimated Reach</div>
+					<div className="value">{reachDescription}</div>
+					<div className="title">Sample Size</div>
+					<div className="value">{this.props.sample.sampleSize}</div>
+					<div className="title">Margin of Error</div>
+					<div className="value">Approx. {numeral(this.props.sample.moe).format('0[.]0a%')}</div>
 				</div>
-				<div className="title">Location</div>
-				<div className="value">United States</div>
-				<div className="title">Demographics</div>
-				<div className="value">{genderDescription}<br/>{ageDescription}</div>
-				{interests}
-				{behaviors}
-				<div className="title">Estimated Reach</div>
-				<div className="value">{reachDescription}</div>
-				<div className="title">Sample Size</div>
-				<div className="value">{this.props.sample.sampleSize}</div>
-				<div className="title">Margin of Error</div>
-				<div className="value">Approx. {numeral(this.props.sample.moe).format('0[.]0a%')}</div>
-				<div className="quote-wizard-side-title">
-					Survey 
-					<button className="askem-button-white edit-button"
-						onClick={()=>this.setState({editing: 'survey'})}>Edit</button>
-					<a href={`/${this.props.lead.quoteID}/preview`} target="_blank">Preview</a>
-				</div>
-				<div className="title">Survey</div>
-				<div className="value">{surveyDescription}</div>
 				
-				<div className="quote-wizard-side-title">
-					Contact Details
+				<div>
+					<div className="quote-wizard-side-title">
+						Survey 
+						<button className="askem-button-white edit-button"
+							onClick={()=>this.setState({editing: 'survey'})}>Edit</button>
+					</div>
+					<div className="title">Survey</div>
+					<div className="value">{surveyDescription}</div>
+					<a style={{padding: 0}} href={`/${this.props.lead.quoteID}/preview`} target="_blank">Preview</a>
 				</div>
-				{quoteContactFields.map((f, idx) => <div key={f.id}>
-					<div className="title">{f.label}</div>
-					<div className="value">{this.props.contact[f.id] || '(Not Provided)'}</div>
-				</div>)}
+				
+				<div>
+					<div className="quote-wizard-side-title">
+						Contact Details
+					</div>
+					{quoteContactFields.map((f, idx) => <div key={f.id}>
+						<div className="title">{f.label}</div>
+						<div className="value">{this.props.contact[f.id] || '(Not Provided)'}</div>
+					</div>)}
+				</div>
+			</div>
 			</div>
 		)
 	}
