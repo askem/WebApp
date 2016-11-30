@@ -24,7 +24,7 @@ class MultiAQContinueButton extends React.Component {
 		let messagePopover;
 		let className = 'multiAQContinue';
 		if (this.props.canContinue) {
-			className += ' enabled animated pulse';
+			className += ' enabled '//animated pulse';
 		} else if (this.state.hasError) {
 			className += ' animated shake';
 			if (this.state.errorMessage) {

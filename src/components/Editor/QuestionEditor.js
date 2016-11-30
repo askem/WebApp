@@ -123,7 +123,7 @@ class QuestionEditor extends React.Component {
 		let advancedImageProperties;
 		let duplicateQuestionButton;
 		if (this.props.advanced) {
-			duplicateQuestionButton = <FlatButton label="Duplicate" onClick={this.duplicateQuestion} />
+			//duplicateQuestionButton = <FlatButton label="Duplicate" onClick={this.duplicateQuestion} />
 			
 			let multiAnswersProperties;
 			if (q.isMultiAnswerQuestion) {

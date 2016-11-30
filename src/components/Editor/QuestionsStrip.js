@@ -38,6 +38,7 @@ class QuestionsStrip extends React.Component {
 	}
 	render() {
 		return <SortableStrip
+			shouldCancelStart={() => true}
 			axis="x" distance={1} helperClass="dragging"
 			onSortEnd={this.onSortEnd} {...this.props} />;
 	}

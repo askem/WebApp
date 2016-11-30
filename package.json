@@ -32,6 +32,7 @@
     "react-chartjs": "github:jhudson8/react-chartjs#chartjs-v2",
     "react-data-grid": "^1.0.46",
     "react-dom": "15.3.2",
+    "react-draggable": "^2.2.3",
     "react-icheck": "^0.3.6",
     "react-icons": "^2.1.0",
     "react-input-toggle": "^0.3.0",

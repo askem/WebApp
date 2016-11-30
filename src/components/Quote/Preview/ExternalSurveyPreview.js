@@ -11,7 +11,7 @@ class ExternalSurveyPreview extends React.Component {
 		if (!this.props.surveyMetadata) {
 			if (this.props.lead && this.props.lead.loadingFail) {
 				return <div className="quote-wizard-loading">
-					<strong>Error: Quote could not load</strong>
+					<strong>Error: Could not load preview</strong>
 				</div>;
 			}
 			return <div className="quote-wizard-loading">
@@ -23,7 +23,6 @@ class ExternalSurveyPreview extends React.Component {
 				<strong>Survey is not yet available</strong>
 			</div>;
 		}
-		
 		
 		return <div className="external-preview">
 				<Survey survey={this.props.survey} questions={this.props.questions} />
