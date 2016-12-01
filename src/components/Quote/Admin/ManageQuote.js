@@ -30,7 +30,6 @@ class ManageQuote extends React.Component {
 		if (this.state.editing === 'survey') {
 			return <div className="quote-manage">
 				<div className="done-botton-container">
-					<a href={`/${this.props.lead.quoteID}/preview`} target="_blank">Survey Preview</a>
 					<button className="askem-button-white" onClick={()=>this.setState({editing: null})}>Done Editing</button>
 				</div>
 				<QuoteSurvey {...this.props} showAdvancedControls={true} />

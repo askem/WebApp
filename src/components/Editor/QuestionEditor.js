@@ -9,9 +9,9 @@ import UploadHiddenControl from 'components/Common/UploadHiddenControl';
 import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, AutomaticPopupArrangementTypes } from 'utils/Askem/AutoArrangement';
 
 const defaultLimits = {
-	maxPossibleAnswers: 5,
-	maxQuestions: 8,
-	maxQuestionTextLength: 100,
+	maxPossibleAnswers: 8,
+	maxQuestions: 12,
+	maxQuestionTextLength: 150,
 	maxPossibleAnswerTextLength: 30
 };
 

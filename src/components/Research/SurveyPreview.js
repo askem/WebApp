@@ -19,27 +19,30 @@ class SurveyPreview extends React.Component {
 	}
 	render() {
 		const actions = [
+			// <FlatButton
+	        //   label="Restart"
+	        //   primary={true}
+	        //   onTouchTap={this.handleRestart}
+	        // />,
 			<FlatButton
-	          label="Restart"
-	          primary={true}
-	          onTouchTap={this.handleRestart}
-	        />,
+				label="Open in New Window"
+				onTouchTap={() => window.open(this.props.previewURL, '_blank')}
+				/>,
 			<FlatButton
 		        label="Close"
-		        primary={true}
+		        
 		        onTouchTap={this.props.togglePreview}
 			/>
 		];
+		// bodyStyle={{backgroundColor: '#444444'}}
+		// titleStyle={{backgroundColor: '#444444', color: 'white'}}
 		return (
 			<Dialog title="Survey Preview"
 				actions={actions}
 				contentStyle={{width:600}}
-				bodyStyle={{backgroundColor: '#444444'}}
-				titleStyle={{backgroundColor: '#444444', color: 'white'}}
 				onRequestClose={this.props.togglePreview}
 				modal={false} open={true}>
-			<div style={{width:400, height: 650, color: 'black',
-				marginLeft: 'auto', marginRight: 'auto'}}>
+			<div className="survey-preview-dialog">
 				<Survey key={`preview-${this.state.dt}`}
 					survey={this.props.survey}
 					questions={this.props.questions} />
@@ -53,6 +56,7 @@ SurveyPreview.propTypes = {
 	togglePreview: React.PropTypes.func.isRequired,
 	survey: React.PropTypes.object.isRequired,
 	questions: React.PropTypes.object.isRequired,
+	previewURL: React.PropTypes.string,
 };
 
 export default SurveyPreview;

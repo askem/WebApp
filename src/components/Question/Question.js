@@ -17,6 +17,7 @@ class Question extends React.Component {
 		};
 	}
 	checkAnswer(questionID, possibleAnswerID, paIndex, textValue, numericValue) {
+		if (!this.props.inSurvey) { return; }
 		let checks = this.state.checks;
 		const q = this.props.question;
 		// Special cases: 'None' or 'All'
