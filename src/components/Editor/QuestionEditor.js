@@ -254,7 +254,7 @@ class QuestionEditor extends React.Component {
 									
 									advancedPAProperties = <div className="possible-answer-advanced">
 										<div className="properties-row">
-											<label htmlFor={`random-${pa.possibleAnswerID}`}>Random Location</label>
+											<label htmlFor={`random-${pa.possibleAnswerID}`}>Randomize Location</label>
 											<Checkbox id={`random-${pa.possibleAnswerID}`}
 												checked={!!pa.randomLocation}
 												onChange={(e) => this.props.setQuotePossibleAnswerRandomLocation(q.questionID, pa.possibleAnswerID, e.target.checked)} />

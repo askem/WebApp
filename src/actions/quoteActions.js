@@ -213,6 +213,17 @@ const setQuotePossibleAnswerText = (questionID, possibleAnswerID, textValue) => 
 	}
 }
 
+const setQuotePossibleAnswerLocation = (questionID, possibleAnswerID, location) => {
+	return {
+		type: 'SET_QUOTE_POSSIBLE_ANSWER_LOCATION',
+		payload: {
+			questionID,
+			possibleAnswerID,
+			location
+		}
+	}
+}
+
 const setQuotePossibleAnswerRandomLocation = (questionID, possibleAnswerID, randomLocation) => {
 	return {
 		type: 'SET_QUOTE_POSSIBLE_ANSWER_RANDOM_LOCATION',
@@ -323,7 +334,7 @@ export {
 	setQuoteQuestionAutoArrangement,
 	finishedEditingQText, setQuoteQuestionImage,
 	addQuotePossibleAnswer, deleteQuotePossibleAnswer, setQuotePossibleAnswerText,
-	setQuotePossibleAnswerRandomLocation, setQuotePossibleAnswerConnection, setQuotePossibleAnswerMultiBehavior,
+	setQuotePossibleAnswerLocation, setQuotePossibleAnswerRandomLocation, setQuotePossibleAnswerConnection, setQuotePossibleAnswerMultiBehavior,
 	setQuoteSampleSize,
 	setQuoteContactValue, finishedEditingContactValue,
 	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead,

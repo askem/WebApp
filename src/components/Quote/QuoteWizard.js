@@ -90,6 +90,7 @@ class QuoteWizard extends React.Component {
 			case stages.SURVEY:
 				advanceButtonTitle = 'Set Sample Size';
 				stageComponent = <QuoteSurvey
+					showAdvancedControls={true}
 					{...this.props} />;
 				// sideComponent = <CreateSurveyPreview
 				// 	selectedQuestion={this.state.selectedQuestion}

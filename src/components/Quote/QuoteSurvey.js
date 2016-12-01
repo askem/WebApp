@@ -29,7 +29,9 @@ class QuoteSurvey extends React.Component {
 					<QuestionPreview
 						title={this.props.showAdvancedControls ? 'Question Preview' : 'Preview'}
 						selectedQuestion={this.state.selectedQuestion}
-						questions={this.props.surveyMetadata.questions} />
+						questions={this.props.surveyMetadata.questions}
+						setQuotePossibleAnswerLocation={this.props.setQuotePossibleAnswerLocation}
+						/>
 				</div>
 			</div>
 		)

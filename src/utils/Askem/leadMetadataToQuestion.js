@@ -6,7 +6,9 @@ const leadMetadataToQuestion = (meta) => {
 	let q = JSON.parse(JSON.stringify(meta));
 	const arrangement = q.autoArrangement || POPUP_ARRANGEMENT_DEFAULT;
 	const possibleAnswersCount = q.possibleAnswers.length;
-	q.popupLocations = calcLocations(possibleAnswersCount, arrangement);
+	if (!q.popupLocations) {
+		q.popupLocations = calcLocations(possibleAnswersCount, arrangement);
+	}
 	q.questionImageURL = blobURL(q.mediaID);
 	q.possibleAnswers.forEach(pa => pa.possibleAnswerID =  q.questionID * 100 + pa.possibleAnswerID);
 	return q;

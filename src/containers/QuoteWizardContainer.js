@@ -57,6 +57,17 @@ const QuoteWizardContainer = connect(
 			closeSuccessSubmitLead: () => dispatch(quoteActions.closeSuccessSubmitLead()),
 			cancelFailedSubmitLead: () => dispatch(quoteActions.cancelFailedSubmitLead()),
 			quoteUIAction: (actionType, metadata) => dispatch(quoteActions.quoteUIAction(actionType, metadata)),
+			
+			/* Advanced */
+			setQuoteQuestionIsMultiAnswer: (questionID, isMultiAnswer) => dispatch(quoteActions.setQuoteQuestionIsMultiAnswer(questionID, isMultiAnswer)),
+			setQuoteQuestionMinAnswers: (questionID, minAnswers) => dispatch(quoteActions.setQuoteQuestionMinAnswers(questionID, minAnswers)),
+			setQuoteQuestionMaxAnswers: (questionID, maxAnswers) => dispatch(quoteActions.setQuoteQuestionMaxAnswers(questionID, maxAnswers)),
+			setQuoteQuestionAutoArrangement: (questionID, autoArrangement) => dispatch(quoteActions.setQuoteQuestionAutoArrangement(questionID, autoArrangement)),
+			setQuotePossibleAnswerRandomLocation: (questionID, possibleAnswerID, randomLocation) => dispatch(quoteActions.setQuotePossibleAnswerRandomLocation(questionID, possibleAnswerID, randomLocation)),
+			setQuotePossibleAnswerConnection: (questionID, possibleAnswerID, entity) => dispatch(quoteActions.setQuotePossibleAnswerConnection(questionID, possibleAnswerID, entity)),
+			setQuotePossibleAnswerMultiBehavior: (questionID, possibleAnswerID, multiBehavior) => dispatch(quoteActions.setQuotePossibleAnswerMultiBehavior(questionID, possibleAnswerID, multiBehavior)),
+			setQuotePossibleAnswerLocation: (questionID, possibleAnswerID, location) => dispatch(quoteActions.setQuotePossibleAnswerLocation(questionID, possibleAnswerID, location)),
+
 		};
 	}
 )(QuoteWizard);

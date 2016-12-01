@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 import { combineReducers } from 'redux-immutable';
 import emptyQuote from 'data/emptyQuote';
+import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, calcLocations } from 'utils/Askem/AutoArrangement';
 
 const initialState = Immutable.fromJS({});
 
@@ -105,7 +106,17 @@ const quoteReducer = (state = initialState, action) => {
 		case 'SET_QUOTE_QUESTION_MAX_ANSWERS':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'maxAnswers'], action.payload.maxAnswers);
 		case 'SET_QUOTE_QUESTION_AUTO_ARRANGEMENT':
-			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'autoArrangement'], action.payload.autoArrangement);
+			return state.updateIn(['surveyMetadata', 'questions', action.payload.questionID], q => {
+				const newArrangement = action.payload.autoArrangement;
+				if (newArrangement === POPUP_ARRANGEMENT_TYPE.CUSTOM) {
+					const arrangement = q.get('autoArrangement') || POPUP_ARRANGEMENT_DEFAULT;
+					const possibleAnswersCount = q.get('possibleAnswers').size;
+					const currentLocations = Immutable.fromJS(calcLocations(possibleAnswersCount, arrangement));
+					return q.set('popupLocations', currentLocations).set('autoArrangement', newArrangement);
+				} else {
+					return q.delete('popupLocations').set('autoArrangement', newArrangement);
+				}
+			});
 		case 'SET_QUOTE_QUESTION_IMAGE':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'mediaID'], action.payload.mediaID);
 		case 'UPLOAD_IMAGE_REQUEST_SUCCESS':
@@ -118,16 +129,30 @@ const quoteReducer = (state = initialState, action) => {
 				return questions;
 			});	
 		case 'ADD_QUOTE_POSSIBLE_ANSWER':
-			return state.updateIn(['surveyMetadata', 'questions', action.payload.questionID, 'possibleAnswers'], pas =>
-				pas.push(Immutable.fromJS({textValue: '', possibleAnswerID: pas.size})));
+			return state.updateIn(['surveyMetadata', 'questions', action.payload.questionID], q => {
+				const possibleAnswerID = q.get('possibleAnswers').size;
+				q = q.update('possibleAnswers', pas => pas.push(Immutable.fromJS({textValue: '', possibleAnswerID})));
+				if (q.get('autoArrangement') === POPUP_ARRANGEMENT_TYPE.CUSTOM && q.get('popupLocations')) {
+					const newLocation = calcLocations(possibleAnswerID + 1, POPUP_ARRANGEMENT_DEFAULT)[possibleAnswerID];
+					q = q.update('popupLocations', locations => locations.push(Immutable.fromJS(newLocation)));
+				}
+				return q;
+			});
 		case 'DELETE_QUOTE_POSSIBLE_ANSWER':
 			return state.updateIn(['surveyMetadata', 'questions', action.payload.questionID, 'possibleAnswers'], pas =>
 				pas
 				.delete(action.payload.possibleAnswerID)
-				.map((pa, idx) => pa.set('possibleAnswerID', idx)));
+				.map((pa, idx) => pa.set('possibleAnswerID', idx)))
+				.updateIn(['surveyMetadata', 'questions', action.payload.questionID, 'popupLocations'], locations => {
+				if (locations) { 
+					return locations.delete(action.payload.possibleAnswerID);
+				}});
 		case 'SET_QUOTE_POSSIBLE_ANSWER_TEXT':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
 				'possibleAnswers', action.payload.possibleAnswerID, 'textValue'], action.payload.textValue);
+		case 'SET_QUOTE_POSSIBLE_ANSWER_LOCATION':
+			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
+				'popupLocations', action.payload.possibleAnswerID], action.payload.location);
 		case 'SET_QUOTE_POSSIBLE_ANSWER_RANDOM_LOCATION':
 			if (action.payload.randomLocation) {
 				return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,

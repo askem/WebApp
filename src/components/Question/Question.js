@@ -85,6 +85,8 @@ class Question extends React.Component {
 				</div>
 				<QuestionMedia ref="questionMedia"
 					question={q}
+					draggable={this.props.draggable}
+					onDragStop={this.props.onDragStop}
 					checks={this.state.checks}
 					checkAnswer={this.checkAnswer} uncheckAnswer={this.uncheckAnswer}
 					reportPopupsGroupSeen={this.reportPopupsGroupSeen}

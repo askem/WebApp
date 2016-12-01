@@ -1,6 +1,7 @@
 import React from 'react';
 import Question from 'components/Question/Question';
 import leadMetadataToQuestion from 'utils/Askem/leadMetadataToQuestion';
+import { POPUP_ARRANGEMENT_TYPE } from 'utils/Askem/AutoArrangement';
 
 class QuestionPreview extends React.Component {
 	constructor(props) {
@@ -14,8 +15,11 @@ class QuestionPreview extends React.Component {
 		let preview;
 		const q = leadMetadataToQuestion(this.props.questions[this.props.selectedQuestion]);
 		if (q) {
+			const isCustomLocations = q.autoArrangement === POPUP_ARRANGEMENT_TYPE.CUSTOM;
 			preview = <div className="preview">
 				<Question question={q}
+				onDragStop={this.props.setQuotePossibleAnswerLocation}
+				draggable={isCustomLocations}
 				onSingleVote={()=>{}}
 				onMultiVote={()=>{}} />
 			</div>;
