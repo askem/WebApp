@@ -12,43 +12,115 @@ class Question extends React.Component {
 		this.checkAnswer = this.checkAnswer.bind(this);
 		this.uncheckAnswer = this.uncheckAnswer.bind(this);
 		this.state = {
-			checks: new Set(),
+			checks: new Map(),
 			popupsGroupsSeen: []
 		};
 	}
-	checkAnswer() {
-		
+	checkAnswer(questionID, possibleAnswerID, paIndex, textValue, numericValue) {
+		let checks = this.state.checks;
+		const q = this.props.question;
+		// Special cases: 'None' or 'All'
+		const multiBehavior = q.possibleAnswers[paIndex].multiBehavior;
+		if (multiBehavior === 'none') {
+			checks.clear()
+		} else if (multiBehavior === 'all') {
+			q.possibleAnswers.forEach((pa, idx) => {
+				// check it, unless it's 'none'
+				if (pa.multiBehavior !== 'none') {
+					if (!checks.has(idx)) {
+						checks.set(idx, {
+							possibleAnswerID: pa.possibleAnswerID
+						});
+					}
+				} else {
+					checks.delete(idx);
+				}
+			});
+		} else {
+			// uncheck any 'none' PA, check any 'all' PA if all regular PAs are checked
+			let regularChecks = [paIndex];
+			checks.forEach((answer, idx) => {
+				switch (q.possibleAnswers[idx].multiBehavior) {
+					case 'none':
+						checks.delete(idx);
+						break;
+					case 'all':
+						break;
+					default:
+						regularChecks.push(idx);
+				}
+			});
+
+			let allRegularPAs = [];
+			q.possibleAnswers.forEach((pa, idx) => {
+				if (pa.multiBehavior !== 'all' && pa.multiBehavior !== 'none') {
+					allRegularPAs.push(idx);
+				}
+			});
+			const diff = allRegularPAs.filter(x => regularChecks.indexOf(x) === -1);
+			const allRegularPAsChecked = diff.length === 0;
+			if (allRegularPAsChecked) {
+				q.possibleAnswers.forEach((pa, idx) => {
+					if (pa.multiBehavior === 'all') {
+						checks.set(idx, {
+							possibleAnswerID: pa.possibleAnswerID
+						});
+					}
+				});
+			}
+		}
+		checks.set(paIndex, {
+			possibleAnswerID,
+			textValue,
+			numericValue,
+		});
+		this.setState({
+			checks
+		});
 	}
-	uncheckAnswer() {
-		
+	uncheckAnswer(paIndex) {
+		let checks = this.state.checks;
+		const q = this.props.question;
+		// Special case: unchecking 'All'
+		if (q.possibleAnswers[paIndex].multiBehavior === 'all') {
+			checks.clear();
+		} else {
+			// remove any 'all' pa if checked
+			checks.forEach((answer, idx) => {
+				if (q.possibleAnswers[idx].multiBehavior === 'all') {
+					checks.delete(idx);
+				}
+			});
+		}
+		checks.delete(paIndex);
+		this.setState({
+			checks
+		});
 	}
 	onClick(group) {
 		this.props.onToggle(group);
 	}
 	canMultiAQContinue() {
-		return true;
-		
-		
 		const checks = this.state.checks;
 		const q = this.props.question;
 		return (checks.size >= q.minAnswers && checks.size <= q.maxAnswers);
 	}
 	multiAQCantContinueReason() {
 		const questionID = this.props.question.questionID;
-		if (this.state.popupsGroupsSeen.length !== this.props.question.popupIndexes.length) {
-			const qMedia = this.refs.questionMedia;
-			//this.setTimeout(() => {
-				qMedia.advancePopupsGroup();
-			//}, 400);
-			//return AskemLocalize('Please check out all available options before you continue');
-			return null;
-		}
+		// if (this.state.popupsGroupsSeen.length !== this.props.question.popupIndexes.length) {
+		// 	const qMedia = this.refs.questionMedia;
+		// 	//this.setTimeout(() => {
+		// 		qMedia.advancePopupsGroup();
+		// 	//}, 400);
+		// 	//return AskemLocalize('Please check out all available options before you continue');
+		// 	return null;
+		// }
 		const checks = this.state.checks.size;
 		const minAnswers = this.props.question.minAnswers;
 		const maxAnswers = this.props.question.maxAnswers;
 		let message;
 		if (checks > maxAnswers) {
-			message = AskemLocalize('Please select up to {0} answers', maxAnswers);
+			message = `Please select up to ${maxAnswers} answers`;
 		} else {
 			if (maxAnswers === this.props.question.possibleAnswers.length) {
 				if (minAnswers === 1) {
@@ -90,7 +162,7 @@ class Question extends React.Component {
 					checks={this.state.checks}
 					checkAnswer={this.checkAnswer} uncheckAnswer={this.uncheckAnswer}
 					reportPopupsGroupSeen={this.reportPopupsGroupSeen}
-					onSingleVote={this.props.onSingleVote} onMultiVote={this.props.onMultiVote}
+					onSingleVote={this.props.onSingleVote}
 					/>
 			</div>
 		</div>;

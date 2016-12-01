@@ -8,6 +8,9 @@ class MultiAQContinueButton extends React.Component {
 			
 		};
 	}
+	componentWillReceiveProps(nextProps) {
+		this.setState({hasError: false, errorMessage: null});
+	}
 	handleClick() {
 		if (this.props.canContinue) {
 			this.props.onClick(event);
@@ -28,6 +31,7 @@ class MultiAQContinueButton extends React.Component {
 		} else if (this.state.hasError) {
 			className += ' animated shake';
 			if (this.state.errorMessage) {
+				messagePopover = <div className="multiaq-continue-error">{this.state.errorMessage}</div>;
 				// messagePopover = <div style={{position: 'absolute', width:'100%'}}>
 				// 	<ReactBootstrap.Popover placement="bottom">{this.state.errorMessage}</ReactBootstrap.Popover>
 				// </div>;

@@ -53,12 +53,14 @@ class QuestionMedia extends React.Component {
 				onStop={(e, dragData) => this.dragStop(true, paIndex, dragData)}
 				><span>
 				<AnswerPopup
-				isMultiAnswerQuestion={!!q.isMultiAnswerQuestion}
-				ref={`answer-${paIndex}`}
-				paIndex={paIndex} questionID={q.questionID}
-				onSingleVote={this.props.onSingleVote}
-				onMultiVote={this.props.onMultiVote}
-				{...pa} />
+					isMultiAnswerQuestion={!!q.isMultiAnswerQuestion}
+					isChecked={this.props.checks.has(paIndex)}
+					onCheck={this.props.checkAnswer}
+					onUncheck={this.props.uncheckAnswer}
+					ref={`answer-${paIndex}`}
+					paIndex={paIndex} questionID={q.questionID}
+					onSingleVote={this.props.onSingleVote}
+					{...pa} />
 		</span></DraggableCore>);
 			const dotIDString = `dot-${paIndex}`;
 			children.push(<DraggableCore key={dotIDString}

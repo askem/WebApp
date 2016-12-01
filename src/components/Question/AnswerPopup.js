@@ -24,7 +24,7 @@ class AnswerPopup extends React.Component {
 					this.props.toggleTextInput(paIndex);
 				} else {
 					if (this.props.onCheck) {
-						this.props.onCheck(paIndex, this.props.questionID, paID);
+						this.props.onCheck(this.props.questionID, paID, paIndex);
 					}
 				}
 			}
