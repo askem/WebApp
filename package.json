@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/askem/WebApp#readme",
   "dependencies": {
-    "chart.js": "^2.1.6",
+    "chart.js": "^2.4.0",
     "icheck": "^1.0.2",
     "immutable": "^3.8.1",
     "inline-style-prefixer": "^2.0.4",
@@ -30,6 +30,7 @@
     "react": "15.3.2",
     "react-bootstrap": "^0.30.3",
     "react-chartjs": "github:jhudson8/react-chartjs#chartjs-v2",
+    "react-chartjs-2": "^1.6.0",
     "react-data-grid": "^1.0.46",
     "react-dom": "15.3.2",
     "react-draggable": "^2.2.3",

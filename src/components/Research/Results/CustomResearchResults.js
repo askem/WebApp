@@ -3,20 +3,7 @@ import numeral from 'numeral';
 import blobURL from 'utils/Askem/blobURL';
 import Loading from 'components/Common/Loading';
 import Checkbox from 'components/Common/Checkbox/Checkbox';
-
-const segmentsToMap = segments => {
-	let segmentsMap = new Map();
-	segments.forEach(segment => {
-		segment.attributes.forEach(attr => {
-			let typeMap = segmentsMap.get(attr.type) || new Map();
-			let valueSet = typeMap.get(attr.value) || new Set()
-			valueSet.add(segment.ID);
-			typeMap.set(attr.value, valueSet);
-			segmentsMap.set(attr.type, typeMap);
-		});
-	});
-	return segmentsMap;
-};
+import { Bar } from 'react-chartjs-2';
 
 const displayAttributeType = (type = '') => {
 	switch (type.toLowerCase()) {
@@ -59,6 +46,89 @@ const displayAttributeValue = (val = '') => {
 		return val;
 	}
 }
+
+class QuestionResults extends React.Component {
+	constructor(props) {
+    	super(props);
+	}
+	render() {
+		const q = this.props.question;
+		const answersSubset = this.props.answersSubset;	
+		const data = {
+			labels: q.possibleAnswers.map(pa => pa.textValue),
+			datasets: [
+				{
+					label: 'Respondents',
+					data: q.possibleAnswers.map(pa => answersSubset.filter(a => a.answers.includes(pa.possibleAnswerID)).length),
+					backgroundColor: [
+						'#c82e13',
+						'#dcbe15',
+						'#1f9571',
+						'#9555aa',
+						'#a43884',
+						'#2b2652',
+						'#a3a9b1',
+						'#ee1fb1',
+						'#ff6a5a',
+						'#2a80b9'
+					]
+				}
+			],
+			
+		};
+		const options = {
+			maintainAspectRatio: false,
+			legend: {
+				display: false
+			},
+			scales: {
+            	xAxes: [{
+	                stacked: true,
+					gridLines: {
+						display: false
+					},
+					ticks: {
+						maxRotation: 0,
+						autoSkip: false,
+						callback: text => {
+							if (text.length > 8) {
+								return `${text.substr(0, 8)}…`
+							}
+							return text
+						}
+					}
+            	}],
+            	yAxes: [{
+                	stacked: true
+            	}]
+			},
+			tooltips: {
+				callbacks: {
+					title: (tooltipItem, data) => data.labels[tooltipItem[0].index]
+				}
+			}
+		};
+		return <div className="question-results">
+			<div className="question-properties">
+				<img className="question-image" src={blobURL(q.mediaID)} title={q.postID} />
+				<div className="titles">
+					<div className="question-title">Question {this.props.questionIndex + 1}</div>
+					<div className="question-text">{q.textValue}</div>
+				</div>
+			</div>
+				
+				
+				
+			<Bar id={`q-${q.questionID}-bar`} ref={`q-${q.questionID}-bar`}
+				width={400} height={400}
+				data={data} options={options} />
+		</div>
+	}
+}
+
+QuestionResults.propTypes = {
+
+};
 
 class CustomResearchResults extends React.Component {
 	constructor(props) {
@@ -147,27 +217,19 @@ class CustomResearchResults extends React.Component {
 			results = <div>
 				<div className="respondents-title">{numberOfAnswers} Respondents 
 					{filteredAttributesValues.size > 0 && ' (Filtered)'}</div>
-				{this.props.survey.questions.map(q => {
-					return <div key={`question-result-${q.postID}`}>
-						<img src={blobURL(q.mediaID)} style={{width:50, height: 50}} title={q.postID} />
-						{q.textValue}
-						{q.possibleAnswers.map(pa => {
-							const paAnswers = answersSubset.filter(a => a.answers.includes(pa.possibleAnswerID)).length;
-							return <div key={`pa-result-${pa.possibleAnswerID}`}>
-								<strong title={pa.possibleAnswerID}>{pa.textValue} </strong>
-								{paAnswers}
-							</div>;
-						})}
-						<hr />
-					</div>
-				})}
+				<div className="questions-grid">
+					{this.props.survey.questions.map((q, idx) => <QuestionResults
+					key={`question-result-${q.postID}`}
+					question={q} questionIndex={idx} answersSubset={answersSubset} />)}
+				</div>
 			</div>;
 		}
 		
 		return (
 			<div className="survey-results">
 				
-				<div className="attributes-selection">			
+				<div className="attributes-selection">
+				<div className="attributes-selection-inner">
 				{Array.from(segmentsMap.keys()).map(type => <div className="attribute-div" key={type}>
 					<div className="attribute-type">{displayAttributeType(type)}</div>
 					{Array.from(segmentsMap.get(type).keys()).map(val => <div key={`${type}->${val}`}>
@@ -177,6 +239,7 @@ class CustomResearchResults extends React.Component {
 							checked={!filteredAttributesValues.has(`${type}->${val}`)} />	
 						</div>)}
 					</div>)}
+				</div>
 				</div>
 				
 				<div>

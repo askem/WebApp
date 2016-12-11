@@ -15,9 +15,6 @@ const QuoteHeader = (props) => <div>
 </div>;
 
 class QuoteFrame extends React.Component {
-	shouldComponentUpdate(nextProps, nextState) {
-		return false;
-	}
 	render() {
 		const lastRoute = this.props.routes[this.props.routes.length - 1];
 		const title = lastRoute.name || 'Get Quote';

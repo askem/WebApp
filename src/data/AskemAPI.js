@@ -226,6 +226,11 @@ class AskemAPI {
 		const phrase = {
 			attributes
 		};
+		return phrase;
+	}
+
+	fetchReach(audience) {
+		const phrase = this._audienceToAttributePhraseUSA(audience);
 		return this.fetchEndpoint('segments/reach', phrase);
 	}
 	fetchCostEstimate(audience, sampleSize = 500) {
