@@ -85,7 +85,7 @@ class QuoteWizard extends React.Component {
 			case stages.AUDIENCE:
 				advanceButtonTitle = 'Define Survey';
 				stageComponent = <QuoteAudience {...this.props} />;
-				sideComponent = <QuoteReach reach={this.props.reachEstimate.reach} />;
+				sideComponent = <QuoteReach reach={this.props.reachEstimate.reach} costEstimate={this.props.costEstimate} />;
 				break;
 			case stages.SURVEY:
 				advanceButtonTitle = 'Set Sample Size';

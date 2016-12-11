@@ -30,6 +30,24 @@ const quoteReducer = (state = initialState, action) => {
 				error: true,
 				fetching: false
 			});
+		case 'COST_ESTIMATE_FETCH':
+			return state.mergeIn(['costEstimate'], {
+				estimates: null,
+				error: false,
+				fetching: true
+			});
+		case 'COST_ESTIMATE_FETCH_SUCCESS':
+			return state.mergeIn(['costEstimate'], {
+				estimates: action.payload.estimates,
+				error: false,
+				fetching: false
+			});
+		case 'COST_ESTIMATE_FETCH_FAIL':
+			return state.mergeIn(['costEstimate'], {
+				estimates: null,
+				error: true,
+				fetching: false
+			});
 			
 		case 'SET_QUOTE_DEMO_GENDER':
 			return state.setIn(['audience', 'demographics', 'gender', action.payload.gender], action.payload.value);

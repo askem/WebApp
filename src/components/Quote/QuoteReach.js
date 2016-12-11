@@ -20,12 +20,35 @@ class QuoteReach extends React.Component {
 		} else {
 			reach = <Loading className="loading-3bounce-green" />;
 		}
+		let costEstimate;
+		if (this.props.costEstimate && this.props.costEstimate.estimates) {
+			const estimates = this.props.costEstimate.estimates;
+			console.info(estimates);
+			costEstimate = <div className="quote-estimated-reach-description">
+				{Object.keys(estimates).map(sampleSize => 
+					<div key={sampleSize}>
+						<span className="sample-size-estimate">{sampleSize} Respondents:</span>
+						<span className="price">
+							{numeral(estimates[sampleSize].costPerSample).divide(100).format('$0,0.00')}
+						</span>
+					</div>)}
+			</div>
+		} else {
+			costEstimate = <Loading className="loading-3bounce-green" />;
+		}
 		return (
 			<div>
 				<div className="quote-wizard-side-title">
 					Estimated Reach
 				</div>
 				{reach}
+				
+				<div className="quote-estimated-cost">
+					<div className="quote-wizard-side-title">
+						Estimated Cost
+					</div>
+					{costEstimate}
+				</div>
 			</div>
 		)
 	}

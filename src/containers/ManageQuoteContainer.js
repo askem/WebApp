@@ -14,6 +14,8 @@ const ManageQuoteContainer = connect(
 		if (imageSuggestions) { imageSuggestions = imageSuggestions.toJS(); }
 		let reachEstimate = state.getIn(['data', 'quote', 'reachEstimate']);
 		if (reachEstimate) { reachEstimate = reachEstimate.toJS(); }
+		let costEstimate = state.getIn(['data', 'quote', 'costEstimate']);
+		if (costEstimate) { costEstimate = costEstimate.toJS(); }
 		let lead = state.getIn(['data', 'lead']);
 		if (lead) { lead = lead.toJS(); }
 		let contact = state.getIn(['data', 'contact']);
@@ -25,6 +27,7 @@ const ManageQuoteContainer = connect(
 			sample,
 			imageSuggestions,
 			reachEstimate,
+			costEstimate,
 			contact
 		};
 	},

@@ -44,7 +44,7 @@ class ManageQuote extends React.Component {
 						<QuoteAudience {...this.props} />
 					</div>
 					<div className="quote-wizard-side">
-						<QuoteReach reach={this.props.reachEstimate.reach} />
+						<QuoteReach reach={this.props.reachEstimate.reach} costEstimate={this.props.costEstimate} />
 					</div>
 				</div>
 				
@@ -83,12 +83,14 @@ class ManageQuote extends React.Component {
 			'1 question' : 
 			numberOfQuestions > 0 ? `${numberOfQuestions} questions` : 'Not defined';
 		const reachDescription = this.props.reachEstimate.reach ? 
-			numeral(this.props.reachEstimate.reach).format('a') : 'N/A';
+			numeral(this.props.reachEstimate.reach).format('a') : 'Fetching ...';
+		const costDescription = this.props.costEstimate && this.props.costEstimate.estimates ?
+			numeral(this.props.costEstimate.estimates[this.props.sample.sampleSize].costPerSample).divide(100).format('$0,0.00') : 'Fetching ...';
 		
 		return (
 			<div className="quote-manage">
 			<div className="manage-summary">
-				<div>
+				<div className="manage-pane">
 					<div className="quote-wizard-side-title">
 						Audience <button className="askem-button-white edit-button"
 							onClick={()=>this.setState({editing: 'audience'})}>Edit</button>
@@ -101,13 +103,15 @@ class ManageQuote extends React.Component {
 					{behaviors}
 					<div className="title">Estimated Reach</div>
 					<div className="value">{reachDescription}</div>
+					<div className="title">Estimated Cost</div>
+					<div className="value">{costDescription}</div>
 					<div className="title">Sample Size</div>
 					<div className="value">{this.props.sample.sampleSize}</div>
 					<div className="title">Margin of Error</div>
 					<div className="value">Approx. {numeral(this.props.sample.moe).format('0[.]0a%')}</div>
 				</div>
 				
-				<div>
+				<div className="manage-pane">
 					<div className="quote-wizard-side-title">
 						Survey 
 						<button className="askem-button-white edit-button"
@@ -118,7 +122,7 @@ class ManageQuote extends React.Component {
 					<a style={{padding: 0}} href={`/${this.props.lead.quoteID}/preview`} target="_blank">Preview</a>
 				</div>
 				
-				<div>
+				<div className="manage-pane">
 					<div className="quote-wizard-side-title">
 						Contact Details
 					</div>

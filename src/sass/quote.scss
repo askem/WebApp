@@ -168,6 +168,19 @@ header {
 	color: $askem-light-gray;
 }
 
+.quote-estimated-cost {
+	padding-top: 20px;
+	.sample-size-estimate {
+		width: 130px;
+		display: inline-block;
+		font-weight: 500;
+	}
+	.price {
+		font-weight: 400;
+		color: $askem-green;
+	}
+}
+
 .quote-audience {
 	padding: 15px 25px;
 	
@@ -469,6 +482,10 @@ header {
 .quote-manage {
 	width: 1100px;
 	margin: 0 auto;
+	
+	.manage-pane {
+		width: 30%;
+	}
 	
 	.manage-summary {
 		display: flex;

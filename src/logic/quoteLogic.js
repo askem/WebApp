@@ -190,7 +190,10 @@ const reachInvalidationLogic = createLogic({
 	process({ getState, action, api }, dispatch) {
 		let audience = getState().getIn(['data', 'quote', 'audience']);
 		if (!audience) { return; }
-		audience = audience.toJS();
+		audience = audience.toJS();	
+		if (api.loggedIn()) {
+			dispatch({ type: 'GET_COST_ESTIMATE' }, { allowMore: true });
+		}
 		dispatch({ type: 'REACH_ESTIMATE_FETCH' }, { allowMore: true });
 		return api.fetchReach(audience)
 		.then(results => {
@@ -199,11 +202,30 @@ const reachInvalidationLogic = createLogic({
 				payload: {
 					reach: results.size
 				}
-			});
+			}, { allowMore: true });
+			
 		})
 		.catch(error => dispatch({ type: 'REACH_ESTIMATE_FETCH_FAIL', payload: {
 			error
 		}, error: true }));
+	}
+});
+
+const fetchCostEstimateLogic = createLogic({
+	type: 'GET_COST_ESTIMATE',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		if (!api.loggedIn()) { return; }
+		let audience = getState().getIn(['data', 'quote', 'audience']);
+		if (!audience) { return; }
+		audience = audience.toJS();	
+		dispatch({ type: 'COST_ESTIMATE_FETCH' }, { allowMore: true });
+		return api.tempFetchAllCostEstimates(audience)
+			.then(estimates => {
+				dispatch({ type: 'COST_ESTIMATE_FETCH_SUCCESS', payload: { estimates } }, { allowMore: true });
+			}).catch(error => dispatch({ type: 'COST_ESTIMATE_FETCH_FAIL', payload: {
+				error
+			}, error: true }));		
 	}
 });
 
@@ -271,5 +293,6 @@ export default [
 	loadQuoteLogic,
 	uploadImageLogic,
 	reachInvalidationLogic,
+	fetchCostEstimateLogic,
 	imageSuggestionsLogic
 ];
