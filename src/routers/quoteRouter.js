@@ -7,6 +7,7 @@ import QuoteWizardContainer from 'containers/QuoteWizardContainer';
 import ManageQuoteContainer from 'containers/ManageQuoteContainer';
 import QuoteAdminHomeContainer from 'containers/QuoteAdminHomeContainer';
 import QuoteExternalPreviewContainer from 'containers/QuoteExternalPreviewContainer';
+import CustomResearchResultsContainer from 'containers/CustomResearchResultsContainer';
 import Login from 'components/Base/Login';
 
 const quoteRouter = (store, api) =>  {
@@ -100,6 +101,28 @@ const quoteRouter = (store, api) =>  {
 		// });
 	};
 
+	const enterSurveyResults = (nextState, replace) => {
+		const surveyID = nextState.params.surveyID;
+		api.getSurvey(surveyID).then(survey => {
+			store.dispatch({
+				type: 'SET_SURVEY',
+				payload: {
+					surveyID,
+					survey
+				}
+			});
+		});
+		api.getSurveyResults(surveyID).then(results => {
+			store.dispatch({
+				type: 'SET_SURVEY_RESULTS',
+				payload: {
+					surveyID,
+					results
+				}
+			});
+		});
+	}
+
 	return <Router history={history}>
 		<Route component={QuoteFrame}>
 			<Route path="/" onEnter={enterWithoutID} />
@@ -109,6 +132,7 @@ const quoteRouter = (store, api) =>  {
 			<Route path="/:quoteID" fullSizeHeader={true} component={QuoteWizardContainer} onEnter={enterWithID} />
 			<Route path="/:quoteID/manage" name="Manage Quote" component={ManageQuoteContainer} onEnter={enterRestrictedWithID} />
 			<Route path="/:quoteID/preview" name="Survey Preview" component={QuoteExternalPreviewContainer} onEnter={enterWithID} />
+			<Route path="/results/survey/:surveyID" name="Results" component={CustomResearchResultsContainer} onEnter={enterSurveyResults} />
 		</Route>
 	</Router>;
 }

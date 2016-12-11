@@ -152,6 +152,15 @@ class AskemAPI {
 		then(results => results.mediaID);
 	}
 	
+	getSurvey(surveyID) {
+		return this.fetchEndpoint(`surveys/${surveyID}`)
+		.then(results => results.survey);
+	}
+	getSurveyResults(surveyID) {
+		return this.fetchEndpoint(`surveys/${surveyID}/report`)
+		.then(results => results.report);
+	}
+	
 	fetchResearchCampaign(researchID) {
 		return this.fetchEndpoint(`researchCampaigns/${researchID}`)
 		.then(results => results.researchCampaign);

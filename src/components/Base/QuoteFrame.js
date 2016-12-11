@@ -14,11 +14,14 @@ const QuoteHeader = (props) => <div>
 	</header>
 </div>;
 
-const noop = () => {};
 class QuoteFrame extends React.Component {
+	shouldComponentUpdate(nextProps, nextState) {
+		return false;
+	}
 	render() {
 		const lastRoute = this.props.routes[this.props.routes.length - 1];
 		const title = lastRoute.name || 'Get Quote';
+		document.title = `Askem | ${title}`;
 		const fullSizeHeader = lastRoute.fullSizeHeader;
 		return <div>
 			<div className="dashboard-main">

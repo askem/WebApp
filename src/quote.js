@@ -9,6 +9,7 @@ import Immutable from 'immutable';
 import { combineReducers } from 'redux-immutable';
 import quoteDataReducer from 'reducers/quoteDataReducer';
 import routingReducer from 'reducers/routingReducer';
+import resultsReducer from 'reducers/resultsReducer';
 // import commitsReducer from 'reducers/commitsReducer';
 import quoteRouter from 'routers/quoteRouter';
 import logger from 'middleware/logger';
@@ -57,6 +58,7 @@ const initialState = Immutable.fromJS({
 const rootReducer = combineReducers({
 	data: quoteDataReducer,
 	routing: routingReducer,
+	results: resultsReducer,
 	// commits: commitsReducer,
 });
 

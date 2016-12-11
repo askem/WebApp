@@ -518,3 +518,39 @@ header {
 	margin-right: auto;
 	margin-top: 10px;
 }
+
+.survey-results {
+	display: flex;
+	padding-top: 30px;
+	width: 1100px;
+	margin: 0 auto;
+	
+	.respondents-title {
+		color: $askem-green;
+		font-size: 22px;
+		font-weight: 500;
+	}
+	
+	.attributes-selection {
+		padding-right: 20px;
+	}
+	
+	.attribute-div {
+		padding-bottom: 20px;
+		
+		.attribute-type {
+			font-weight: 300;
+			font-size: 22px;
+			text-transform: capitalize;
+		}
+		
+		.icheckbox_askem {
+			zoom: 0.8;
+		}
+		.icheckbox_askem+span {
+			font-weight: normal;
+			color: $askem-purple;
+		}
+	}
+	
+}
