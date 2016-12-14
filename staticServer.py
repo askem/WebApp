@@ -41,9 +41,9 @@ class Handler( BaseHTTPServer.BaseHTTPRequestHandler ):
 		self.wfile.write(f.read())
 		f.close()
 try:
-	print 'Serving on http://localhost:'+str(PORT_NUMBER)
+	print 'Serving on http://127.0.0.1:'+str(PORT_NUMBER)
 	httpd = BaseHTTPServer.HTTPServer( ('127.0.0.1', PORT_NUMBER), Handler )
-	os.system('open http://localhost:'+str(PORT_NUMBER))
+	#os.system('open http://127.0.0.1:'+str(PORT_NUMBER))
 	httpd.serve_forever()
 	
 except KeyboardInterrupt:
