@@ -32,6 +32,7 @@
     "react-chartjs": "github:jhudson8/react-chartjs#chartjs-v2",
     "react-chartjs-2": "^1.6.0",
     "react-data-grid": "^1.0.46",
+    "react-datagrid": "^2.1.2",
     "react-dom": "15.3.2",
     "react-draggable": "^2.2.3",
     "react-icheck": "^0.3.6",
@@ -48,6 +49,7 @@
     "redux-immutable": "^3.0.6",
     "redux-logic": "^0.9.3",
     "rxjs": "^5.0.0-beta.11",
+    "sorty": "^1.2.2",
     "timeout-transition-group": "^2.1.0",
     "webpack-dev-server": "^1.14.1"
   },

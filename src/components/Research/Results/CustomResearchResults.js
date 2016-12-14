@@ -42,6 +42,10 @@ const displayAttributeValue = (val = '') => {
 		return '18-24';
 	case '1999-2003':
 		return '13-17';
+	case 'apollo i control':
+		return '1st wave - Nov 2016';
+	case 'apollo ii control':
+		return '2nd wave - Dec 2016';
 	default:
 		return val;
 	}

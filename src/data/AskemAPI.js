@@ -293,6 +293,10 @@ class AskemAPI {
 			}
 		});
 	}
+	getAllQuotes() {
+		return this.fetchEndpoint('leads')
+		.then(results => results.leads);
+	}
 
 	/* API - Not yet implemented */
 	fetchMediaPlan(researchID) {
