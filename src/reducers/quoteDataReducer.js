@@ -10,7 +10,13 @@ const quoteReducer = (state = initialState, action) => {
 		case 'CREATE_NEW_QUOTE':
 			return Immutable.fromJS(emptyQuote);
 		case 'LOAD_QUOTE_REQUEST_SUCCESS':
-			return Immutable.fromJS(action.payload.quote.metadata);
+			let metadata;
+			if (action.payload.quote && action.payload.quote.metadata && typeof(action.payload.quote.metadata) === 'object') {
+				metadata = action.payload.quote.metadata;
+			} else {
+				metadata = emptyQuote;
+			}
+			return Immutable.fromJS(metadata);
 		
 		case 'REACH_ESTIMATE_FETCH':
 			return state.mergeIn(['reachEstimate'], {
@@ -214,7 +220,8 @@ const leadReducer = (state = initialState, action) => {
 	switch(action.type) {
 	case 'CREATE_NEW_QUOTE':
 		return Immutable.fromJS({
-			quoteID: action.payload.quoteID
+			quoteID: action.payload.quoteID,
+			loaded: true
 		});
 	case 'LOAD_QUOTE':
 		return state.set('quoteID', action.payload.quoteID);
@@ -224,7 +231,7 @@ const leadReducer = (state = initialState, action) => {
 		return state.set('loadingFail', true);
 	case 'LOAD_QUOTE_REQUEST_SUCCESS':
 		const { researchId, status, name, internalDescription, dateModified, dateCreated, userId, source, description } = action.payload.quote;
-		return state.merge({ researchId, status, name, internalDescription, dateModified, dateCreated, userId, source, description });
+		return state.merge({ loaded: true, researchId, status, name, internalDescription, dateModified, dateCreated, userId, source, description });
 	case 'SUBMIT_LEAD_REQUEST_START':
 		return state.set('submitInProgress', true);
 	case 'SUBMIT_LEAD_REQUEST_SUCCESS':
