@@ -485,6 +485,16 @@ header {
 	
 	.manage-pane {
 		width: 30%;
+		
+		.contact-field {
+			display: flex;
+			.title {
+				width: 95px;
+			}
+			a {
+				padding: 0;
+			}
+		}
 	}
 	
 	.manage-summary {
@@ -550,6 +560,10 @@ header {
 	
 	.attributes-selection {
 		padding-right: 20px;
+		
+		.attributes-selection-inner {
+			/*position: fixed;*/
+		}
 	}
 	
 	.attribute-div {

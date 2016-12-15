@@ -5,6 +5,12 @@ const requestReach = () => {
 	};
 };
 
+const requestCostEstimates = () => {
+	return {
+		type: 'GET_COST_ESTIMATE'
+	};
+};
+
 const setQuoteDemoGender = (gender, value) => {
 	return {
 		type: 'SET_QUOTE_DEMO_GENDER',
@@ -324,7 +330,7 @@ const quoteUIAction = (actionType, metadata = '') => {
 }
 
 export {
-	requestReach,
+	requestReach, requestCostEstimates,
 	setQuoteDemoGender, toggleQuoteDemoAgeGroup,
 	addQuoteAudiencePage, toggleQuoteAudiencePageConnected, removeQuoteAudiencePage,
 	addQuoteAudienceInterest, removeQuoteAudienceInterest,

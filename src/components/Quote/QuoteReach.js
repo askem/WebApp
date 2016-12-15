@@ -21,21 +21,27 @@ class QuoteReach extends React.Component {
 			reach = <Loading className="loading-3bounce-green" />;
 		}
 		let estimatedCostDiv;
-		if (window.api.loggedIn()) {
+		if (this.props.showCostEstimate) {
 			let costEstimate;
-			if (this.props.costEstimate && this.props.costEstimate.estimates) {
-				const estimates = this.props.costEstimate.estimates;
-				costEstimate = <div className="quote-estimated-reach-description">
-					{Object.keys(estimates).map(sampleSize => 
-						<div key={sampleSize}>
-							<span className="sample-size-estimate">{sampleSize} Respondents:</span>
-							<span className="price">
-								{numeral(estimates[sampleSize].costPerSample).divide(100).format('$0,0.00')}
-							</span>
-						</div>)}
-				</div>
+			if (this.props.costEstimate) {
+				if (this.props.costEstimate.estimates) {
+					const estimates = this.props.costEstimate.estimates;
+					costEstimate = <div className="quote-estimated-reach-description">
+						{Object.keys(estimates).map(sampleSize => 
+							<div key={sampleSize}>
+								<span className="sample-size-estimate">{sampleSize} Respondents:</span>
+								<span className="price">
+									{numeral(estimates[sampleSize].costPerSample).divide(100).format('$0,0.00')}
+								</span>
+							</div>)}
+					</div>
+				} else {
+					costEstimate = <Loading className="loading-3bounce-green" />;
+				}
 			} else {
-				costEstimate = <Loading className="loading-3bounce-green" />;
+				costEstimate = <div>
+					<button className="askem-button-white" onClick={this.props.requestCostEstimates}>Get Cost Estimate</button>
+				</div>;
 			}
 			estimatedCostDiv = <div className="quote-estimated-cost">
 				<div className="quote-wizard-side-title">
@@ -58,7 +64,10 @@ class QuoteReach extends React.Component {
 }
 
 QuoteReach.propTypes = {
-
+	reach: React.PropTypes.number,
+	showCostEstimate: React.PropTypes.bool,
+	costEstimate: React.PropTypes.object,
+	requestCostEstimates: React.PropTypes.func,
 };
 
 export default QuoteReach;

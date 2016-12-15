@@ -3,6 +3,7 @@ import DataGrid from 'react-datagrid';
 require('react-datagrid/index.css');
 //import sorty from 'sorty';
 import Loading from 'components/Common/Loading';
+import dateStringToDate from 'utils/dateStringToDate';
 
 const renderStatus = status => {
 	switch (status) {
@@ -12,7 +13,7 @@ const renderStatus = status => {
 			return status;
 	}
 };
-const renderDate = windowsDate => new Date(parseInt(windowsDate.substr(6))).toDateString();
+const renderDate = windowsDate => dateStringToDate(windowsDate).toDateString();
 
 class AdminHome extends React.Component {
 	constructor(props) {

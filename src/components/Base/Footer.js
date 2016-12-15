@@ -8,9 +8,9 @@ const Footer = () => (
 			</div>
 	        <div className="social col-lg-6 col-md-6 col-sm-12 col-xs-12">
 	            <ul className="social_links">
-	               {/*<li><a href="#"><i className="fa fa-facebook"></i></a></li>
-	                <li><a href="#"><i className="fa fa-twitter"></i></a></li>*/}
-					<li><a href="https://www.linkedin.com/company/2855667"><i className="fa fa-linkedin"></i></a></li>
+					{/*<li><a href="#"><i className="fa fa-twitter"></i></a></li>*/}
+					<li><a href="https://facebook.com/AskemInsights" target="_blank"><i className="fa fa-facebook"></i></a></li>
+                    <li><a href="https://www.linkedin.com/company/2855667" target="_blank"><i className="fa fa-linkedin"></i></a></li>
 				</ul>
 			</div>
 		</div>

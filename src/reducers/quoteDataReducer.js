@@ -10,7 +10,7 @@ const quoteReducer = (state = initialState, action) => {
 		case 'CREATE_NEW_QUOTE':
 			return Immutable.fromJS(emptyQuote);
 		case 'LOAD_QUOTE_REQUEST_SUCCESS':
-			return Immutable.fromJS(action.payload.quote);
+			return Immutable.fromJS(action.payload.quote.metadata);
 		
 		case 'REACH_ESTIMATE_FETCH':
 			return state.mergeIn(['reachEstimate'], {
@@ -30,6 +30,8 @@ const quoteReducer = (state = initialState, action) => {
 				error: true,
 				fetching: false
 			});
+		case 'INVALIDATE_COST_ESTIMATE':
+			return state.delete('costEstimate');
 		case 'COST_ESTIMATE_FETCH':
 			return state.mergeIn(['costEstimate'], {
 				estimates: null,
@@ -220,6 +222,9 @@ const leadReducer = (state = initialState, action) => {
 		return state.set('loadingFail', false);
 	case 'LOAD_QUOTE_REQUEST_FAIL':
 		return state.set('loadingFail', true);
+	case 'LOAD_QUOTE_REQUEST_SUCCESS':
+		const { researchId, status, name, internalDescription, dateModified, dateCreated, userId, source, description } = action.payload.quote;
+		return state.merge({ researchId, status, name, internalDescription, dateModified, dateCreated, userId, source, description });
 	case 'SUBMIT_LEAD_REQUEST_START':
 		return state.set('submitInProgress', true);
 	case 'SUBMIT_LEAD_REQUEST_SUCCESS':
@@ -241,6 +246,8 @@ const contactReducer = (state = initialState, action) => {
 		return state.set(action.payload.field, action.payload.value);
 	case 'CREATE_NEW_QUOTE':
 		return initialState;
+	case 'LOAD_QUOTE_REQUEST_SUCCESS':
+		return Immutable.fromJS(action.payload.quote.contact);
 	default:
 		return state;
 	}

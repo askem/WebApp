@@ -1,6 +1,7 @@
 import AGE_GROUPS from 'constants/AGE_GROUPS';
 import quoteContactFields from 'constants/quoteContactFields';
 import Cookies from 'cookies-js';
+import dateStringToDate from 'utils/dateStringToDate';
 
 const defaultModelData = {
 	"modelID": "dce",
@@ -31,6 +32,7 @@ class AskemAPI {
 	}
 	signOut() {
 		Cookies.expire('atoken');
+		Cookies.expire('rtoken');
 		this._accessToken = undefined;
 		localStorage.removeItem('username');
 		this.setHeaders();
@@ -263,21 +265,22 @@ class AskemAPI {
 		return this.fetchEndpoint(`attributes/search?q=${encodeURIComponent(searchQuery)}&type=behaviors&limit=${limit}`);
 	}
 
-	createQuote(quoteID, quote, source) {
+	createQuote(quoteID, metadata, source) {
 		return this.fetchEndpoint('external/leads', {
 			ID: quoteID,
 			source,
-			metadata: JSON.stringify(quote)
+			metadata: JSON.stringify(metadata)
 		});
 	}
-	updateQuote(quoteID, quote = {}, contact, description = '') {
+	updateQuote(quoteID, metadata = {}, contact, description = '', submit) {
 		let quoteUpdate = {
 			ID: quoteID,
-			metadata: JSON.stringify(quote),
+			metadata: JSON.stringify(metadata),
 			description
 		};
 		quoteUpdate = Object.assign({}, quoteUpdate, contact);
-		return this.fetchEndpoint(`external/leads/${quoteID}`, quoteUpdate);
+		const submitParam = `submit=${submit ? '1' : '0'}`;
+		return this.fetchEndpoint(`external/leads/${quoteID}?${submitParam}`, quoteUpdate);
 	}
 	getQuoteByID(quoteID) {
 		let endpoint = `external/leads/${quoteID}`;
@@ -286,8 +289,16 @@ class AskemAPI {
 		}
 		return this.fetchEndpoint(endpoint)
 		.then(results => {
-			if (results && results.lead && results.lead.metadata) {
-				return JSON.parse(results.lead.metadata)
+			if (results && results.lead) {
+				let lead = results.lead;
+				lead.dateCreated = dateStringToDate(lead.dateCreated);
+				lead.dateModified = dateStringToDate(lead.dateModified);
+				if (lead.metadata) {
+					lead.metadata = JSON.parse(lead.metadata);
+				}
+				const { firstName, lastName, email, phone, company, jobTitle } = lead;
+				lead.contact = { firstName, lastName, email, phone, company, jobTitle };
+				return lead;
 			} else {
 				return null;
 			}

@@ -144,7 +144,7 @@ const submitQuoteLogic = createLogic({
 		let contact = getState().getIn(['data', 'contact']);
 		if (contact) { contact = contact.toJS(); } else { contact = {}; }
 		dispatch({ type: 'SUBMIT_LEAD_REQUEST_START' }, { allowMore: true });
-		return api.updateQuote(quoteID, quote, contact, 'Submit from Quote')
+		return api.updateQuote(quoteID, quote, contact, '', true)
 		.then(() => {
 			localStorage.removeItem('inProgressQuoteID');
 			dispatch({ type: 'SUBMIT_LEAD_REQUEST_SUCCESS' }, { allowMore: true });
@@ -191,9 +191,11 @@ const reachInvalidationLogic = createLogic({
 		let audience = getState().getIn(['data', 'quote', 'audience']);
 		if (!audience) { return; }
 		audience = audience.toJS();	
-		if (api.loggedIn()) {
-			dispatch({ type: 'GET_COST_ESTIMATE' }, { allowMore: true });
-		}
+		// automatically fetch cost estimate
+		// if (api.loggedIn()) {
+		// 	dispatch({ type: 'GET_COST_ESTIMATE' }, { allowMore: true });
+		// }
+		dispatch({ type: 'INVALIDATE_COST_ESTIMATE' }, { allowMore: true });
 		dispatch({ type: 'REACH_ESTIMATE_FETCH' }, { allowMore: true });
 		return api.fetchReach(audience)
 		.then(results => {

@@ -7,6 +7,13 @@ import consolidateAgeGroups from 'utils/array/consolidateAgeGroups';
 import numeral from 'numeral';
 import quoteContactFields from 'constants/quoteContactFields';
 
+const renderContactValue = (field, contact) => {
+	let value = contact[field.id];
+	if (!value) { return '(Not Provided)' }
+	if (field.type === 'email') { value = <a href={`mailto:${value}`}>{value}</a>; }
+	return value;
+}
+
 class ManageQuote extends React.Component {
 	constructor(props) {
     	super(props);
@@ -44,7 +51,9 @@ class ManageQuote extends React.Component {
 						<QuoteAudience {...this.props} />
 					</div>
 					<div className="quote-wizard-side">
-						<QuoteReach reach={this.props.reachEstimate.reach} costEstimate={this.props.costEstimate} />
+						<QuoteReach reach={this.props.reachEstimate.reach}
+							showCostEstimate={true} costEstimate={this.props.costEstimate}
+							requestCostEstimates={this.props.requestCostEstimates} />
 					</div>
 				</div>
 				
@@ -84,11 +93,12 @@ class ManageQuote extends React.Component {
 			numberOfQuestions > 0 ? `${numberOfQuestions} questions` : 'Not defined';
 		const reachDescription = this.props.reachEstimate.reach ? 
 			numeral(this.props.reachEstimate.reach).format('a') : 'Fetching ...';
-		const costDescription = this.props.costEstimate && this.props.costEstimate.estimates ?
-			numeral(this.props.costEstimate.estimates[this.props.sample.sampleSize].costPerSample).divide(100).format('$0,0.00') : 'Fetching ...';
+		// const costDescription = this.props.costEstimate && this.props.costEstimate.estimates ?
+		// 	numeral(this.props.costEstimate.estimates[this.props.sample.sampleSize].costPerSample).divide(100).format('$0,0.00') : 'Fetching ...';
 		
 		return (
 			<div className="quote-manage">
+			
 			<div className="manage-summary">
 				<div className="manage-pane">
 					<div className="quote-wizard-side-title">
@@ -103,8 +113,8 @@ class ManageQuote extends React.Component {
 					{behaviors}
 					<div className="title">Estimated Reach</div>
 					<div className="value">{reachDescription}</div>
-					<div className="title">Estimated Cost</div>
-					<div className="value">{costDescription}</div>
+					{/*<div className="title">Estimated Cost</div>
+					<div className="value">{costDescription}</div>*/}
 					<div className="title">Sample Size</div>
 					<div className="value">{this.props.sample.sampleSize}</div>
 					<div className="title">Margin of Error</div>
@@ -126,12 +136,21 @@ class ManageQuote extends React.Component {
 					<div className="quote-wizard-side-title">
 						Contact Details
 					</div>
-					{quoteContactFields.map((f, idx) => <div key={f.id}>
+					{quoteContactFields.map((f, idx) => <div className="contact-field" key={f.id}>
 						<div className="title">{f.label}</div>
-						<div className="value">{this.props.contact[f.id] || '(Not Provided)'}</div>
+						<div className="value">{renderContactValue(f, this.props.contact)}</div>
 					</div>)}
+					<div className="quote-wizard-side-title">Status</div>
+					<div className="value"><strong>{this.props.lead.status}</strong>, Created {this.props.lead.dateCreated.toDateString()}</div>
+					<div className="quote-wizard-side-title">Description</div>
+					<div className="value">{this.props.lead.description}</div>
+					<div className="quote-wizard-side-title">Internal Description</div>
+					<div className="value">{this.props.lead.intenralDescription}</div>
 				</div>
 			</div>
+			
+			
+		
 			</div>
 		)
 	}
