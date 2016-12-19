@@ -1,5 +1,7 @@
 import React from 'react';
 import AGE_GROUPS from 'constants/AGE_GROUPS';
+import HOUSEHOLD_INCOME from 'constants/HOUSEHOLD_INCOME';
+import RELATIONSHIP_STATUS from 'constants/RELATIONSHIP_STATUS';
 import consolidateAgeGroups from 'utils/array/consolidateAgeGroups';
 import Checkbox from 'components/Common/Checkbox/Checkbox';
 import ReactSelectize from 'react-selectize';
@@ -7,6 +9,7 @@ require('react-selectize/themes/index.css');
 import QuoteFBPages from 'components/Quote/QuoteFBPages';
 import QuoteInterests from 'components/Quote/QuoteInterests';
 import QuoteBehaviors from 'components/Quote/QuoteBehaviors';
+import TargetingList from 'components/Quote/TargetingList';
 
 class QuoteAudience extends React.Component {
 	constructor(props) {
@@ -83,6 +86,18 @@ class QuoteAudience extends React.Component {
 						<QuoteFBPages {...this.props} />
 					</div>
 				</div>*/}
+				
+				<TargetingList title="Relationship Status"
+					attributeType="relationship"
+					availableAttributes={RELATIONSHIP_STATUS}
+					attributes={this.props.audience.relationship || []}
+					onToggle={this.props.toggleQuoteAudienceAttribute} />
+				
+				<TargetingList title="Household Income"
+					attributeType="householdIncome"
+					availableAttributes={HOUSEHOLD_INCOME}
+					attributes={this.props.audience.householdIncome || []}
+					onToggle={this.props.toggleQuoteAudienceAttribute} />
 
 			</div>
 		)

@@ -200,6 +200,15 @@ header {
 		font-weight: normal;
 		color: $askem-purple;
 	}
+	
+	.attributes-list {
+		display: flex;
+		flex-wrap: wrap;
+		
+		.attributes-list-item {
+			width: 30%;
+		}
+	}
 }
 
 .quote-fbpage {

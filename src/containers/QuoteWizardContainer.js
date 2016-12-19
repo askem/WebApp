@@ -34,6 +34,7 @@ const QuoteWizardContainer = connect(
 	function mapDispatchToProps(dispatch) {
 		return {
 			requestReach: () => dispatch(quoteActions.requestReach()),
+			toggleQuoteAudienceAttribute: (attributeType, attribute) => dispatch(quoteActions.toggleQuoteAudienceAttribute(attributeType, attribute)),
 			setQuoteDemoGender: (gender, value) => dispatch(quoteActions.setQuoteDemoGender(gender, value)),
 			toggleQuoteDemoAgeGroup: group => dispatch(quoteActions.toggleQuoteDemoAgeGroup(group)),
 			addQuoteAudiencePage: fbPage => dispatch(quoteActions.addQuoteAudiencePage(fbPage)),

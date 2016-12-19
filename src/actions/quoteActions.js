@@ -11,6 +11,16 @@ const requestCostEstimates = () => {
 	};
 };
 
+const toggleQuoteAudienceAttribute = (attributeType, attribute) => {
+	return {
+		type: 'TOGGLE_QUOTE_AUDIENCE_ATTRIBUTE',
+		payload: {
+			attributeType,
+			attribute
+		}
+	};
+};
+
 const setQuoteDemoGender = (gender, value) => {
 	return {
 		type: 'SET_QUOTE_DEMO_GENDER',
@@ -331,6 +341,7 @@ const quoteUIAction = (actionType, metadata = '') => {
 
 export {
 	requestReach, requestCostEstimates,
+	toggleQuoteAudienceAttribute,
 	setQuoteDemoGender, toggleQuoteDemoAgeGroup,
 	addQuoteAudiencePage, toggleQuoteAudiencePageConnected, removeQuoteAudiencePage,
 	addQuoteAudienceInterest, removeQuoteAudienceInterest,

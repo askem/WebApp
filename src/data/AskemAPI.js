@@ -1,4 +1,6 @@
 import AGE_GROUPS from 'constants/AGE_GROUPS';
+import HOUSEHOLD_INCOME from 'constants/HOUSEHOLD_INCOME';
+import RELATIONSHIP_STATUS from 'constants/RELATIONSHIP_STATUS';
 import quoteContactFields from 'constants/quoteContactFields';
 import Cookies from 'cookies-js';
 import dateStringToDate from 'utils/dateStringToDate';
@@ -217,14 +219,21 @@ class AskemAPI {
 			});
 		}
 
-		if (audience.demographics.ageGroups.length !== AGE_GROUPS.length) {
-			attributes = attributes.concat(AGE_GROUPS
-			.filter(group => audience.demographics.ageGroups.includes(group.id))
-			.map(group => group.attribute));
+		const concatAttributes = (includedAttributes, availableAttributes) => {
+			if (includedAttributes) {
+				attributes = attributes.concat(availableAttributes
+				.filter(attr => includedAttributes.includes(attr.id))
+				.map(attr => attr.attribute));
+			}
 		}
-
+		if (audience.demographics.ageGroups.length !== AGE_GROUPS.length) {
+			concatAttributes(audience.demographics.ageGroups, AGE_GROUPS);
+		}
 		attributes = attributes.concat(audience.interests);
 		attributes = attributes.concat(audience.behaviors);
+		concatAttributes(audience.householdIncome, HOUSEHOLD_INCOME);
+		concatAttributes(audience.relationship, RELATIONSHIP_STATUS);
+		
 		const phrase = {
 			attributes
 		};

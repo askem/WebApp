@@ -69,7 +69,17 @@ const quoteReducer = (state = initialState, action) => {
 					return groups.delete(idx);
 				}
 			});
-
+		case 'TOGGLE_QUOTE_AUDIENCE_ATTRIBUTE':
+			const attributeType = action.payload.attributeType;
+			return state.updateIn(['audience', attributeType], Immutable.List(), list => {
+				const attribute = action.payload.attribute;
+				const idx = list.keyOf(attribute);
+				if (idx === undefined) {
+					return list.push(attribute);
+				} else {
+					return list.delete(idx);
+				}
+			});
 		case 'ADD_QUOTE_AUDIENCE_PAGE':
 			return state.updateIn(['audience', 'facebookPages'], pages =>
 			pages.push(Immutable.fromJS(action.payload.fbPage)));
