@@ -229,10 +229,16 @@ class AskemAPI {
 		if (audience.demographics.ageGroups.length !== AGE_GROUPS.length) {
 			concatAttributes(audience.demographics.ageGroups, AGE_GROUPS);
 		}
-		attributes = attributes.concat(audience.interests);
-		attributes = attributes.concat(audience.behaviors);
 		concatAttributes(audience.householdIncome, HOUSEHOLD_INCOME);
 		concatAttributes(audience.relationship, RELATIONSHIP_STATUS);
+		
+		// Attributes stored as complete entities
+		attributes = attributes.concat(audience.interests || []);
+		attributes = attributes.concat(audience.behaviors || []);
+		attributes = attributes.concat(audience.educationMajors || []);
+		attributes = attributes.concat(audience.industries || []);
+		attributes = attributes.concat(audience.workPositions || []);
+		attributes = attributes.concat(audience.workEmployers || []);
 		
 		const phrase = {
 			attributes
@@ -246,13 +252,13 @@ class AskemAPI {
 	}
 	fetchCostEstimate(audience, sampleSize = 500) {
 		const phrase = this._audienceToAttributePhraseUSA(audience);
-		return this.fetchEndpoint(`segments/cost/estimate?responders=${sampleSize}`, phrase);
+		return this.fetchEndpoint(`segments/cost/estimate?reponders=${sampleSize}`, phrase);
 	}
 	tempFetchAllCostEstimates(audience) {
 		const phrase = this._audienceToAttributePhraseUSA(audience);
 		const sampleSizes = [200, 500, 2000];
 		const promises = sampleSizes.map(size => 
-			this.fetchEndpoint(`segments/cost/estimate?responders=${size}`, phrase));
+			this.fetchEndpoint(`segments/cost/estimate?reponders=${size}`, phrase));
 		return Promise.all(promises)
 		.then(resultsArray => {
 			let estimates = {};
@@ -263,6 +269,25 @@ class AskemAPI {
 		});
 	}
 
+	searchTargetingAttributes(type, searchQuery = "", limit = 20) {
+		switch (type) {
+			case 'educationMajors':
+				type = 'education_major';
+				break;
+			case 'industries':
+				type = 'industry';
+				break;
+			case 'workPositions':
+				type = 'work_positions';
+				break;
+			case 'workEmployers':
+				type = 'work_employer';
+				break;
+			default:
+				break;
+		}
+		return this.fetchEndpoint(`attributes/search?type=${type}&limit=${limit}&q=${encodeURIComponent(searchQuery)}`);
+	}
 
 	searchTargetingInterests(searchQuery = "", limit = 20) {
 		return this.fetchEndpoint(`attributes/search?q=${encodeURIComponent(searchQuery)}&type=interests&limit=${limit}`);
@@ -275,6 +300,7 @@ class AskemAPI {
 	}
 
 	createQuote(quoteID, metadata, source) {
+		// const endpoint = this.loggedIn() ? 'leads' : 'external/leads';
 		return this.fetchEndpoint('external/leads', {
 			ID: quoteID,
 			source,

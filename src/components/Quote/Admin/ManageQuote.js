@@ -95,6 +95,8 @@ class ManageQuote extends React.Component {
 			numeral(this.props.reachEstimate.reach).format('a') : 'Fetching ...';
 		// const costDescription = this.props.costEstimate && this.props.costEstimate.estimates ?
 		// 	numeral(this.props.costEstimate.estimates[this.props.sample.sampleSize].costPerSample).divide(100).format('$0,0.00') : 'Fetching ...';
+		const createDateDescription = this.props.lead.dateCreated ? 
+			<div>Created {this.props.lead.dateCreated.toDateString()}</div> : null;
 		
 		return (
 			<div className="quote-manage">
@@ -141,7 +143,8 @@ class ManageQuote extends React.Component {
 						<div className="value">{renderContactValue(f, this.props.contact)}</div>
 					</div>)}
 					<div className="quote-wizard-side-title">Status</div>
-					<div className="value"><strong>{this.props.lead.status}</strong>, Created {this.props.lead.dateCreated.toDateString()}</div>
+					<div className="value"><strong>{this.props.lead.status}</strong> </div>
+					{createDateDescription}
 					<div className="quote-wizard-side-title">Description</div>
 					<div className="value">{this.props.lead.description}</div>
 					<div className="quote-wizard-side-title">Internal Description</div>

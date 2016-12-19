@@ -11,6 +11,12 @@ const HOUSEHOLD_INCOME = [
         "description": "People in households that have an estimated household income of between $40K and $50K",
         "type": "income",
     }},
+	{id: '$50,000 - $75,000', title: '$50,000 - $75,000', attribute: {
+        "facebookID": "6018510122932",
+        "value": "$50,000 - $75,000",
+        "description": "People in households that have an estimated household income of between $50,000 and $75,000",
+        "type": "income",
+    }},
 	{id: '$75,000 - $100,000', title: '$75,000 - $100,000', attribute: {
         "facebookID": "6018510100332",
         "value": "$75,000 - $100,000",

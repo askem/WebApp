@@ -72,7 +72,7 @@ const quoteReducer = (state = initialState, action) => {
 		case 'TOGGLE_QUOTE_AUDIENCE_ATTRIBUTE':
 			const attributeType = action.payload.attributeType;
 			return state.updateIn(['audience', attributeType], Immutable.List(), list => {
-				const attribute = action.payload.attribute;
+				const attribute = Immutable.fromJS(action.payload.attribute);
 				const idx = list.keyOf(attribute);
 				if (idx === undefined) {
 					return list.push(attribute);

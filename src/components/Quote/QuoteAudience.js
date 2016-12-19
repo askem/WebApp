@@ -10,6 +10,15 @@ import QuoteFBPages from 'components/Quote/QuoteFBPages';
 import QuoteInterests from 'components/Quote/QuoteInterests';
 import QuoteBehaviors from 'components/Quote/QuoteBehaviors';
 import TargetingList from 'components/Quote/TargetingList';
+import TargetingSearch from 'components/Quote/TargetingSearch';
+
+const TargetingSearchWithTitle = (props) => (
+	<div className="quote-audience">
+	<div className="title">{props.title}</div>
+	<div className="value" style={{width: 500}}>
+		<TargetingSearch {... props} />
+	</div>
+</div>);
 
 class QuoteAudience extends React.Component {
 	constructor(props) {
@@ -98,7 +107,26 @@ class QuoteAudience extends React.Component {
 					availableAttributes={HOUSEHOLD_INCOME}
 					attributes={this.props.audience.householdIncome || []}
 					onToggle={this.props.toggleQuoteAudienceAttribute} />
+				
+				<TargetingSearchWithTitle title="Education Major"
+					attributeType="educationMajors"
+					attributes={this.props.audience.educationMajors || []}
+					onToggle={this.props.toggleQuoteAudienceAttribute} />
 
+				<TargetingSearchWithTitle title="Work Industry"
+						attributeType="industries"
+						attributes={this.props.audience.industries || []}
+						onToggle={this.props.toggleQuoteAudienceAttribute} />
+					
+				<TargetingSearchWithTitle title="Work Position"
+					attributeType="workPositions"
+					attributes={this.props.audience.workPositions || []}
+					onToggle={this.props.toggleQuoteAudienceAttribute} />
+				
+				<TargetingSearchWithTitle title="Employer"
+						attributeType="workEmployers"
+						attributes={this.props.audience.workEmployers || []}
+						onToggle={this.props.toggleQuoteAudienceAttribute} />
 			</div>
 		)
 	}
