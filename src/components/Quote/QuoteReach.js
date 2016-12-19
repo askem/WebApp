@@ -31,7 +31,7 @@ class QuoteReach extends React.Component {
 							let estimateDescription;
 							if (estimates[sampleSize].supported) {
 								estimateDescription = <span className="price">
-									numeral(estimates[sampleSize].costPerSample).divide(100).format('$0,0.00')
+									{numeral(estimates[sampleSize].costPerSample).divide(100).format('$0,0.00')}
 								</span>;
 							} else {
 								estimateDescription = <span className="price-error">

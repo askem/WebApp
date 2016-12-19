@@ -22,6 +22,9 @@ class AdminHome extends React.Component {
 		this.state = { };
 		window.api.getAllQuotes()
 		.then(leads => {
+if (__PRODUCTION__) {
+			leads = leads.filter(lead => lead.email !== 'test@askem.com');
+}
 			this.setState({ leads });
 		});
 	}
