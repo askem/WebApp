@@ -7,6 +7,7 @@ import Checkbox from 'components/Common/Checkbox/Checkbox';
 import blobURL from 'utils/Askem/blobURL';
 import UploadHiddenControl from 'components/Common/UploadHiddenControl';
 import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, AutomaticPopupArrangementTypes } from 'utils/Askem/AutoArrangement';
+import VariantsEditor from 'components/Editor/VariantsEditor';
 
 const defaultLimits = {
 	maxPossibleAnswers: 8,
@@ -32,6 +33,9 @@ class QuestionEditor extends React.Component {
 		this.handleBlurQText = this.handleBlurQText.bind(this);
 		this.uploadImage = this.uploadImage.bind(this);
 		this.limits = this.limits.bind(this);
+		this.addVariant = this.addVariant.bind(this);
+		this.deleteVariant = this.deleteVariant.bind(this);
+		this.onChangeVariant = this.onChangeVariant.bind(this);
 		this.state = {
 			errorMessage: ''
 		}
@@ -56,11 +60,11 @@ class QuestionEditor extends React.Component {
 	changeQTextValue() {
 		const textValue = this.refs.questionText.input.value || this.refs.questionText.input.refs.input.value;
 		if (textValue.length > this.limits().maxQuestionTextLength) { return; }
-		this.props.setQuoteQuestionText(this.props.question.questionID, textValue);
+		this.props.setQuoteQuestionText(this.props.question.questionID, textValue, this.props.selectedVariant);
 	}
 	handleBlurQText() {
 		const textValue = this.refs.questionText.input.value;
-		this.props.finishedEditingQText(this.props.question.questionID, textValue);
+		this.props.finishedEditingQText(this.props.question.questionID, textValue, this.props.selectedVariant);
 	}
 	addPA() {
 		const maxPossibleAnswers = this.limits().maxPossibleAnswers;
@@ -87,24 +91,61 @@ class QuestionEditor extends React.Component {
 		const maxPossibleAnswerTextLength = this.limits().maxPossibleAnswerTextLength;
 		const textValue = this.refs[`pavalue-${possibleAnswerID}`].input.value;
 		if (textValue.length > maxPossibleAnswerTextLength) { return; }
-		this.props.setQuotePossibleAnswerText(this.props.question.questionID, possibleAnswerID, textValue);
+		this.props.setQuotePossibleAnswerText(this.props.question.questionID, possibleAnswerID, textValue, this.props.selectedVariant);
 	}
 	handleSuggestionClick(suggestion) {
-		this.props.setQuoteQuestionImage(this.props.question.questionID, suggestion.imageURL);
+		this.props.setQuoteQuestionImage(this.props.question.questionID, suggestion.imageURL, this.props.selectedVariant);
 	}
 	uploadImage(dataURI) {
-		this.props.setQuoteQuestionImage(this.props.question.questionID, dataURI);
+		this.props.setQuoteQuestionImage(this.props.question.questionID, dataURI, this.props.selectedVariant);
+	}
+	addVariant(variantID) {
+		this.props.addQuestionVariant(this.props.question.questionID,
+			variantID | this.props.selectedVariant);
+	}
+	deleteVariant(variantID) {
+		variantID = variantID | this.props.selectedVariant;
+		let variantToSelect;
+		if (this.props.variants.length > 2) {
+			// Always minimum 2 variants
+			variantToSelect = variantID - 1;
+   			if (variantToSelect < 0) { variantToSelect = 0; }
+		} else {
+			this.setState({editingVariants: false});
+		}
+		this.props.deleteQuestionVariant(this.props.question.questionID, variantID);
+		this.props.onSelectQuestion(this.props.selectedQuestion, variantToSelect);
+	}
+	onChangeVariant(e) {
+		const value = e.target.value;
+		if (value === 'edit-variants') {
+			this.setState({editingVariants: true});
+			return;
+		}
+		this.props.onSelectQuestion(this.props.selectedQuestion, Number(value));
 	}
 	render() {
 		if (this.state.errorMessage) {
+			
 		}
 		const maxPossibleAnswers = this.limits().maxPossibleAnswers;
 		const q = this.props.question;
-		const imageURL = blobURL(q.mediaID);
-		const imageButtonLabel = q.mediaID ? 'Change Image' : 'Upload Image';
+		const hasVariants = this.props.variants.length > 0;
+		const shownObject = hasVariants ?
+			this.props.variants.find(v => v.ID === this.props.selectedVariant) : q;
+		
+		let selectedPopupsArangement;
+		if (shownObject.paArrangement) {
+			selectedPopupsArangement = AutomaticPopupArrangementTypes.find(type => type.title === shownObject.paArrangement).id;
+		} else {
+			selectedPopupsArangement = shownObject.autoArrangement || POPUP_ARRANGEMENT_DEFAULT;
+		}
+		
+		const imageURL = blobURL(shownObject.mediaID);
+		const imageButtonLabel = shownObject.mediaID ? 'Change Image' : 'Upload Image';
 		let imageSuggestionsPicker;
-		const imageSuggestions = this.props.imageSuggestions[q.textValue];
-		if (!q.mediaID && imageSuggestions && imageSuggestions.suggestions && imageSuggestions.suggestions.length > 0) {
+		const imageSuggestions = this.props.imageSuggestions[shownObject.textValue];
+		if (!shownObject.mediaID && imageSuggestions && imageSuggestions.suggestions && imageSuggestions.suggestions.length > 0) {
 			imageSuggestionsPicker = <div className="image-suggestions">
 				<div>Suggested Images</div>
 				{imageSuggestions.suggestions.map((suggestion, idx) => <img
@@ -118,7 +159,7 @@ class QuestionEditor extends React.Component {
 
 		const possibleAnswersCount = q.possibleAnswers.length;
 		const addPAButton = possibleAnswersCount >= maxPossibleAnswers ? null :
-			<FlatButton onClick={this.addPA} label="Add Answer" icon={<MdAdd />} />;
+			<FlatButton onClick={this.addPA} label="Add Answer" icon={<MdAdd />} disabled={hasVariants}/>;
 			
 		let advancedImageProperties;
 		let duplicateQuestionButton;
@@ -156,8 +197,8 @@ class QuestionEditor extends React.Component {
 				<hr />
 				<label>Popups</label>
 				<select
-					value={q.autoArrangement || POPUP_ARRANGEMENT_DEFAULT}
-					onChange={(e) => this.props.setQuoteQuestionAutoArrangement(q.questionID, Number(e.target.value))}>
+					value={selectedPopupsArangement}
+					onChange={(e) => this.props.setQuoteQuestionAutoArrangement(q.questionID, Number(e.target.value), this.props.selectedVariant)}>
 					{AutomaticPopupArrangementTypes.map(t => <option
 						key={t.id} value={t.id}>
 						{t.title}
@@ -179,11 +220,40 @@ class QuestionEditor extends React.Component {
 				);
 			}
 		}
+		let variantsButton;
+		let variantsStrip;
+		let variantsEditor;
+		if (this.props.showVariants) {
+			if (hasVariants) {
+				variantsStrip = <select
+					value={this.props.selectedVariant}
+					onChange={this.onChangeVariant}>
+					{this.props.variants.map(v => <option value={v.ID} key={`variant-${v.ID}`}>
+						Variant {String.fromCharCode(65 + v.ID)}
+					</option>)}
+					<option value="edit-variants">Edit Variants</option>
+				</select>
+			}
+			if (hasVariants) {
+				//variantsButton = <FlatButton label="Duplicate Variant" onClick={this.addVariant} />
+			} else {
+				variantsButton = <FlatButton label="Add Variant" onClick={this.addVariant} />
+			}
+			if (this.state.editingVariants) {
+				variantsEditor = <VariantsEditor
+					closeVariantsEditor={() => this.setState({editingVariants: false})} 
+					addVariant={this.addVariant} deleteVariant={this.deleteVariant}
+					{...this.props} />;
+			}
+		}
 		
 		return (
 			<div className="question-creator">
+				{variantsEditor}
 				<div className="question-title">
 					Question {q.questionID+1}
+					{variantsStrip}
+					{variantsButton}
 					<FlatButton label="Delete Question" onClick={this.deleteQuestion} />
 					{duplicateQuestionButton}
 				</div>
@@ -194,12 +264,12 @@ class QuestionEditor extends React.Component {
 							onFileUpload={this.uploadImage}	/>
 						<div title={imageButtonLabel}
 							style={{backgroundImage: `url('${imageURL}')`}}
-							className={q.mediaID ? "image-preview" : "image-preview empty-overlay"}
+							className={shownObject.mediaID ? "image-preview" : "image-preview empty-overlay"}
 							onClick={() => this.refs.imageUploadControl.openUploadDialog()} />
 						{advancedImageProperties}
 					</div>
 					<div className="text-inputs">				
-						<TextField value={q.textValue} ref="questionText"
+						<TextField value={shownObject.textValue} ref="questionText"
 								id={`qvalue-${q.questionID}`}
 								hintText="Question Text"
 								inputStyle={{color: 'black'}}
@@ -208,7 +278,7 @@ class QuestionEditor extends React.Component {
 								multiLine={!!this.props.advanced}
 								onBlur={this.handleBlurQText}
 								onChange={this.changeQTextValue} />
-							{q.possibleAnswers.map(pa => {
+							{q.possibleAnswers.map((pa, paIdx) => {
 								let advancedPAProperties;
 								if (this.props.advanced) {
 									let multiPAProperties;
@@ -263,9 +333,10 @@ class QuestionEditor extends React.Component {
 										{advanceTargetProperties}
 									</div>
 								}
+								const paTextValue = shownObject.paTextValues ? shownObject.paTextValues[paIdx] : pa.textValue;
 								return <div key={pa.possibleAnswerID}>
 									<div className="possible-answer-input">
-										<TextField value={pa.textValue} ref={`pavalue-${pa.possibleAnswerID}`}
+										<TextField value={paTextValue} ref={`pavalue-${pa.possibleAnswerID}`}
 											id={`pavalue-${pa.possibleAnswerID}`}
 											inputStyle={{color: 'black'}}
 											fullWidth={true}
@@ -274,7 +345,7 @@ class QuestionEditor extends React.Component {
 										</TextField>
 										{possibleAnswersCount === 1 ? null :
 											<div className="possible-answer-delete">
-												<XButton onClick={() => this.deletePA(pa.possibleAnswerID)} />
+												<XButton onClick={() => this.deletePA(pa.possibleAnswerID)} disabled={hasVariants} />
 											</div>
 										}
 									</div>

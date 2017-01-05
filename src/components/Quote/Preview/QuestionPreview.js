@@ -9,22 +9,41 @@ class QuestionPreview extends React.Component {
 	}
 
 	render() {
-		// if (this.props.selectedQuestion === null || this.props.questions.length === 0) {
-		// 	return null;
-		// }
-		let preview;
-		const q = leadMetadataToQuestion(this.props.questions[this.props.selectedQuestion]);
-		if (q) {
-			const isCustomLocations = q.autoArrangement === POPUP_ARRANGEMENT_TYPE.CUSTOM;
-			preview = <div className="preview">
-				<Question question={q}
-				onDragStop={this.props.setQuotePossibleAnswerLocation}
-				draggable={isCustomLocations}
-				onSingleVote={()=>{}}
-				onMultiVote={()=>{}} />
-			</div>;
-		} else {
-			preview = <div className="empty-preview" />
+		let preview = <div className="empty-preview" />;
+		if (this.props.selectedQuestion !== null) {
+			let variants;
+			const qVariants = this.props.questionsVariants
+				.find(qv => qv.questionID === this.props.selectedQuestion);
+			if (qVariants) {
+				variants = qVariants.variants;
+			}
+			const hasVariants = variants && variants.length > 0;
+			let shownObject;
+			let isCustomLocations;
+			if (hasVariants) { 
+				shownObject = variants.find(v => v.ID === this.props.selectedVariant);
+				// Normalize
+				shownObject.popupLocations = shownObject.paLocations;
+				shownObject.possibleAnswers = shownObject.paTextValues.map(textValue => {
+					return { textValue }
+				});
+				isCustomLocations = shownObject.paArrangement === 'Custom';
+			} else {
+				shownObject = this.props.questions[this.props.selectedQuestion];
+				isCustomLocations = shownObject.autoArrangement === POPUP_ARRANGEMENT_TYPE.CUSTOM;
+			}
+			let q = leadMetadataToQuestion(shownObject);
+			q.questionID = this.props.selectedQuestion;
+			if (q) {
+				preview = <div className="preview">
+					<Question question={q}
+					selectedVariant={this.props.selectedVariant}
+					onDragStop={this.props.setQuotePossibleAnswerLocation}
+					draggable={isCustomLocations}
+					onSingleVote={()=>{}}
+					onMultiVote={()=>{}} />
+				</div>;
+			}
 		}
 		let debugButton;
 		if (__DEV__) {

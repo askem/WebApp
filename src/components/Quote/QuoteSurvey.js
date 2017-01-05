@@ -13,6 +13,7 @@ class QuoteSurvey extends React.Component {
 		this.toggleSurveyPreview = this.toggleSurveyPreview.bind(this);
 		this.state = {
 			selectedQuestion: null,
+			selectedVariant: null,
 			showingSurveyPreview: false
 		};
 	}
@@ -21,13 +22,27 @@ class QuoteSurvey extends React.Component {
 			showingSurveyPreview: !this.state.showingSurveyPreview
 		});
 	}
-	setSelectedQuestion(selectedQuestion) {
+	setSelectedQuestion(selectedQuestion, selectedVariant) {
 		this.setState({
-			selectedQuestion
+			selectedQuestion,
+			selectedVariant
 		});
 	}
 	render() {
 		let surveyPreview;
+		let selectedVariant = this.state.selectedVariant;
+		const selectedQuestion = this.state.selectedQuestion;
+		const questionsVariants = this.props.surveyMetadata.questionsVariants || [];
+		if (selectedQuestion !== undefined) {
+			const qVariants = questionsVariants.find(qv => qv.questionID === selectedQuestion);
+			if (qVariants && qVariants.variants.length > 0) {
+				if (!selectedVariant) {
+					selectedVariant = 0;
+				} else if (selectedVariant > qVariants.variants.length) {
+					selectedVariant = qVariants.variants.length - 1;
+				}
+			}
+		}
 		if (this.state.showingSurveyPreview) {
 			const survey = leadMetadataToSurvey(this.props.surveyMetadata);
 			surveyPreview = <SurveyPreview
@@ -47,15 +62,20 @@ class QuoteSurvey extends React.Component {
 				<div className="quote-wizard-maincontent">
 					<SurveyEditor
 					showAdvancedControls={this.props.showAdvancedControls}
-					selectedQuestion={this.state.selectedQuestion}
+					showVariants={this.props.showVariants}
+					selectedQuestion={selectedQuestion}
+					selectedVariant={selectedVariant}
 					onChangeSelectedQuestion={this.setSelectedQuestion}
 					{...this.props} />
 				</div>
 				<div className="quote-wizard-side">
 					<QuestionPreview
 						title={this.props.showAdvancedControls ? 'Question Preview' : 'Preview'}
-						selectedQuestion={this.state.selectedQuestion}
 						questions={this.props.surveyMetadata.questions}
+						selectedQuestion={selectedQuestion}
+						questionsVariants={questionsVariants}
+						variants={this.props.surveyMetadata.variants}
+						selectedVariant={selectedVariant}
 						setQuotePossibleAnswerLocation={this.props.setQuotePossibleAnswerLocation}
 						/>
 					{surveyPreviewButton}

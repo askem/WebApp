@@ -21,7 +21,7 @@ class QuestionMedia extends React.Component {
 	// isPopup - true=popup, false=dot
 	dragStop(isPopup, paIndex, dragData) {
 		const location = this.state.popupLocations[paIndex];
-		this.props.onDragStop(this.props.question.questionID, paIndex, location);	
+		this.props.onDragStop(this.props.question.questionID, paIndex, location, this.props.selectedVariant);	
 	}
 	dragMove(isPopup, paIndex, dragData) {
 		const deltaX = dragData.deltaX / this.imageLength;

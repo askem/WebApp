@@ -1,9 +1,20 @@
 import Immutable from 'immutable';
 import { combineReducers } from 'redux-immutable';
 import emptyQuote from 'data/emptyQuote';
-import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, calcLocations } from 'utils/Askem/AutoArrangement';
+import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, calcLocations, AutomaticPopupArrangementTypes } from 'utils/Askem/AutoArrangement';
 
 const initialState = Immutable.fromJS({});
+
+const stateWithSettingValueInVQariant = (state, questionID, variantID, key, value) => {
+	const idx = state.getIn(['surveyMetadata', 'questionsVariants']).findIndex(v => v.get('questionID') === questionID);
+	const variantIdx = state.getIn(['surveyMetadata', 'questionsVariants', idx, 'variants']).findIndex(v => v.get('ID') === variantID);
+	return state.setIn(['surveyMetadata', 'questionsVariants', idx, 'variants', variantIdx, key], value);
+};
+const stateWithSettingPAValueInVQariant = (state, questionID, variantID, possibleAnswerID, key, value) => {
+	const idx = state.getIn(['surveyMetadata', 'questionsVariants']).findIndex(v => v.get('questionID') === questionID);
+	const variantIdx = state.getIn(['surveyMetadata', 'questionsVariants', idx, 'variants']).findIndex(v => v.get('ID') === variantID);
+	return state.setIn(['surveyMetadata', 'questionsVariants', idx, 'variants', variantIdx, key, possibleAnswerID], value);
+};
 
 const quoteReducer = (state = initialState, action) => {
 	switch(action.type) {
@@ -124,6 +135,9 @@ const quoteReducer = (state = initialState, action) => {
 					.map((q, idx) => q.set('questionID', idx));
 			});
 		case 'SET_QUOTE_QUESTION_TEXT':
+			if (action.payload.variantID !== undefined) {
+				return stateWithSettingValueInVQariant(state, action.payload.questionID, action.payload.variantID, 'textValue', action.payload.textValue);
+			}
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'textValue'], action.payload.textValue);
 		case 'SET_QUOTE_QUESTION_IS_MULTI_ANSWER':
 			return state.updateIn(['surveyMetadata', 'questions', action.payload.questionID], q => {
@@ -142,6 +156,15 @@ const quoteReducer = (state = initialState, action) => {
 		case 'SET_QUOTE_QUESTION_MAX_ANSWERS':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'maxAnswers'], action.payload.maxAnswers);
 		case 'SET_QUOTE_QUESTION_AUTO_ARRANGEMENT':
+			if (action.payload.variantID !== undefined) {
+				// Set both name and actual locations
+				const arrangementTitle = AutomaticPopupArrangementTypes.find(type => type.id === action.payload.autoArrangement).title;
+				const possibleAnswersCount = state.getIn(['surveyMetadata', 'questions', action.payload.questionID, 'possibleAnswers']).size;
+				const locations = Immutable.fromJS(calcLocations(possibleAnswersCount, action.payload.autoArrangement));
+				let vState = stateWithSettingValueInVQariant(state, action.payload.questionID, action.payload.variantID, 'paArrangement', arrangementTitle);
+				vState = stateWithSettingValueInVQariant(vState, action.payload.questionID, action.payload.variantID, 'paLocations', locations);
+				return vState;
+			}
 			return state.updateIn(['surveyMetadata', 'questions', action.payload.questionID], q => {
 				const newArrangement = action.payload.autoArrangement;
 				if (newArrangement === POPUP_ARRANGEMENT_TYPE.CUSTOM) {
@@ -154,10 +177,14 @@ const quoteReducer = (state = initialState, action) => {
 				}
 			});
 		case 'SET_QUOTE_QUESTION_IMAGE':
+			if (action.payload.variantID !== undefined) {
+				return stateWithSettingValueInVQariant(state, action.payload.questionID, action.payload.variantID, 'mediaID', action.payload.mediaID);
+			}
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'mediaID'], action.payload.mediaID);
 		case 'UPLOAD_IMAGE_REQUEST_SUCCESS':
 			const { originalMediaID, newMediaID } = action.payload;
 			return state.updateIn(['surveyMetadata', 'questions'], questions => {
+				// TODO - add variants
 				const key = questions.findKey(q => q.get('mediaID') === originalMediaID);
 				if (key !== undefined) {
 					return questions.setIn([key, 'mediaID'], newMediaID);
@@ -184,9 +211,17 @@ const quoteReducer = (state = initialState, action) => {
 					return locations.delete(action.payload.possibleAnswerID);
 				}});
 		case 'SET_QUOTE_POSSIBLE_ANSWER_TEXT':
+			if (action.payload.variantID !== undefined) {
+				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID, 
+					action.payload.possibleAnswerID, 'paTextValues', action.payload.textValue);
+			}
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
 				'possibleAnswers', action.payload.possibleAnswerID, 'textValue'], action.payload.textValue);
 		case 'SET_QUOTE_POSSIBLE_ANSWER_LOCATION':
+			if (action.payload.variantID !== undefined) {
+				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID, 
+					action.payload.possibleAnswerID, 'paLocations', action.payload.location);
+			}
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
 				'popupLocations', action.payload.possibleAnswerID], action.payload.location);
 		case 'SET_QUOTE_POSSIBLE_ANSWER_RANDOM_LOCATION':
@@ -216,6 +251,88 @@ const quoteReducer = (state = initialState, action) => {
 				return state.deleteIn(['surveyMetadata', 'questions', action.payload.questionID,
 					'possibleAnswers', action.payload.possibleAnswerID, 'multiBehavior']);
 			}
+		case 'ADD_QUESTION_VARIANT':
+			const questionToVariant = q => {
+				const arrangement = q.autoArrangement || POPUP_ARRANGEMENT_DEFAULT;
+				const newVariant = {
+					status: 'Draft',
+					title: '',
+					ID: 0,
+					mediaID: q.mediaID,
+					textValue: q.textValue,
+					paTextValues: q.possibleAnswers.map(pa => pa.textValue),
+					paArrangement: AutomaticPopupArrangementTypes.find(type => type.id === arrangement).title,
+					paLocations: q.popupLocations ||
+					 	calcLocations(q.possibleAnswers.length, arrangement)
+				}
+				return newVariant;
+			}
+			const questionID = action.payload.questionID;
+			let allQuestionsVariants = state.getIn(['surveyMetadata', 'questionsVariants']);
+			let qVariants;
+			let qVariantsIndex = -1;
+			if (allQuestionsVariants) {
+				qVariantsIndex = allQuestionsVariants.findIndex(v => v.get('questionID') === questionID);
+				if (qVariantsIndex > -1) {
+					qVariants = allQuestionsVariants.get(qVariantsIndex);
+				}
+			} else {
+				allQuestionsVariants = Immutable.List();
+			}
+			if (!qVariants) {
+				const q = state.getIn(['surveyMetadata', 'questions', questionID]).toJS();
+				qVariants = Immutable.fromJS({
+					questionID,
+					variants: [
+						questionToVariant(q)
+					]
+				});
+				allQuestionsVariants = allQuestionsVariants.push(qVariants);
+				qVariantsIndex = allQuestionsVariants.size - 1;
+			}
+			const newVariantID = qVariants.get('variants').size;
+			const duplicateVariantID = action.payload.duplicateVariantID || 0;
+			const variantToDuplicate = qVariants.get('variants').find(v => v.get('ID') === duplicateVariantID);
+			if (!variantToDuplicate) {
+				console.warn(`Can't find duplicateVariantID ${duplicateVariantID}`);
+				return state;
+			}
+			let newVariant = variantToDuplicate.toJS();
+			newVariant.ID = newVariantID;
+			//newVariant.textValue = `variant text ${newVariantID + 1}`;
+			qVariants = qVariants.update('variants', 
+				variants => variants.push(Immutable.fromJS(newVariant)));
+			allQuestionsVariants = allQuestionsVariants.set(qVariantsIndex, qVariants);
+			return state.setIn(['surveyMetadata', 'questionsVariants'], allQuestionsVariants);
+		case 'DELETE_QUESTION_VARIANT':
+			const deleteQVariantsIndex = state.getIn(['surveyMetadata', 'questionsVariants']).findIndex(v => v.get('questionID') === action.payload.questionID);
+			const deleteVariantIndex = state.getIn(['surveyMetadata', 'questionsVariants', deleteQVariantsIndex, 'variants'])
+				.findIndex(v => v.get('ID') === action.payload.variantID);
+			let deletedState = state.updateIn(['surveyMetadata', 'questionsVariants', deleteQVariantsIndex, 'variants'], variants =>
+				variants
+				.delete(deleteVariantIndex)
+				.map((v, idx) => v.set('ID', idx)));
+			if (deletedState.getIn(['surveyMetadata', 'questionsVariants', deleteQVariantsIndex, 'variants']).size === 1) {
+				const lastVariant = deletedState.getIn(['surveyMetadata', 'questionsVariants', deleteQVariantsIndex, 'variants', 0]).toJS();
+				let possibleAnswers = [];
+				lastVariant.paTextValues.forEach((textValue, idx) => {
+					let pa = {
+						textValue,
+					};
+					possibleAnswers.push(pa);
+				});	
+				const q = {
+					mediaID: lastVariant.mediaID,
+					textValue: lastVariant.textValue,
+					possibleAnswers,
+					popupLocations: lastVariant.paLocations,
+					autoArrangement: AutomaticPopupArrangementTypes.find(type => type.title === lastVariant.paArrangement).id
+				};
+				deletedState = state
+				.deleteIn(['surveyMetadata', 'questionsVariants', deleteQVariantsIndex])
+				.mergeDeepIn(['surveyMetadata', 'questions', action.payload.questionID], Immutable.fromJS(q));
+			}
+			return deletedState;
 		case 'SET_QUOTE_SAMPLE_SIZE':
 			return state.set('sample', Immutable.fromJS({
 				sampleSize: action.payload.sampleSize,

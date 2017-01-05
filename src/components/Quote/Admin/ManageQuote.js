@@ -39,7 +39,9 @@ class ManageQuote extends React.Component {
 				<div className="done-botton-container">
 					<button className="askem-button-white" onClick={()=>this.setState({editing: null})}>Done Editing</button>
 				</div>
-				<QuoteSurvey {...this.props} showAdvancedControls={true} />
+				<QuoteSurvey {...this.props}
+					showAdvancedControls={true}
+					showVariants={true} />
 			</div>;
 		} else if (this.state.editing === 'audience') {
 			return <div className="quote-manage">

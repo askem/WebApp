@@ -8,6 +8,7 @@ const XButton = (props) => {
 	return <FlatButton
 		onClick={props.onClick}
 		style={style}
-		icon={<MdHighlightRemove size={23}/>} />;
+		icon={<MdHighlightRemove size={23}/>}
+		{...props} />;
 };
 export default XButton;

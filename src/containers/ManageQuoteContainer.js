@@ -47,12 +47,12 @@ const ManageQuoteContainer = connect(
 			addQuoteQuestion: () => dispatch(quoteActions.addQuoteQuestion()),
 			deleteQuoteQuestion: (questionID) => dispatch(quoteActions.deleteQuoteQuestion(questionID)),
 			swapQuoteQuestions: (oldIndex, newIndex) => dispatch(quoteActions.swapQuoteQuestions(oldIndex, newIndex)),
-			setQuoteQuestionText: (questionID, textValue) => dispatch(quoteActions.setQuoteQuestionText(questionID, textValue)),
-			finishedEditingQText: (questionID, textValue) => dispatch(quoteActions.finishedEditingQText(questionID, textValue)),
-			setQuoteQuestionImage: (questionID, mediaID) => dispatch(quoteActions.setQuoteQuestionImage(questionID, mediaID)),
+			setQuoteQuestionText: (questionID, textValue, variantID) => dispatch(quoteActions.setQuoteQuestionText(questionID, textValue, variantID)),
+			finishedEditingQText: (questionID, textValue, variantID) => dispatch(quoteActions.finishedEditingQText(questionID, textValue, variantID)),
+			setQuoteQuestionImage: (questionID, mediaID, variantID) => dispatch(quoteActions.setQuoteQuestionImage(questionID, mediaID, variantID)),
 			addQuotePossibleAnswer: (questionID) => dispatch(quoteActions.addQuotePossibleAnswer(questionID)),
 			deleteQuotePossibleAnswer: (questionID, possibleAnswerID) => dispatch(quoteActions.deleteQuotePossibleAnswer(questionID, possibleAnswerID)),
-			setQuotePossibleAnswerText: (questionID, possibleAnswerID, textValue) => dispatch(quoteActions.setQuotePossibleAnswerText(questionID, possibleAnswerID, textValue)),
+			setQuotePossibleAnswerText: (questionID, possibleAnswerID, textValue, variantID) => dispatch(quoteActions.setQuotePossibleAnswerText(questionID, possibleAnswerID, textValue, variantID)),
 			setQuoteSampleSize: (sampleSize, moe) => dispatch(quoteActions.setQuoteSampleSize(sampleSize, moe)),
 			setQuoteContactValue: (field, value) => dispatch(quoteActions.setQuoteContactValue(field, value)),
 			finishedEditingContactValue: (field, value) => dispatch(quoteActions.finishedEditingContactValue(field, value)),
@@ -63,15 +63,17 @@ const ManageQuoteContainer = connect(
 			quoteUIAction: (actionType, metadata) => dispatch(quoteActions.quoteUIAction(actionType, metadata)),
 			
 			/* Advanced */
+			addQuestionVariant: (questionID, duplicateVariantID) => dispatch(quoteActions.addQuestionVariant(questionID, duplicateVariantID)),
+			deleteQuestionVariant: (questionID, variantID) => dispatch(quoteActions.deleteQuestionVariant(questionID, variantID)),
 			requestCostEstimates: () => dispatch(quoteActions.requestCostEstimates()),
 			setQuoteQuestionIsMultiAnswer: (questionID, isMultiAnswer) => dispatch(quoteActions.setQuoteQuestionIsMultiAnswer(questionID, isMultiAnswer)),
 			setQuoteQuestionMinAnswers: (questionID, minAnswers) => dispatch(quoteActions.setQuoteQuestionMinAnswers(questionID, minAnswers)),
 			setQuoteQuestionMaxAnswers: (questionID, maxAnswers) => dispatch(quoteActions.setQuoteQuestionMaxAnswers(questionID, maxAnswers)),
-			setQuoteQuestionAutoArrangement: (questionID, autoArrangement) => dispatch(quoteActions.setQuoteQuestionAutoArrangement(questionID, autoArrangement)),
+			setQuoteQuestionAutoArrangement: (questionID, autoArrangement, variantID) => dispatch(quoteActions.setQuoteQuestionAutoArrangement(questionID, autoArrangement, variantID)),
 			setQuotePossibleAnswerRandomLocation: (questionID, possibleAnswerID, randomLocation) => dispatch(quoteActions.setQuotePossibleAnswerRandomLocation(questionID, possibleAnswerID, randomLocation)),
 			setQuotePossibleAnswerConnection: (questionID, possibleAnswerID, entity) => dispatch(quoteActions.setQuotePossibleAnswerConnection(questionID, possibleAnswerID, entity)),
 			setQuotePossibleAnswerMultiBehavior: (questionID, possibleAnswerID, multiBehavior) => dispatch(quoteActions.setQuotePossibleAnswerMultiBehavior(questionID, possibleAnswerID, multiBehavior)),
-			setQuotePossibleAnswerLocation: (questionID, possibleAnswerID, location) => dispatch(quoteActions.setQuotePossibleAnswerLocation(questionID, possibleAnswerID, location)),
+			setQuotePossibleAnswerLocation: (questionID, possibleAnswerID, location, variantID) => dispatch(quoteActions.setQuotePossibleAnswerLocation(questionID, possibleAnswerID, location, variantID)),
 		};
 	}
 )(ManageQuote);

@@ -35,17 +35,27 @@ class SurveyEditor extends React.Component {
 	addQuestion() {
 		this.props.addQuoteQuestion();
 	}
-	selectQuestion(selectedQuestion) {
-		this.props.onChangeSelectedQuestion(selectedQuestion);
+	selectQuestion(selectedQuestion, selectedVariant) {
+		this.props.onChangeSelectedQuestion(selectedQuestion, selectedVariant);
 	}
 	render() {
 		const hasQuestions = this.props.surveyMetadata.questions.length > 0;
 		let currentQ;
 		if (this.props.selectedQuestion !== null) {
 			const q = this.props.surveyMetadata.questions[this.props.selectedQuestion];
+			let variants = [];
+			const qVariants = (this.props.surveyMetadata.questionsVariants || [])
+				.find(qv => qv.questionID === this.props.selectedQuestion);
+			if (qVariants) {
+				variants = qVariants.variants;
+			}
 			if (q) {
 				currentQ = <QuestionEditor
+					onSelectQuestion={this.selectQuestion}
 					advanced={this.state.advanced}
+					showVariants={this.props.showVariants}
+					variants={variants}
+					selectedVariant={this.props.selectedVariant}
 					question={q}
 					questionsCount={this.props.surveyMetadata.questions.length}
 					{...this.props} />;
@@ -53,10 +63,21 @@ class SurveyEditor extends React.Component {
 		}
 		let questionsGrid;
 		if (hasQuestions) {
+			let numberOfVariantsPerQuestion = {};
+			this.props.surveyMetadata.questions.forEach(q => {
+				let count = 0;
+				const qVariants = (this.props.surveyMetadata.questionsVariants || [])
+					.find(qv => qv.questionID === q.questionID);
+				if (qVariants) {
+					count = qVariants.variants.length;
+				}
+				numberOfVariantsPerQuestion[q.questionID] = count;
+			});
 			questionsGrid = <QuestionsStrip
 				onSelectQuestion={this.selectQuestion}
 				swapQuoteQuestions={this.props.swapQuoteQuestions}
 				questions={this.props.surveyMetadata.questions}
+				numberOfVariantsPerQuestion={numberOfVariantsPerQuestion}
 				selectedQuestion={this.props.selectedQuestion} />;
 		}
 		let advancedToggle;

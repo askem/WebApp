@@ -2,15 +2,18 @@ import React from 'react';
 import NavBar from 'components/Base/NavBar';
 import Footer from 'components/Base/Footer';
 
-const QuoteHeader = (props) => <div>
-	<header className={props.fullSizeHeader ? 'fullsize' : ''}>
+const QuoteHeader = (props) => 
+<div className={`header-fixed ${props.fullSizeHeader ? 'fullsize' : ''}`}>
+
+	<header className={props.fullSizeHeader ? 'fullsize' : 'fixed'}>
+		
 		<div className="main">
 			<div className="side-anchor">
 				<img src="/images/layout/logo-white.png" alt="Askem"/>
 			</div>
 			<div className="title">{props.title}</div>
 			<div className="side-anchor"></div>
-		</div>	
+		</div>
 	</header>
 </div>;
 

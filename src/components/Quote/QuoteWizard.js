@@ -136,6 +136,7 @@ class QuoteWizard extends React.Component {
 			<div>
 				<QuoteSubmitDialog {...this.props}
 					onNewSubmission={this.onNewSubmission} />
+				<div className="quote-wizard-header-fixed">
 				<div className="quote-wizard-header">
 					{stageTitles.map((s, idx) => {
 						let className = (idx === this.state.stage) ? 'stage active' : 'stage';
@@ -145,6 +146,7 @@ class QuoteWizard extends React.Component {
 							<div className="title">{s}</div>
 						</div>
 					})}
+				</div>
 				</div>
 				<div className="quote-wizard-border">
 					{mainComponent}

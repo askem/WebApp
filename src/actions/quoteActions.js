@@ -129,12 +129,13 @@ const swapQuoteQuestions = (oldIndex, newIndex) => {
 	}
 }
 
-const setQuoteQuestionText = (questionID, textValue) => {
+const setQuoteQuestionText = (questionID, textValue, variantID) => {
 	return {
 		type: 'SET_QUOTE_QUESTION_TEXT',
 		payload: {
 			questionID,
-			textValue
+			textValue,
+			variantID
 		}
 	}
 }
@@ -149,12 +150,13 @@ const setQuoteQuestionIsMultiAnswer = (questionID, isMultiAnswer) => {
 	}
 }
 
-const setQuoteQuestionAutoArrangement = (questionID, autoArrangement) => {
+const setQuoteQuestionAutoArrangement = (questionID, autoArrangement, variantID) => {
 	return {
 		type: 'SET_QUOTE_QUESTION_AUTO_ARRANGEMENT',
 		payload: {
 			questionID,
-			autoArrangement
+			autoArrangement,
+			variantID
 		}
 	}
 }
@@ -179,22 +181,24 @@ const setQuoteQuestionMaxAnswers = (questionID, maxAnswers) => {
 	}
 }
 
-const finishedEditingQText = (questionID, textValue) => {
+const finishedEditingQText = (questionID, textValue, variantID) => {
 	return {
 		type: 'FINISHED_EDITING_QUOTE_QUESTION_TEXT',
 		payload: {
 			questionID,
-			textValue
+			textValue,
+			variantID
 		}
 	}
 }
 
-const setQuoteQuestionImage = (questionID, mediaID) => {
+const setQuoteQuestionImage = (questionID, mediaID, variantID) => {
 	return {
 		type: 'SET_QUOTE_QUESTION_IMAGE',
 		payload: {
 			questionID,
-			mediaID
+			mediaID,
+			variantID
 		}
 	}
 }
@@ -218,24 +222,26 @@ const deleteQuotePossibleAnswer = (questionID, possibleAnswerID) => {
 	}
 }
 
-const setQuotePossibleAnswerText = (questionID, possibleAnswerID, textValue) => {
+const setQuotePossibleAnswerText = (questionID, possibleAnswerID, textValue, variantID) => {
 	return {
 		type: 'SET_QUOTE_POSSIBLE_ANSWER_TEXT',
 		payload: {
 			questionID,
 			possibleAnswerID,
-			textValue
+			textValue,
+			variantID
 		}
 	}
 }
 
-const setQuotePossibleAnswerLocation = (questionID, possibleAnswerID, location) => {
+const setQuotePossibleAnswerLocation = (questionID, possibleAnswerID, location, variantID) => {
 	return {
 		type: 'SET_QUOTE_POSSIBLE_ANSWER_LOCATION',
 		payload: {
 			questionID,
 			possibleAnswerID,
-			location
+			location,
+			variantID
 		}
 	}
 }
@@ -258,6 +264,26 @@ const setQuotePossibleAnswerConnection = (questionID, possibleAnswerID, entity) 
 			questionID,
 			possibleAnswerID,
 			entity
+		}
+	}
+}
+
+const addQuestionVariant = (questionID, duplicateVariantID) => {
+	return {
+		type: 'ADD_QUESTION_VARIANT',
+		payload: {
+			questionID,
+			duplicateVariantID
+		}
+	}
+}
+
+const deleteQuestionVariant = (questionID, variantID) => {
+	return {
+		type: 'DELETE_QUESTION_VARIANT',
+		payload: {
+			questionID,
+			variantID
 		}
 	}
 }
@@ -352,6 +378,7 @@ export {
 	finishedEditingQText, setQuoteQuestionImage,
 	addQuotePossibleAnswer, deleteQuotePossibleAnswer, setQuotePossibleAnswerText,
 	setQuotePossibleAnswerLocation, setQuotePossibleAnswerRandomLocation, setQuotePossibleAnswerConnection, setQuotePossibleAnswerMultiBehavior,
+	addQuestionVariant, deleteQuestionVariant,
 	setQuoteSampleSize,
 	setQuoteContactValue, finishedEditingContactValue,
 	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead,
