@@ -159,7 +159,7 @@ class QuestionEditor extends React.Component {
 
 		const possibleAnswersCount = q.possibleAnswers.length;
 		const addPAButton = possibleAnswersCount >= maxPossibleAnswers ? null :
-			<FlatButton onClick={this.addPA} label="Add Answer" icon={<MdAdd />} disabled={hasVariants}/>;
+			<FlatButton onClick={this.addPA} label="Add Answer" icon={<MdAdd />} />;
 			
 		let advancedImageProperties;
 		let duplicateQuestionButton;
@@ -345,7 +345,7 @@ class QuestionEditor extends React.Component {
 										</TextField>
 										{possibleAnswersCount === 1 ? null :
 											<div className="possible-answer-delete">
-												<XButton onClick={() => this.deletePA(pa.possibleAnswerID)} disabled={hasVariants} />
+												<XButton onClick={() => this.deletePA(pa.possibleAnswerID)} />
 											</div>
 										}
 									</div>

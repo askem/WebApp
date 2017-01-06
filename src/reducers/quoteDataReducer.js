@@ -160,7 +160,8 @@ const quoteReducer = (state = initialState, action) => {
 				// Set both name and actual locations
 				const arrangementTitle = AutomaticPopupArrangementTypes.find(type => type.id === action.payload.autoArrangement).title;
 				const possibleAnswersCount = state.getIn(['surveyMetadata', 'questions', action.payload.questionID, 'possibleAnswers']).size;
-				const locations = Immutable.fromJS(calcLocations(possibleAnswersCount, action.payload.autoArrangement));
+				const arrangeBy = action.payload.autoArrangement === POPUP_ARRANGEMENT_TYPE.CUSTOM ? POPUP_ARRANGEMENT_DEFAULT : action.payload.autoArrangement;
+				const locations = Immutable.fromJS(calcLocations(possibleAnswersCount, arrangeBy));
 				let vState = stateWithSettingValueInVQariant(state, action.payload.questionID, action.payload.variantID, 'paArrangement', arrangementTitle);
 				vState = stateWithSettingValueInVQariant(vState, action.payload.questionID, action.payload.variantID, 'paLocations', locations);
 				return vState;
@@ -184,32 +185,71 @@ const quoteReducer = (state = initialState, action) => {
 		case 'UPLOAD_IMAGE_REQUEST_SUCCESS':
 			const { originalMediaID, newMediaID } = action.payload;
 			return state.updateIn(['surveyMetadata', 'questions'], questions => {
-				// TODO - add variants
 				const key = questions.findKey(q => q.get('mediaID') === originalMediaID);
 				if (key !== undefined) {
 					return questions.setIn([key, 'mediaID'], newMediaID);
 				}
 				return questions;
-			});	
-		case 'ADD_QUOTE_POSSIBLE_ANSWER':
-			return state.updateIn(['surveyMetadata', 'questions', action.payload.questionID], q => {
-				const possibleAnswerID = q.get('possibleAnswers').size;
-				q = q.update('possibleAnswers', pas => pas.push(Immutable.fromJS({textValue: '', possibleAnswerID})));
+			}).updateIn(['surveyMetadata', 'questionsVariants'], Immutable.List(), allQVariants => 
+				allQVariants.map(qVariants => qVariants.update('variants', variants =>
+					variants.map(v => {
+						if (v.get('mediaID') === originalMediaID) {
+							return v.set('mediaID', newMediaID);
+						}
+						return v;
+					})
+				)
+			));
+		case 'ADD_QUOTE_POSSIBLE_ANSWER': {
+			let newPAID;
+			let addedState = state.updateIn(['surveyMetadata', 'questions', action.payload.questionID], q => {
+				newPAID = q.get('possibleAnswers').size;
+				q = q.update('possibleAnswers', pas => pas.push(Immutable.fromJS({
+					textValue: '',
+					possibleAnswerID: newPAID
+				})));
 				if (q.get('autoArrangement') === POPUP_ARRANGEMENT_TYPE.CUSTOM && q.get('popupLocations')) {
-					const newLocation = calcLocations(possibleAnswerID + 1, POPUP_ARRANGEMENT_DEFAULT)[possibleAnswerID];
-					q = q.update('popupLocations', locations => locations.push(Immutable.fromJS(newLocation)));
+					const newLocation = Immutable.fromJS(calcLocations(newPAID + 1, POPUP_ARRANGEMENT_DEFAULT)[newPAID]);
+					q = q.update('popupLocations', locations => locations.push(newLocation));
 				}
 				return q;
 			});
-		case 'DELETE_QUOTE_POSSIBLE_ANSWER':
-			return state.updateIn(['surveyMetadata', 'questions', action.payload.questionID, 'possibleAnswers'], pas =>
+			const qVariantsIndex = (state.getIn(['surveyMetadata', 'questionsVariants']) || Immutable.List()).findIndex(v => v.get('questionID') === action.payload.questionID);
+			if (qVariantsIndex > -1) {
+				addedState = addedState.updateIn(['surveyMetadata', 'questionsVariants', qVariantsIndex, 'variants'], variants => {
+					return variants.map(v => {
+						const arrangementType = v.get('paArrangement');
+						let arrangement = AutomaticPopupArrangementTypes.find(type => type.title === arrangementType).id;
+						arrangement = arrangement === POPUP_ARRANGEMENT_TYPE.CUSTOM ? POPUP_ARRANGEMENT_DEFAULT : arrangement;
+						const paLocations = Immutable.fromJS(calcLocations(newPAID + 1, arrangement));
+						return v.update('paTextValues', values => values.push(''))
+						.set('paLocations', paLocations);
+					});
+				});
+			}
+			return addedState;
+		}
+		case 'DELETE_QUOTE_POSSIBLE_ANSWER': {
+			const paID = action.payload.possibleAnswerID;
+			let deletedState = state;
+			const qVariantsIndex = (state.getIn(['surveyMetadata', 'questionsVariants']) || Immutable.List()).findIndex(v => v.get('questionID') === action.payload.questionID);
+			if (qVariantsIndex > -1) {
+				deletedState = deletedState.updateIn(['surveyMetadata', 'questionsVariants', qVariantsIndex, 'variants'], variants => {
+					return variants.map(v => 
+						v
+						.deleteIn(['paTextValues', paID])
+						.deleteIn(['paLocations', paID]));
+				});
+			}
+			return deletedState.updateIn(['surveyMetadata', 'questions', action.payload.questionID, 'possibleAnswers'], pas =>
 				pas
-				.delete(action.payload.possibleAnswerID)
+				.delete(paID)
 				.map((pa, idx) => pa.set('possibleAnswerID', idx)))
 				.updateIn(['surveyMetadata', 'questions', action.payload.questionID, 'popupLocations'], locations => {
 				if (locations) { 
-					return locations.delete(action.payload.possibleAnswerID);
+					return locations.delete(paID);
 				}});
+		}
 		case 'SET_QUOTE_POSSIBLE_ANSWER_TEXT':
 			if (action.payload.variantID !== undefined) {
 				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID, 
