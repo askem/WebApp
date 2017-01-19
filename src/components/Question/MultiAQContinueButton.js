@@ -11,9 +11,9 @@ class MultiAQContinueButton extends React.Component {
 	componentWillReceiveProps(nextProps) {
 		this.setState({hasError: false, errorMessage: null});
 	}
-	handleClick() {
+	handleClick(evt) {
 		if (this.props.canContinue) {
-			this.props.onClick(event);
+			this.props.onClick(evt);
 		} else {
 			let message = this.props.cantContinueReasonHandler();
 			this.setState({hasError: true, errorMessage: message});

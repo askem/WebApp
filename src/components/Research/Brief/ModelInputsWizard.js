@@ -22,8 +22,8 @@ class TextVariable extends React.Component {
 		super(props);
 		this.onChange = this.onChange.bind(this);
 	}
-	onChange(event) {
-		this.props.onValueChange(this.props.variable, event.target.value);
+	onChange(evt) {
+		this.props.onValueChange(this.props.variable, evt.target.value);
 	}
 	render() {
 		return <TextField id={`${this.props.variable.id}_textfield`} hintText={this.props.variable.name} floatingLabelText={this.props.variable.name}
@@ -121,8 +121,8 @@ class ImageVariable extends React.Component {
 		super(props);
 		this.onChange = this.onChange.bind(this);
 	}
-	onChange(event) {
-		//this.props.onValueChange(this.props.variable, event.target.value);
+	onChange(evt) {
+		//this.props.onValueChange(this.props.variable, evt.target.value);
 	}
 	render() {
 		const hasValue = this.props.value && this.props.value.mediaID;

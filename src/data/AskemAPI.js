@@ -4,6 +4,8 @@ import RELATIONSHIP_STATUS from 'constants/RELATIONSHIP_STATUS';
 import quoteContactFields from 'constants/quoteContactFields';
 import Cookies from 'cookies-js';
 import dateStringToDate from 'utils/dateStringToDate';
+import leadMetadataToQuestion from 'utils/Askem/leadMetadataToQuestion';
+import leadMetadataToSurvey from 'utils/Askem/leadMetadataToSurvey';
 
 const defaultModelData = {
 	"modelID": "dce",
@@ -12,6 +14,7 @@ const defaultModelData = {
 	"variableValues": [],
 	"requiredKPIs": ["exposure_targeting"]
 };
+const EMPTY_MEDIA_ID = '5e86a8e1-ecda-4cc8-a074-78e4638ad4d0';
 
 class AskemAPI {
 	constructor(props = {}) {
@@ -343,6 +346,76 @@ class AskemAPI {
 		return this.fetchEndpoint('leads')
 		.then(results => results.leads);
 	}
+
+	createSurvey(questionsMetadata, questionsVariantsMetadata, leadID = '') {
+		//TODO: reverse, jumps
+		let questions = [...questionsMetadata];
+		questions.reverse();
+		let newQuestionIDs = questions.map(q => q.questionID);
+		let newPossibleAnswerIDs = new Map();
+		let newSurveyID;
+		const qPromises = questions.map(q => {
+			const originalQID = q.questionID;
+			q = leadMetadataToQuestion(q);
+			q.questionTypeID = 3;
+			q.geoLocation = { longitude: 0, latitude: 0};
+			if (!q.mediaID) { q.mediaID = EMPTY_MEDIA_ID; }
+			delete q.questionID;
+			q.possibleAnswers.forEach((pa, idx) => {
+				Object.assign(pa, q.popupLocations[idx]);
+				pa.numericValue = idx;
+				let attributes = 0;
+				if (pa.randomLocation) { attributes |= 1; }
+				if (pa.multiBehavior === 'none') { attributes |= 2; }
+				if (pa.multiBehavior === 'all') { attributes |= 4; }
+				pa.attributes = attributes;
+				delete pa.possibleAnswerID;
+			});
+			return this.fetchEndpoint(`questions/add`, q)
+			.then(result => {
+				const newQuestionID = result.postID;
+				newQuestionIDs[originalQID] = newQuestionID;
+				newPossibleAnswerIDs.set(newQuestionID, result.possibleAnswersID);
+				
+				questions[originalQID].questionID = newQuestionID;
+				questions[originalQID].possibleAnswers.forEach((pa, idx) => {
+					pa.possibleAnswerID = result.possibleAnswersID[idx];
+				});
+			});
+		});
+		
+		return Promise.all(qPromises)
+		.then(qResults => {
+			let questionsVariants;
+			if (questionsVariantsMetadata) {
+				questionsVariants = [...questionsVariantsMetadata];
+				questionsVariants.forEach(v => v.questionID = newQuestionIDs[v.questionID]);
+			}
+			let survey = leadMetadataToSurvey({ questions, questionsVariants }, true);
+			survey.questionIDs = newQuestionIDs;
+			survey.title = `Survey from lead ${leadID}`;
+			survey.description = `Survey from lead ${leadID}`;
+			delete survey.questions;
+			const transformConnectionsDictionary = dict => Object.keys(dict).map(sourceID => {
+				return {
+					ID: Number(sourceID),
+					destination: dict[sourceID]
+				};
+			});
+			survey.connections.possibleAnswers = transformConnectionsDictionary(survey.connections.possibleAnswers);
+			
+			return this.fetchEndpoint(`surveys/add`, survey)
+			.then(sResults => {
+				newSurveyID = sResults.surveyID;
+				return {
+					surveyID: newSurveyID,
+					questionIDs: newQuestionIDs,
+					possibleAnswerIDs: newPossibleAnswerIDs
+				};
+			})
+		});
+	}
+
 
 	/* API - Not yet implemented */
 	fetchMediaPlan(researchID) {

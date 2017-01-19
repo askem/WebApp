@@ -9,7 +9,7 @@ class AnswerPopup extends React.Component {
 		super(props);
 		this.onPopupClick = this.onPopupClick.bind(this);
 	}
-	onPopupClick(event) {
+	onPopupClick(evt) {
 		const uiTypeID = this.props.uiTypeID;
 		const paIndex = this.props.paIndex;
 		const paID = this.props.possibleAnswerID;

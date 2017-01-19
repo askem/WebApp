@@ -6,6 +6,7 @@ import QuoteReach from 'components/Quote/QuoteReach';
 import consolidateAgeGroups from 'utils/array/consolidateAgeGroups';
 import numeral from 'numeral';
 import quoteContactFields from 'constants/quoteContactFields';
+import genGUID from 'utils/Askem/genGUID';
 
 const renderContactValue = (field, contact) => {
 	let value = contact[field.id];
@@ -19,7 +20,9 @@ class ManageQuote extends React.Component {
     	super(props);
 		this.state = {
 			selectedQuestion: null,
-			editing: null
+			editing: null,
+			creatingSurvey: false,
+			duplicatingLead: false,
 		};
 	}
 	render() {
@@ -154,7 +157,49 @@ class ManageQuote extends React.Component {
 				</div>
 			</div>
 			
-			
+			<div>
+				<button
+					disabled={this.state.creatingSurvey}
+					onClick={() => {
+						this.setState({creatingSurvey: true});
+						api.createSurvey(this.props.surveyMetadata.questions, this.props.surveyMetadata.questionsVariants, this.props.lead.quoteID)
+						.then(results => {
+							this.setState({creatingSurvey: false});
+							console.info(results);
+							alert(`Created survey with ID: ${results.surveyID}`);
+						}).catch(error => {
+							this.setState({creatingSurvey: false});
+							console.error(error);
+							alert('Error, see console for details');
+						});
+					}
+				}>{this.state.creatingSurvey ? 'Please Wait ...' : 'Create Survey'}</button>
+			</div>
+			<div>
+				<button 
+					disabled={this.state.duplicatingLead}
+					onClick={() => {
+						this.setState({duplicatingLead: true});
+						const newLeadID = genGUID();
+						console.info(`Creating new lead: ${newLeadID}`);
+						api.createQuote(newLeadID, {
+							surveyMetadata: this.props.surveyMetadata,
+							audience: this.props.audience,
+							reachEstimate: this.props.reachEstimate,
+							sample: this.props.sample,
+						}, `Duplicated lead from ${this.props.lead.quoteID}`)
+						.then(results => {
+							this.setState({duplicatingLead: false});
+							console.info(results);
+							alert(`Created duplicate lead with ID: ${newLeadID}`);
+						}).catch(error => {
+							this.setState({duplicatingLead: false});
+							console.error(error);
+							alert('Error, see console for details');
+						});
+					}}
+				>{this.state.duplicatingLead ? 'Please Wait...' : 'Duplicate Quote'}</button>
+			</div>
 		
 			</div>
 		)
