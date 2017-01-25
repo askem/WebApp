@@ -1,5 +1,5 @@
 import React from 'react';
-import ToggleArrow from 'components/Quote/ToggleArrow';
+import ToggleArrow from 'components/Common/ToggleArrow';
 
 
 class CollapableSection extends React.Component {

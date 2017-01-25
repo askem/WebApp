@@ -11,7 +11,7 @@ import QuoteInterests from 'components/Quote/QuoteInterests';
 import QuoteBehaviors from 'components/Quote/QuoteBehaviors';
 import TargetingList from 'components/Quote/TargetingList';
 import TargetingSearch from 'components/Quote/TargetingSearch';
-import CollapableSection from 'components/Quote/CollapableSection';
+import CollapableSection from 'components/Common/CollapableSection';
 
 const TargetingSearchWithTitle = (props) => (
 	<div className="quote-audience">
