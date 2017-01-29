@@ -61,7 +61,8 @@ const QuoteWizardContainer = connect(
 			closeSuccessSubmitLead: () => dispatch(quoteActions.closeSuccessSubmitLead()),
 			cancelFailedSubmitLead: () => dispatch(quoteActions.cancelFailedSubmitLead()),
 			quoteUIAction: (actionType, metadata) => dispatch(quoteActions.quoteUIAction(actionType, metadata)),
-			
+			toggleCollapsablePanel : (actionType, metaData) => dispatch(quoteActions.toggleCollapsablePanel(actionType, metaData)),
+
 			/* Advanced */
 			setQuoteQuestionIsMultiAnswer: (questionID, isMultiAnswer) => dispatch(quoteActions.setQuoteQuestionIsMultiAnswer(questionID, isMultiAnswer)),
 			setQuoteQuestionMinAnswers: (questionID, minAnswers) => dispatch(quoteActions.setQuoteQuestionMinAnswers(questionID, minAnswers)),

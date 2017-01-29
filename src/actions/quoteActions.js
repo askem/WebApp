@@ -365,6 +365,16 @@ const quoteUIAction = (actionType, metadata = '') => {
 	}
 }
 
+const toggleCollapsablePanel = (actionType, eventData) => {
+	return {
+		type : 'TOGGLE_COLLAPSABLE_PANEL',
+		payload : {
+				actionType,
+				eventData
+		}
+	}
+}
+
 export {
 	requestReach, requestCostEstimates,
 	toggleQuoteAudienceAttribute,
@@ -382,5 +392,6 @@ export {
 	setQuoteSampleSize,
 	setQuoteContactValue, finishedEditingContactValue,
 	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead,
-	quoteUIAction
+	quoteUIAction,
+	toggleCollapsablePanel
 };

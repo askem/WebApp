@@ -1,7 +1,6 @@
 import React from 'react';
 import ToggleArrow from 'components/Common/ToggleArrow';
 
-
 class CollapableSection extends React.Component {
 	constructor(props){
 		super(props);
@@ -13,13 +12,24 @@ class CollapableSection extends React.Component {
 		}
 	}
 
-
 	toggleState() {
 		let { collapsed } = this.state;
 
 		this.setState({
 			collapsed:!collapsed
 		})
+
+		if (this.props.useAnalytics && __PRODUCTION__) {
+			const eventPostfix = collapsed ? 'OPEN' : 'CLOSED';
+			const eventName = `${this.props.eventName}_${eventPostfix}`;
+
+			let stateObj = {
+				collapsed : !collapsed,
+				eventName : eventName,
+			}
+
+			this.props.toggleCollapsablePanel(this.props.eventName, stateObj);
+		}
 	}
 
 	render() {

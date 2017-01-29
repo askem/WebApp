@@ -97,7 +97,7 @@ class QuoteAudience extends React.Component {
 					</div>
 				</div>*/}
 
-					<CollapableSection title="Advanced">					
+					<CollapableSection title="Advanced" useAnalytics={true} eventName="ADVANCED_TOGGLE" {...this.props }>
 							<TargetingList title="Relationship Status"
 								attributeType="relationship"
 								availableAttributes={RELATIONSHIP_STATUS}
@@ -115,7 +115,7 @@ class QuoteAudience extends React.Component {
 								attributes={this.props.audience.educationMajors || []}
 								onToggle={this.props.toggleQuoteAudienceAttribute} />
 
-							<CollapableSection title="Employment">
+							<CollapableSection title="Employment" useAnalytics={true} eventName="EMPLOYMENT_TOGGLE" {...this.props }>
 								<TargetingSearchWithTitle title="Work Industry"
 										attributeType="industries"
 										attributes={this.props.audience.industries || []}
@@ -131,7 +131,7 @@ class QuoteAudience extends React.Component {
 										attributes={this.props.audience.workEmployers || []}
 										onToggle={this.props.toggleQuoteAudienceAttribute} />
 							</CollapableSection>
-					</CollapableSection>					
+					</CollapableSection>
 			</div>
 		)
 	}
