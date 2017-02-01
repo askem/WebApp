@@ -9,8 +9,10 @@ import QuoteSubmitDialog from 'components/Quote/QuoteSubmitDialog';
 import MdArrowForward from 'react-icons/lib/md/arrow-forward';
 import MdCheck from 'react-icons/lib/md/check';
 import Loading from 'components/Common/Loading';
+import QuoteObjectives from 'components/Quote/QuoteObjectives';
 
 const stages = {
+	MARKET_OBJECTIVES : -1,
 	AUDIENCE: 0,
 	SURVEY: 1,
 	SAMPLE_SIZE: 2,
@@ -31,7 +33,8 @@ class QuoteWizard extends React.Component {
 		this.submitLead = this.submitLead.bind(this);
 		this.onNewSubmission = this.onNewSubmission.bind(this);
 		this.state = {
-			stage: stages.AUDIENCE
+			//stage: stages.AUDIENCE
+			stage : stages.MARKET_OBJECTIVES // temporary hack!
 		};
 	}
 	handleStageClick(stage) {
@@ -76,12 +79,15 @@ class QuoteWizard extends React.Component {
 				<Loading className="loading-3bounce-green loading-3bounce-lg" />
 			</div>;
 		}
-		
+
 		let stageComponent;
 		let sideComponent;
 		let advanceButtonTitle;
 		let advanceButton;
 		switch (this.state.stage) {
+			case stages.MARKET_OBJECTIVES:
+				stageComponent = <QuoteObjectives />;
+				break;
 			case stages.AUDIENCE:
 				advanceButtonTitle = 'Define Survey';
 				stageComponent = <QuoteAudience {...this.props} />;
