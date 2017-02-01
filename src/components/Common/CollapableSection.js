@@ -5,11 +5,34 @@ class CollapableSection extends React.Component {
 	constructor(props){
 		super(props);
 		this.toggleState = this.toggleState.bind(this);
-		this.state = {
-			collapsed : true,
-			titleWidth : 80
+		this.childrenSelected = this.childrenSelected.bind(this);
 
+		const initialCollapsedState = !this.childrenSelected(this.props.children);
+
+		this.state = {
+			collapsed : initialCollapsedState,
+			titleWidth : 80
 		}
+	}
+
+	childrenSelected(items) {
+		if (items) {
+			const childrenSelected = items.some(item => {
+					if (item.props.attributes) {
+						return item.props.attributes.length > 0;
+					}
+					else if (item.props.children) {
+									return this.childrenSelected(item.props.children);
+								}
+								else {
+									return false;
+								}
+			});
+
+			return childrenSelected;
+		}
+
+		return false; // no children --> initial state of toggle is collapsed so we return false
 	}
 
 	toggleState() {
