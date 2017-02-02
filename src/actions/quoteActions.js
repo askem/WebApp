@@ -365,6 +365,16 @@ const quoteUIAction = (actionType, metadata = '') => {
 	}
 }
 
+const setResearchObjective = (researchId, description = '') => {
+	return {
+		type : 'SET_RESEARCH_OBJECTIVE',
+		payload : {
+			researchId,
+			description
+		}
+	}
+}
+
 export {
 	requestReach, requestCostEstimates,
 	toggleQuoteAudienceAttribute,
@@ -382,5 +392,6 @@ export {
 	setQuoteSampleSize,
 	setQuoteContactValue, finishedEditingContactValue,
 	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead,
-	quoteUIAction
+	quoteUIAction,
+	setResearchObjective
 };

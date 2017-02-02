@@ -28,7 +28,7 @@ const quoteReducer = (state = initialState, action) => {
 				metadata = emptyQuote;
 			}
 			return Immutable.fromJS(metadata);
-		
+
 		case 'REACH_ESTIMATE_FETCH':
 			return state.mergeIn(['reachEstimate'], {
 				reach: null,
@@ -67,7 +67,7 @@ const quoteReducer = (state = initialState, action) => {
 				error: true,
 				fetching: false
 			});
-			
+
 		case 'SET_QUOTE_DEMO_GENDER':
 			return state.setIn(['audience', 'demographics', 'gender', action.payload.gender], action.payload.value);
 		case 'TOGGLE_QUOTE_DEMO_AGE_GROUP':
@@ -149,7 +149,7 @@ const quoteReducer = (state = initialState, action) => {
 					return q.delete('isMultiAnswerQuestion')
 					.delete('minAnswers')
 					.delete('maxAnswers');
-				}	
+				}
 			});
 		case 'SET_QUOTE_QUESTION_MIN_ANSWERS':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'minAnswers'], action.payload.minAnswers);
@@ -190,7 +190,7 @@ const quoteReducer = (state = initialState, action) => {
 					return questions.setIn([key, 'mediaID'], newMediaID);
 				}
 				return questions;
-			}).updateIn(['surveyMetadata', 'questionsVariants'], Immutable.List(), allQVariants => 
+			}).updateIn(['surveyMetadata', 'questionsVariants'], Immutable.List(), allQVariants =>
 				allQVariants.map(qVariants => qVariants.update('variants', variants =>
 					variants.map(v => {
 						if (v.get('mediaID') === originalMediaID) {
@@ -235,7 +235,7 @@ const quoteReducer = (state = initialState, action) => {
 			const qVariantsIndex = (state.getIn(['surveyMetadata', 'questionsVariants']) || Immutable.List()).findIndex(v => v.get('questionID') === action.payload.questionID);
 			if (qVariantsIndex > -1) {
 				deletedState = deletedState.updateIn(['surveyMetadata', 'questionsVariants', qVariantsIndex, 'variants'], variants => {
-					return variants.map(v => 
+					return variants.map(v =>
 						v
 						.deleteIn(['paTextValues', paID])
 						.deleteIn(['paLocations', paID]));
@@ -246,20 +246,20 @@ const quoteReducer = (state = initialState, action) => {
 				.delete(paID)
 				.map((pa, idx) => pa.set('possibleAnswerID', idx)))
 				.updateIn(['surveyMetadata', 'questions', action.payload.questionID, 'popupLocations'], locations => {
-				if (locations) { 
+				if (locations) {
 					return locations.delete(paID);
 				}});
 		}
 		case 'SET_QUOTE_POSSIBLE_ANSWER_TEXT':
 			if (action.payload.variantID !== undefined) {
-				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID, 
+				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID,
 					action.payload.possibleAnswerID, 'paTextValues', action.payload.textValue);
 			}
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
 				'possibleAnswers', action.payload.possibleAnswerID, 'textValue'], action.payload.textValue);
 		case 'SET_QUOTE_POSSIBLE_ANSWER_LOCATION':
 			if (action.payload.variantID !== undefined) {
-				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID, 
+				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID,
 					action.payload.possibleAnswerID, 'paLocations', action.payload.location);
 			}
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
@@ -340,7 +340,7 @@ const quoteReducer = (state = initialState, action) => {
 			let newVariant = variantToDuplicate.toJS();
 			newVariant.ID = newVariantID;
 			//newVariant.textValue = `variant text ${newVariantID + 1}`;
-			qVariants = qVariants.update('variants', 
+			qVariants = qVariants.update('variants',
 				variants => variants.push(Immutable.fromJS(newVariant)));
 			allQuestionsVariants = allQuestionsVariants.set(qVariantsIndex, qVariants);
 			return state.setIn(['surveyMetadata', 'questionsVariants'], allQuestionsVariants);
@@ -360,7 +360,7 @@ const quoteReducer = (state = initialState, action) => {
 						textValue,
 					};
 					possibleAnswers.push(pa);
-				});	
+				});
 				const q = {
 					mediaID: lastVariant.mediaID,
 					textValue: lastVariant.textValue,
@@ -377,6 +377,11 @@ const quoteReducer = (state = initialState, action) => {
 			return state.set('sample', Immutable.fromJS({
 				sampleSize: action.payload.sampleSize,
 				moe: action.payload.moe
+			}));
+		case 'SET_RESEARCH_OBJECTIVE':
+			return state.set('researchObjective', Immutable.fromJS({
+				id : action.payload.researchId,
+				description : action.payload.description
 			}));
 		default:
 			return state;

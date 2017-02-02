@@ -9,10 +9,10 @@ import QuoteSubmitDialog from 'components/Quote/QuoteSubmitDialog';
 import MdArrowForward from 'react-icons/lib/md/arrow-forward';
 import MdCheck from 'react-icons/lib/md/check';
 import Loading from 'components/Common/Loading';
-import QuoteObjectives from 'components/Quote/QuoteObjectives';
+import QuoteObjective from 'components/Quote/QuoteObjective';
 
 const stages = {
-	MARKET_OBJECTIVES : -1,
+	RESEARCH_OBJECTIVE : -1,
 	AUDIENCE: 0,
 	SURVEY: 1,
 	SAMPLE_SIZE: 2,
@@ -33,8 +33,8 @@ class QuoteWizard extends React.Component {
 		this.submitLead = this.submitLead.bind(this);
 		this.onNewSubmission = this.onNewSubmission.bind(this);
 		this.state = {
-			//stage: stages.AUDIENCE
-			stage : stages.MARKET_OBJECTIVES // temporary hack!
+			// stage: stages.AUDIENCE
+			stage : stages.RESEARCH_OBJECTIVE // TODO: THIS IS TEMPORARY - ADD LOGIC HERE!!!!
 		};
 	}
 	handleStageClick(stage) {
@@ -50,6 +50,7 @@ class QuoteWizard extends React.Component {
 		this.setState({
 			stage: this.state.stage + 1,
 		});
+		debugger;
 		this.props.quoteUIAction('WIZARD_CLICK_NEXT', stageTitles[stage]);
 	}
 	submitLead() {
@@ -68,6 +69,7 @@ class QuoteWizard extends React.Component {
 		this.props.quoteUIAction('WIZARD_AFTER_SUBMIT_START_NEW');
 		this.props.newSubmission();
 	}
+
 	render() {
 		if (!this.props.lead.loaded) {
 			if (this.props.lead && this.props.lead.loadingFail) {
@@ -84,9 +86,15 @@ class QuoteWizard extends React.Component {
 		let sideComponent;
 		let advanceButtonTitle;
 		let advanceButton;
+		let headerVisibility = 'visible';
 		switch (this.state.stage) {
-			case stages.MARKET_OBJECTIVES:
-				stageComponent = <QuoteObjectives />;
+			case stages.RESEARCH_OBJECTIVE:
+				stageComponent = <QuoteObjective
+														 title="Select Research Objective"
+													 	 onSetResearchObjective={this.props.setResearchObjective}
+														 onAdvance={() => this.handleStageClick(stages.AUDIENCE)}
+														 {...this.props} />;
+				headerVisibility = 'hidden';
 				break;
 			case stages.AUDIENCE:
 				advanceButtonTitle = 'Define Survey';
@@ -142,7 +150,7 @@ class QuoteWizard extends React.Component {
 			<div>
 				<QuoteSubmitDialog {...this.props}
 					onNewSubmission={this.onNewSubmission} />
-				<div className="quote-wizard-header-fixed">
+				<div className="quote-wizard-header-fixed" style={{visibility:headerVisibility}}>
 				<div className="quote-wizard-header">
 					{stageTitles.map((s, idx) => {
 						let className = (idx === this.state.stage) ? 'stage active' : 'stage';
