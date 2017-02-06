@@ -32,11 +32,20 @@ class QuoteWizard extends React.Component {
 		this.nextStage = this.nextStage.bind(this);
 		this.submitLead = this.submitLead.bind(this);
 		this.onNewSubmission = this.onNewSubmission.bind(this);
+
+		const initialStage = props.showResearchObjective ? stages.RESEARCH_OBJECTIVE : stages.AUDIENCE;
+
 		this.state = {
-			// stage: stages.AUDIENCE
-			stage : stages.RESEARCH_OBJECTIVE // TODO: THIS IS TEMPORARY - ADD LOGIC HERE!!!!
+			stage : initialStage
 		};
 	}
+
+	 componentWillReceiveProps(nextProps) {
+		 if (nextProps.showResearchObjective && !this.props.showResearchObjective) {
+			 this.setState({stage :stages.RESEARCH_OBJECTIVE });
+		 }
+	 }
+	 
 	handleStageClick(stage) {
 		if (this.state.stage === stage) {
 			return;
@@ -50,7 +59,6 @@ class QuoteWizard extends React.Component {
 		this.setState({
 			stage: this.state.stage + 1,
 		});
-		debugger;
 		this.props.quoteUIAction('WIZARD_CLICK_NEXT', stageTitles[stage]);
 	}
 	submitLead() {

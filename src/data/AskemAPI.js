@@ -348,7 +348,7 @@ class AskemAPI {
 		let parsedMetaData = JSON.parse(metadata);
 		if (!parsedMetaData.researchObjective) {
 			parsedMetaData.researchObjective = {
-				id : genGUID(),
+				id : 'custom',
 				description : null
 			}
 		}

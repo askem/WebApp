@@ -20,6 +20,8 @@ const QuoteWizardContainer = connect(
 		if (lead) { lead = lead.toJS(); }
 		let contact = state.getIn(['data', 'contact']);
 		if (contact) { contact = contact.toJS(); }
+    let showResearchObjective  = state.getIn(['data', 'quote', 'showResearchObjective']);
+
 		return {
 			lead,
 			audience,
@@ -28,7 +30,8 @@ const QuoteWizardContainer = connect(
 			imageSuggestions,
 			reachEstimate,
 			costEstimate,
-			contact
+			contact,
+			showResearchObjective
 		};
 	},
 	function mapDispatchToProps(dispatch) {
