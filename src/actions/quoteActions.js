@@ -365,7 +365,7 @@ const quoteUIAction = (actionType, metadata = '') => {
 	}
 }
 
-const setResearchObjective = (researchId, description) => {
+const setResearchObjective = (researchId, description, title) => {
 	return {
 		type : 'SET_RESEARCH_OBJECTIVE',
 		payload : {

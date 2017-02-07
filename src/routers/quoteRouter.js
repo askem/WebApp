@@ -19,12 +19,12 @@ const quoteRouter = (store, api) =>  {
 	});
 
 	const enterWithoutID = (nextState, replace) => {
-		setTimeout( ()=> 
+		setTimeout( ()=>
 			store.dispatch({
 				type: 'ROUTING_ENTER_WITHOUT_ID'
 			})
 		, 0);
-		
+
 		// const existingQuoteID = store.getState().getIn(['data', 'lead', 'quoteID']);
 		// if (!existingQuoteID) {
 		// 	let quoteID = localStorage.inProgressQuoteID;
@@ -43,13 +43,12 @@ const quoteRouter = (store, api) =>  {
 		// 	}
 		// }
 	}
-	
+
 	const enterWithID = (nextState, replace) => {
-		
 		const quoteID = nextState.params.quoteID;
 		// const existingQuoteID = store.getState().getIn(['data', 'lead', 'quoteID']);
 		// if (existingQuoteID === quoteID) { return; }
-		setTimeout(()=> 
+		setTimeout(()=>
 			store.dispatch({
 				type: 'ROUTING_ENTER_WITH_ID',
 				payload: {
@@ -57,7 +56,7 @@ const quoteRouter = (store, api) =>  {
 				}
 			}), 0);
 	}
-	
+
 	const enterRestricted = (nextState, replace) => {
 		if (!api.loggedIn()) {
 			replace({
@@ -69,7 +68,7 @@ const quoteRouter = (store, api) =>  {
 			return;
 		}
 	};
-	
+
 	const enterRestrictedWithID= (nextState, replace) => {
 		if (!api.loggedIn()) {
 			replace({
@@ -81,7 +80,7 @@ const quoteRouter = (store, api) =>  {
 			return;
 		}
 		const quoteID = nextState.params.quoteID;
-		setTimeout(()=> 
+		setTimeout(()=>
 			store.dispatch({
 				type: 'ROUTING_ENTER_WITH_ID',
 				payload: {
@@ -89,7 +88,7 @@ const quoteRouter = (store, api) =>  {
 				}
 			}), 0);
 	};
-	
+
 	const signOut =  (nextState, replace) => {
 		api.signOut();
 		history.goBack();
@@ -124,8 +123,8 @@ const quoteRouter = (store, api) =>  {
 	}
 
 	return <Router history={history}>
-		<Route component={QuoteFrame}>
-			<Route path="/" onEnter={enterWithoutID} />
+		<Route component={QuoteFrame} storeref={store}>
+			<Route path="/" onEnter={enterWithoutID} fullSizeHeader={false}/>
 			<Route path="/login" name="Login" component={Login} />
 			<Route path="/signout" onEnter={signOut} />
 			<Route path="/admin" name="Quote Management" onEnter={enterRestricted} component={QuoteAdminHomeContainer} />

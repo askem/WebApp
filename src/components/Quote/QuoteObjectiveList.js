@@ -41,8 +41,8 @@ class QuoteObjectiveList extends React.Component {
   }
 
   setResearchObjective(item) {
-    const { id, description } = item;
-    this.props.setResearchObjective(id, description);
+    const { id, description, title } = item;
+    this.props.setResearchObjective(id, description, title);
     this.props.onAdvance();
   }
 
@@ -81,7 +81,7 @@ class QuoteObjectiveList extends React.Component {
         <div className="quote-objective-container">
           { objectiveBoxes }
         </div>
-        <QuoteObjectiveFooter />
+        <QuoteObjectiveFooter setObjective={ this.setResearchObjective } />
       </div>
     )
   }

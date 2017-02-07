@@ -741,7 +741,22 @@ header {
 }
 
 .quote-objective-footer {
-	border:solid 1px $askem-light-gray;
-	border-top: none;
-	padding: 20px;
+	// border:solid 1px $askem-light-gray;
+	// padding: 20px;
+	margin-top: 40px;
+
+	.form {
+		display: flex;
+		align-items: baseline;
+
+		.textfield-wrapper {
+			width: 600px;
+		}
+
+		.action-buttons {
+			margin-left: 32px;
+		}
+	}
+
+
 }
