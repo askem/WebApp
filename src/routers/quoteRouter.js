@@ -124,7 +124,7 @@ const quoteRouter = (store, api) =>  {
 
 	return <Router history={history}>
 		<Route component={QuoteFrame} storeref={store}>
-			<Route path="/" onEnter={enterWithoutID} fullSizeHeader={false}/>
+			<Route path="/" onEnter={enterWithoutID} />
 			<Route path="/login" name="Login" component={Login} />
 			<Route path="/signout" onEnter={signOut} />
 			<Route path="/admin" name="Quote Management" onEnter={enterRestricted} component={QuoteAdminHomeContainer} />
