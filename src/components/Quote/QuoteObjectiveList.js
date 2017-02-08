@@ -12,31 +12,31 @@ class QuoteObjectiveList extends React.Component {
   }
 
   mapObjectiveToIcon(id) {
-    let imgPath = '';
+    let imagePath = '';
 
     switch(id) {
       case 'advertising':
-        imgPath = 'https://know.askem.com/img/insights-adv-ico.png';
+        imagePath = 'https://know.askem.com/img/insights-adv-ico.png';
         break;
       case 'consumer':
-        imgPath = 'https://know.askem.com/img/insights-con-ico.png';
+        imagePath = 'https://know.askem.com/img/insights-con-ico.png';
         break;
       case 'brand':
-        imgPath = 'https://know.askem.com/img/insights-cs-ico.png';
+        imagePath = 'https://know.askem.com/img/insights-cs-ico.png';
         break;
       case 'marketing':
-        imgPath = 'https://know.askem.com/img/insights-brand-ico.png';
+        imagePath = 'https://know.askem.com/img/insights-brand-ico.png';
         break;
       case 'startups':
-        imgPath = 'https://know.askem.com/img/insights-su-ico.png';
+        imagePath = 'https://know.askem.com/img/insights-su-ico.png';
         break;
       default:
-        imgPath = '';
+        imagePath = '';
         break;
     }
 
     return (
-      <img src={ imgPath }/>
+      <img src={ imagePath }/>
     )
   }
 
@@ -74,12 +74,12 @@ class QuoteObjectiveList extends React.Component {
   }
 
   render() {
-    let objectiveBoxes = this.mapTopLevelItems(RESEARCH_OBJECTIVE_CATEGORIES);
+    let objectives = this.mapTopLevelItems(RESEARCH_OBJECTIVE_CATEGORIES);
 
     return (
       <div>
         <div className="quote-objective-container">
-          { objectiveBoxes }
+          { objectives }
         </div>
         <QuoteObjectiveFooter setObjective={ this.setResearchObjective } />
       </div>
