@@ -42,10 +42,10 @@
 header {
 	height: 90px;
 	width: 100%;
-	
+
 	background-image: url(/images/layout/header.jpg);
 	color: white;
-	
+
 	&.fullsize {
 		height: 130px;
 	}
@@ -89,8 +89,8 @@ header {
 	border: 1px solid $border-gray;
 	border-radius: 3px;
 	/*box-shadow: 0px 4px 20px 0px #aaa;*/
-	
-	
+
+
 	background-color: white;
 	display: flex;
 	color: #ECEBE9;
@@ -117,7 +117,7 @@ header {
 			font-size: 12px;
 		}
 		.title {
-			
+
 		}
 	}
 }
@@ -126,7 +126,7 @@ header {
 	width: 80%;
 	margin-right: auto;
 	margin-left: auto;
-	
+
 	.button-container {
 		text-align: right;
 		margin-top: 15px;
@@ -215,7 +215,7 @@ header {
 
 .quote-audience {
 	padding: 15px 25px;
-	
+
 	&:not(:last-child) {
 		border-bottom: 1px solid $border-gray;
 	}
@@ -232,11 +232,11 @@ header {
 		font-weight: normal;
 		color: $askem-purple;
 	}
-	
+
 	.attributes-list {
 		display: flex;
 		flex-wrap: wrap;
-		
+
 		.attributes-list-item {
 			width: 30%;
 		}
@@ -336,7 +336,7 @@ header {
 		align-items: baseline;
 		border-bottom: 1px solid #d0d1d5;
 	}
-	
+
 	.questions-grid {
 		display: flex;
 		overflow-y: scroll;
@@ -356,23 +356,23 @@ header {
 
 .question-creator {
 	padding: 20px;
-	
+
 	.question-title {
 		font-size: 30px;
-		
+
 		option {
 			margin: 0 20px;
 	font-size: 22px;
 	height: 38px
 		}
 	}
-	
+
 	.question-inputs {
 		display: flex;
-		
+
 		.text-inputs {
 			width: 100%;
-			
+
 			.possible-answer-input {
 				display: flex;
 			}
@@ -381,17 +381,17 @@ header {
 			}
 		}
 	}
-	
+
 	.possible-answer-advanced {
 		padding-bottom: 5px;
 		margin-bottom: 20px;
 		border-bottom: 1px dashed black;
 		font-size: 12px;
-		
+
 		.properties-row {
 			/*display: flex;
 			justify-content: space-between;*/
-			
+
 			.icheckbox_askem {
 				zoom: 0.8;
 			}
@@ -404,7 +404,7 @@ header {
 			width: 130px;
 		}
 	}
-	
+
 	.image-upload {
 		padding-top: 20px;
 		padding-bottom: 20px;
@@ -416,11 +416,25 @@ header {
 			background-size: cover;
 			border: 1px solid $border-gray;
 			margin-bottom: 5px;
+
+				.image-action-buttons {
+					display: none;
+					position: relative;
+					top:172px;
+					background: #fff;
+					opacity: 0.75;
+				}
+
+				&:hover{
+					.image-action-buttons {
+						display: flex;
+					}
+				}
 		}
 		.empty-overlay {
 			position: relative;
 		}
-		.empty-overlay::after {	
+		.empty-overlay::after {
 			position: absolute;
 			top:0;
 			left:0;
@@ -437,11 +451,11 @@ header {
 			text-align: center;
 			content: "Click here to Upload Image";
 		}
-		
+
 		hr {
 			margin: 10px 20px 10px 0;
 		}
-		
+
 		select {
 			float: right;
 			margin-right: 20px;
@@ -449,18 +463,17 @@ header {
 		.answers-count {
 			width: 45px;
 		}
-		
 	}
-	
+
 	.image-suggestions {
 		color: $askem-green;
 		text-transform: uppercase;
 		font-weight: bold;
-		
+
 		img {
 			margin-right: 5px;
 			width: 70px;
-			height: 70px; 
+			height: 70px;
 			object-fit: cover;
 			cursor: pointer;
 		}
@@ -529,10 +542,10 @@ header {
 .quote-manage {
 	width: 1100px;
 	margin: 0 auto;
-	
+
 	.manage-pane {
 		width: 30%;
-		
+
 		.contact-field {
 			display: flex;
 			.title {
@@ -543,7 +556,7 @@ header {
 			}
 		}
 	}
-	
+
 	.manage-summary {
 		display: flex;
 		justify-content: space-around;
@@ -551,18 +564,18 @@ header {
 		padding-left: 70px;
 		padding-right: 70px;
 	}
-	
+
 	a {
 		font-weight: normal;
 		color: $askem-purple;
 		padding: 0 10px;
 		text-transform: none;
 	}
-	
+
 	.title {
 		font-weight: 300;
 		color: $askem-purple;
-		
+
 	}
 	.value {
 		padding-bottom: 5px;
@@ -571,7 +584,7 @@ header {
 		margin-left: 5px;
 		padding: 2px 5px;
 	}
-	
+
 	.done-botton-container {
 		text-align: right;
 		padding: 10px 0;
@@ -598,30 +611,30 @@ header {
 	padding-top: 30px;
 	width: 1100px;
 	margin: 0 auto;
-	
+
 	.respondents-title {
 		color: $askem-green;
 		font-size: 22px;
 		font-weight: 500;
 	}
-	
+
 	.attributes-selection {
 		padding-right: 20px;
-		
+
 		.attributes-selection-inner {
 			/*position: fixed;*/
 		}
 	}
-	
+
 	.attribute-div {
 		width: 200px;
-		
+
 		.attribute-type {
 			font-weight: 300;
 			font-size: 22px;
 			text-transform: capitalize;
 		}
-		
+
 		.icheckbox_askem {
 			zoom: 0.8;
 		}
@@ -630,10 +643,10 @@ header {
 			color: $askem-purple;
 		}
 	}
-	
+
 	.questions-grid {
-		
-		
+
+
 		.question-results {
 			width: 280px;
 			margin-top: 40px;
@@ -641,14 +654,14 @@ header {
 			border: 1px solid $border-gray;
 			border-top: 2px solid $askem-purple;
 			border-radius: 2px;
-			
+
 			.question-properties {
 				display: flex;
 				position: relative;
 				top: -40px;
 				left: 20px;
 				margin-bottom: -30px;
-				
+
 				.question-image {
 					width: 80px !important;
 					height: 80px;
@@ -667,9 +680,9 @@ header {
 						padding-right: 2px;
 						font-size: 10px;
 						text-transform: uppercase;
-						
+
 						max-height: 40px;
-						
+
 						text-overflow: ellipsis;
 						overflow: hidden;
 						display: -webkit-box;
@@ -677,9 +690,9 @@ header {
 						-webkit-box-orient: vertical;
 					}
 				}
-				
+
 			}
-			
+
 			canvas {
 				width: 270px !important;
 				height: 240px !important;

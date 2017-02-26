@@ -192,13 +192,14 @@ const finishedEditingQText = (questionID, textValue, variantID) => {
 	}
 }
 
-const setQuoteQuestionImage = (questionID, mediaID, variantID) => {
+const setQuoteQuestionImage = (questionID, mediaID, variantID, croppedMetadata) => {
 	return {
 		type: 'SET_QUOTE_QUESTION_IMAGE',
 		payload: {
 			questionID,
 			mediaID,
-			variantID
+			variantID,
+			croppedMetadata
 		}
 	}
 }

@@ -41,7 +41,15 @@ class QuestionMedia extends React.Component {
 	}
 	render() {
 		const q = this.props.question;
-		const imageURL = q.questionImageURL || '/images/emptyMediaID.png';
+		const { croppedMetadata } = q;
+		let imageURL;
+		if (croppedMetadata) {
+			imageURL = croppedMetadata.dataURI;
+		}
+		else {
+			imageURL = q.questionImageURL || '/images/emptyMediaID.png';
+		}
+
 		const canvasStyle = { backgroundImage: `url(${imageURL})` };
 		//style={{width: 20, height: 20, backgroundColor:'#333'}}
 		let children = [];

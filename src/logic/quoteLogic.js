@@ -3,6 +3,7 @@ import nlp_compromise from 'nlp_compromise/src/index';
 import genGUID from 'utils/Askem/genGUID';
 import blobURL from 'utils/Askem/blobURL';
 import dataURIToBlob from 'utils/dataURIToBlob';
+import { calculateAspectRatio, getImageData } from 'utils/imageUtils';
 
 const createQuoteLogic = createLogic({
 	type: 'CREATE_NEW_QUOTE',
@@ -40,7 +41,7 @@ const newSubmissionLogic = createLogic({
 				quoteID,
 				source: 'quote.askem.com:wizard/new submission'
 			}
-		});		
+		});
 	}
 });
 
@@ -83,6 +84,20 @@ const updateQuoteLogic = createLogic({
 		let quote = getState().getIn(['data', 'quote']);
 		if (!quoteID || !quote) { return; }
 		quote = quote.toJS();
+
+		//removed dataURI from cropped object if exists
+		//------------------------------------------------
+		quote.surveyMetadata.questions.forEach(q => {
+			if (q.croppedMetadata) {
+				if (q.croppedMetadata.dataURI) {
+					delete q.croppedMetadata.dataURI;
+				}
+			} 
+
+			return q; 
+		});
+		//------------------------------------------------
+
 		let contact = getState().getIn(['data', 'contact']);
 		if (contact) { contact = contact.toJS(); } else { contact = {}; }
 		dispatch({ type: 'UPDATE_QUOTE_REQUEST_START' }, { allowMore: true });
@@ -103,18 +118,18 @@ const updateQuoteLogic = createLogic({
 const uploadImageLogic = createLogic({
 	type: 'SET_QUOTE_QUESTION_IMAGE',
 	process({ getState, action, api }, dispatch) {
+		const questionID = action.payload.questionID;
 		const quoteID = getState().getIn(['data', 'lead', 'quoteID']);
-		if (!quoteID) { return; }
+		if (!quoteID) { return; }	
 		const mediaID = action.payload.mediaID;
 		if (!mediaID.startsWith('data:')) { return; }
-		const questionID = action.payload.questionID;
 		const blob = dataURIToBlob(mediaID);
 		dispatch({ type: 'UPLOAD_IMAGE_REQUEST_START' }, { allowMore: true });
 		return api.uploadFileForLead(blob, quoteID)
 		.then(newMediaID => {
 			// Preload image to make visual transition seamless
 			const img = new Image();
-			img.onload = () => {
+			img.onload = (img) => {
 				dispatch({
 					type: 'UPLOAD_IMAGE_REQUEST_SUCCESS',
 					payload: {
@@ -166,12 +181,49 @@ const loadQuoteLogic = createLogic({
 		dispatch({ type: 'LOAD_QUOTE_REQUEST_START' }, { allowMore: true });
 		return api.getQuoteByID(quoteID)
 		.then((quote) => {
-			dispatch({
-				type: 'LOAD_QUOTE_REQUEST_SUCCESS',
-				payload: {
-					quote
-				}				
-			}, { allowMore: true });
+			if (quote.metadata.surveyMetadata.questions) {
+				const promisesArr = quote.metadata.surveyMetadata.questions.map(q => {
+					const uri = blobURL(q.mediaID);
+
+					if (q.croppedMetadata) {
+						const newMetadata = Object.assign({}, q.croppedMetadata, {dataURI : uri, questionID: q.questionID})
+						return getImageData(newMetadata);
+					}
+					else {
+						return Promise.resolve({ dataURI:uri, questionID: q.questionID });
+					}
+				});
+
+				Promise
+					.all(promisesArr)
+					.then(values => {
+						values.forEach(v => {
+							if (quote.metadata.surveyMetadata.questions[v.questionID].croppedMetadata) {
+								quote.metadata.surveyMetadata.questions[v.questionID].croppedMetadata.dataURI = v.dataURI;
+							}							
+						});
+
+						dispatch({
+							type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+							payload: {
+								quote
+							}
+						}, { allowMore: true });
+
+					})
+					.catch(err => {
+						console.error('quote.Logic.js -> loadQuoteLogic -> err', err);
+						throw err;
+					})
+			}
+			else {
+				dispatch({
+					type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+					payload: {
+						quote
+					}
+				}, { allowMore: true });
+			}
 		})
 		.catch(error => dispatch({ type: 'LOAD_QUOTE_REQUEST_FAIL', payload: {
 			error
@@ -192,7 +244,7 @@ const reachInvalidationLogic = createLogic({
 	process({ getState, action, api }, dispatch) {
 		let audience = getState().getIn(['data', 'quote', 'audience']);
 		if (!audience) { return; }
-		audience = audience.toJS();	
+		audience = audience.toJS();
 		// automatically fetch cost estimate
 		// if (api.loggedIn()) {
 		// 	dispatch({ type: 'GET_COST_ESTIMATE' }, { allowMore: true });
@@ -207,7 +259,7 @@ const reachInvalidationLogic = createLogic({
 					reach: results.size
 				}
 			}, { allowMore: true });
-			
+
 		})
 		.catch(error => dispatch({ type: 'REACH_ESTIMATE_FETCH_FAIL', payload: {
 			error
@@ -222,14 +274,14 @@ const fetchCostEstimateLogic = createLogic({
 		if (!api.loggedIn()) { return; }
 		let audience = getState().getIn(['data', 'quote', 'audience']);
 		if (!audience) { return; }
-		audience = audience.toJS();	
+		audience = audience.toJS();
 		dispatch({ type: 'COST_ESTIMATE_FETCH' }, { allowMore: true });
 		return api.tempFetchAllCostEstimates(audience)
 			.then(estimates => {
 				dispatch({ type: 'COST_ESTIMATE_FETCH_SUCCESS', payload: { estimates } }, { allowMore: true });
 			}).catch(error => dispatch({ type: 'COST_ESTIMATE_FETCH_FAIL', payload: {
 				error
-			}, error: true }));		
+			}, error: true }));
 	}
 });
 
