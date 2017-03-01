@@ -365,6 +365,91 @@ const quoteUIAction = (actionType, metadata = '') => {
 	}
 }
 
+const updateCreativeHeadline = (index, text) => {
+	return {
+		type : 'UPDATE_CREATIVE_HEADLINE',
+		payload :{
+			index,
+			text
+		}
+	}
+}
+
+
+const addCreativeHeadline = () => {
+	return {
+		type : 'ADD_CREATIVE_HEADLINE'
+	}
+}
+
+const deleteCreativeHeadline = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_HEADLINE',
+		payload : {
+			index
+		}
+	}
+}
+
+const addCreativeText = () => {
+	return {
+		type : 'ADD_CREATIVE_TEXT'
+	}
+}
+
+const updateCreativeText = (index, text) => {
+	return {
+		type : 'UPDATE_CREATIVE_TEXT',
+		payload : {
+			index, 
+			text
+		}
+	}
+}
+
+const deleteCreativeText = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_TEXT',
+		payload : {
+			index
+		}
+	}
+}
+
+const addCreativeDescription = () => {
+	return {
+		type : 'ADD_CREATIVE_DESCRIPTION'
+	}
+}
+
+const updateCreativeDescription = (index, text) => {
+	return {
+		type : 'UPDATE_CREATIVE_DESCRIPTION',
+		payload : {
+			index, 
+			text
+		}
+	}
+}
+
+const deleteCreativeDescription = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_DESCRIPTION',
+		payload : {
+			index
+		}
+	}
+}
+
+const deleteCreativeImage = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_IMAGE',
+		payload: {
+			index
+		}
+	}
+}
+
 export {
 	requestReach, requestCostEstimates,
 	toggleQuoteAudienceAttribute,
@@ -382,5 +467,9 @@ export {
 	setQuoteSampleSize,
 	setQuoteContactValue, finishedEditingContactValue,
 	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead,
-	quoteUIAction
+	quoteUIAction,
+	updateCreativeHeadline, addCreativeHeadline, deleteCreativeHeadline,
+	addCreativeText, updateCreativeText, deleteCreativeText,
+	addCreativeDescription, updateCreativeDescription, deleteCreativeDescription,
+	deleteCreativeImage
 };

@@ -687,3 +687,105 @@ header {
 		}
 	}
 }
+
+.creative-container {
+	display: flex;
+	justify-content: space-between;
+	width:1100px;
+
+	.creative-editable-section {
+		margin-left: 20px;
+		width: 50%;
+
+		.ad-creatives-array-container {
+			margin-top: 35px;
+
+			.input-item-container {
+				display: flex;
+			}
+		}
+	}
+
+	.creative-preview-section {
+		.ad-creative-facebook-title{
+			font-size:22px;
+			margin-bottom: 9px;
+
+			.refresh-preview {
+				margin-left: 30px;
+				cursor: pointer;
+			}
+		}
+
+		.ad-creatives-preview {
+			height:453px;
+			width: 500px;
+			border:solid 1px silver;
+			margin-right: 15px;
+			margin-bottom: 23px;
+			padding:12px 12px 0 12px;
+
+			.ad-creative-company-title {
+				color :#365899;
+				font-family: Helvetica, Arial, Lucida Grande, sans-serif;
+				font-size:14px;
+				font-weight: bold;
+
+				.askem-title {
+					margin-left: 50px;
+					margin-top:-43px;
+					// position:absolute;
+					//display: inline;
+				}
+
+				.sponsered-text {
+					color:#90949c;
+					font-size: 12px;
+					margin:6px 0 0 50px;
+				}
+			}
+
+			.askem-com-title {
+				padding-top: 9px;
+				position:relative;
+				font-size:11px;
+				text-transform: uppercase;
+				line-height:11px;
+				color:#90949c;
+				padding-left: 10px;
+			}
+
+			.creative-preview-text {
+				color:#1d2129;
+				font-family:Georgia, 'Times New Roman', Times, serif;
+				font-size:18px;
+				font-weight:500;
+				height:22px;
+				margin-top: 10px;
+				padding-left: 10px;
+			}
+
+			.creative-preview-description { 
+				color:#1d2129;
+				font-family: Arial, Helvetica, sans-serif;
+				font-size: 12px;
+				margin-top: 5px;
+				padding-left: 10px;
+			}
+
+			.creative-preview-headline {
+				color :#1d2129;
+				font-size: 14px;
+				margin-top: 20px;
+				margin-bottom: 15px;
+
+			}
+
+			.creative-preview-images {
+				border: solid 1px silver;
+				width:476px;
+				height: 248px;
+			}
+		}
+	}
+}

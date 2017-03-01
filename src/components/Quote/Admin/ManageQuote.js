@@ -7,6 +7,7 @@ import consolidateAgeGroups from 'utils/array/consolidateAgeGroups';
 import numeral from 'numeral';
 import quoteContactFields from 'constants/quoteContactFields';
 import genGUID from 'utils/Askem/genGUID';
+import AdCreatives from 'components/Quote/AdCreatives';
 
 const renderContactValue = (field, contact) => {
 	let value = contact[field.id];
@@ -60,6 +61,20 @@ class ManageQuote extends React.Component {
 							showCostEstimate={true} costEstimate={this.props.costEstimate}
 							requestCostEstimates={this.props.requestCostEstimates} />
 					</div>
+				</div>
+				
+			</div>;
+		}
+		else if (this.state.editing === 'creatives') {
+			return <div className="quote-manage">
+				<div className="done-botton-container">
+					<button className="askem-button-white" onClick={()=>this.setState({editing: null})}>Done Editing</button>
+				</div>
+				<div className="quote-wizard-main">
+					<div className="quote-wizard-maincontent">
+						<AdCreatives {...this.props} />
+					</div>
+
 				</div>
 				
 			</div>;
@@ -137,6 +152,26 @@ class ManageQuote extends React.Component {
 					<div className="title">Survey</div>
 					<div className="value">{surveyDescription}</div>
 					<a style={{padding: 0}} href={`/${this.props.lead.quoteID}/preview`} target="_blank">Preview</a>
+
+
+					<div className="quote-wizard-side-title">
+						ad creatives
+						<button className="askem-button-white edit-button"
+							onClick={()=>this.setState({editing: 'creatives'})}>Edit</button>
+					</div>
+					<div className="title">creative</div>
+					{ (this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.images) &&
+							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.images.length} images `}</div>
+					}
+					{ this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines && 
+							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines.length} headlines`}</div>
+					}
+					{ this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.texts && 
+							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.texts.length} texts`}</div>
+					}
+					{ this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions && 
+							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions.length} descriptions`}</div>
+					}
 				</div>
 				
 				<div className="manage-pane">
