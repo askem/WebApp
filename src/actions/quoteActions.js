@@ -366,6 +366,26 @@ const quoteUIAction = (actionType, metadata = '') => {
 	}
 }
 
+const setResearchObjective = (researchId, description, title) => {
+	return {
+		type : 'SET_RESEARCH_OBJECTIVE',
+		payload : {
+			researchId,
+			description
+    }
+  }
+}
+
+const toggleCollapsablePanel = (actionType, eventData) => {
+	return {
+		type : 'TOGGLE_COLLAPSABLE_PANEL',
+		payload : {
+				actionType,
+				eventData
+		}
+	}
+}
+
 export {
 	requestReach, requestCostEstimates,
 	toggleQuoteAudienceAttribute,
@@ -383,5 +403,7 @@ export {
 	setQuoteSampleSize,
 	setQuoteContactValue, finishedEditingContactValue,
 	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead,
-	quoteUIAction
+	quoteUIAction,
+	setResearchObjective,
+	toggleCollapsablePanel,
 };

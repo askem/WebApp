@@ -243,6 +243,12 @@ header {
 	}
 }
 
+.collapsable-header {
+		display: flex;
+		align-content: center;
+		cursor: pointer;
+}
+
 .quote-fbpage {
 	display: flex;
 	font-family: "Open Sans", Helvetica, Arial, sans-serif;
@@ -699,4 +705,77 @@ header {
 			}
 		}
 	}
+}
+
+
+
+.quote-objective-container {
+	display: flex;
+
+	.quote-objective-box {
+		border: solid 1px $askem-light-gray;
+		flex-direction: column;
+		flex:1;
+		border-right: none;
+
+		&:nth-last-child(1) {
+			border-right: solid 1px $askem-light-gray;
+		}
+		.quote-objective-header {
+			display: flex;
+			padding:20px;
+			justify-content: center;
+			align-items: center;
+			border-bottom: solid 1px $askem-light-gray;
+			max-height: 97px;
+
+				.quote-objective-title {
+					font-size: 18px;
+					font-weight: bold;
+					max-width: 200px;
+					margin-left: 20px;
+				}
+		}
+
+		.quote-objective-item {
+			cursor: pointer;
+			padding-left: 20px;
+			height: 50px;
+			border-bottom: solid 1px $askem-light-gray;
+			display: flex;
+			align-items: center;
+
+			&:hover {
+				color:$askem-purple;
+				border-left:solid 2px $askem-purple;
+				padding:18px;
+				background-color: rgba(226, 230, 230, 0.53);
+			}
+
+			&:nth-last-child(1) {
+				border-bottom:none;
+			}
+		}
+	}
+}
+
+.quote-objective-footer {
+	// border:solid 1px $askem-light-gray;
+	// padding: 20px;
+	margin-top: 40px;
+
+	.form {
+		display: flex;
+		align-items: baseline;
+
+		.textfield-wrapper {
+			width: 600px;
+		}
+
+		.action-buttons {
+			margin-left: 32px;
+		}
+	}
+
+
 }

@@ -20,11 +20,13 @@ const stateWithSettingPAValueInVQariant = (state, questionID, variantID, possibl
 const quoteReducer = (state = initialState, action) => {
 	switch(action.type) {
 		case 'CREATE_NEW_QUOTE':
+			emptyQuote.showResearchObjective =  true;
 			return Immutable.fromJS(emptyQuote);
 		case 'LOAD_QUOTE_REQUEST_SUCCESS':
 			let metadata;
 			if (action.payload.quote && action.payload.quote.metadata && typeof(action.payload.quote.metadata) === 'object') {
 				metadata = action.payload.quote.metadata;
+				delete metadata.showResearchObjective;
 			} else {
 				metadata = emptyQuote;
 			}
@@ -386,8 +388,12 @@ const quoteReducer = (state = initialState, action) => {
 				sampleSize: action.payload.sampleSize,
 				moe: action.payload.moe
 			}));
-		case 'SET_CROPPED_IMAGE_IN_QUESTION':
-			return state;
+		case 'SET_RESEARCH_OBJECTIVE':
+			state = state.deleteIn(['showResearchObjective']);
+			return state.set('researchObjective', Immutable.fromJS({
+				id : action.payload.researchId,
+				description : action.payload.description
+			}));
 		default:
 			return state;
 	}
