@@ -20,6 +20,8 @@ const QuoteWizardContainer = connect(
 		if (lead) { lead = lead.toJS(); }
 		let contact = state.getIn(['data', 'contact']);
 		if (contact) { contact = contact.toJS(); }
+    let showResearchObjective  = state.getIn(['data', 'quote', 'showResearchObjective']);
+
 		return {
 			lead,
 			audience,
@@ -28,7 +30,8 @@ const QuoteWizardContainer = connect(
 			imageSuggestions,
 			reachEstimate,
 			costEstimate,
-			contact
+			contact,
+			showResearchObjective
 		};
 	},
 	function mapDispatchToProps(dispatch) {
@@ -61,7 +64,8 @@ const QuoteWizardContainer = connect(
 			closeSuccessSubmitLead: () => dispatch(quoteActions.closeSuccessSubmitLead()),
 			cancelFailedSubmitLead: () => dispatch(quoteActions.cancelFailedSubmitLead()),
 			quoteUIAction: (actionType, metadata) => dispatch(quoteActions.quoteUIAction(actionType, metadata)),
-			toggleCollapsablePanel : (actionType, metaData) => dispatch(quoteActions.toggleCollapsablePanel(actionType, metaData)),
+	    setResearchObjective: (researchId, description) => dispatch(quoteActions.setResearchObjective(researchId, description)),
+			toggleCollapsablePanel: (actionType, metaData) => dispatch(quoteActions.toggleCollapsablePanel(actionType, metaData)),
 
 			/* Advanced */
 			setQuoteQuestionIsMultiAnswer: (questionID, isMultiAnswer) => dispatch(quoteActions.setQuoteQuestionIsMultiAnswer(questionID, isMultiAnswer)),

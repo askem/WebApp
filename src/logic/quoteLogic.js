@@ -40,12 +40,13 @@ const newSubmissionLogic = createLogic({
 				quoteID,
 				source: 'quote.askem.com:wizard/new submission'
 			}
-		});		
+		});
 	}
 });
 
 const autoSaveLogic = createLogic({
 	type: [
+		'SET_RESEARCH_OBJECTIVE',
 		'TOGGLE_QUOTE_AUDIENCE_ATTRIBUTE',
 		'SET_QUOTE_DEMO_GENDER', 'TOGGLE_QUOTE_DEMO_AGE_GROUP',
 		'ADD_QUOTE_AUDIENCE_PAGE', 'TOGGLE_QUOTE_AUDIENCE_PAGE_CONNECTED', 'REMOVE_QUOTE_AUDIENCE_PAGE',
@@ -170,7 +171,7 @@ const loadQuoteLogic = createLogic({
 				type: 'LOAD_QUOTE_REQUEST_SUCCESS',
 				payload: {
 					quote
-				}				
+				}
 			}, { allowMore: true });
 		})
 		.catch(error => dispatch({ type: 'LOAD_QUOTE_REQUEST_FAIL', payload: {
@@ -192,7 +193,7 @@ const reachInvalidationLogic = createLogic({
 	process({ getState, action, api }, dispatch) {
 		let audience = getState().getIn(['data', 'quote', 'audience']);
 		if (!audience) { return; }
-		audience = audience.toJS();	
+		audience = audience.toJS();
 		// automatically fetch cost estimate
 		// if (api.loggedIn()) {
 		// 	dispatch({ type: 'GET_COST_ESTIMATE' }, { allowMore: true });
@@ -207,7 +208,7 @@ const reachInvalidationLogic = createLogic({
 					reach: results.size
 				}
 			}, { allowMore: true });
-			
+
 		})
 		.catch(error => dispatch({ type: 'REACH_ESTIMATE_FETCH_FAIL', payload: {
 			error
@@ -222,14 +223,14 @@ const fetchCostEstimateLogic = createLogic({
 		if (!api.loggedIn()) { return; }
 		let audience = getState().getIn(['data', 'quote', 'audience']);
 		if (!audience) { return; }
-		audience = audience.toJS();	
+		audience = audience.toJS();
 		dispatch({ type: 'COST_ESTIMATE_FETCH' }, { allowMore: true });
 		return api.tempFetchAllCostEstimates(audience)
 			.then(estimates => {
 				dispatch({ type: 'COST_ESTIMATE_FETCH_SUCCESS', payload: { estimates } }, { allowMore: true });
 			}).catch(error => dispatch({ type: 'COST_ESTIMATE_FETCH_FAIL', payload: {
 				error
-			}, error: true }));		
+			}, error: true }));
 	}
 });
 
