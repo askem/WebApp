@@ -422,6 +422,20 @@ header {
 			background-size: cover;
 			border: 1px solid $border-gray;
 			margin-bottom: 5px;
+
+				.image-action-buttons {
+					display: none;
+					position: relative;
+					top:172px;
+					background: #fff;
+					opacity: 0.75;
+				}
+
+				&:hover{
+					.image-action-buttons {
+						display: flex;
+					}
+				}
 		}
 		.empty-overlay {
 			position: relative;
@@ -455,7 +469,6 @@ header {
 		.answers-count {
 			width: 45px;
 		}
-
 	}
 
 	.image-suggestions {

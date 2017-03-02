@@ -11,7 +11,7 @@ const MiniQuestion = SortableElement((props) => {
 		onClick={props.selected ? null : ()=> {props.onQuestionClick(props.question.questionID)}}>
 		<img
 			style={{objectFit: 'cover'}}
-			src={blobURL(props.question.mediaID)}
+			src={props.question.croppedMetadata ? props.question.croppedMetadata.dataURI : blobURL(props.question.mediaID)}
 			alt={`Question ${props.question.questionID + 1} Image`} />
 		<div>Question {props.question.questionID + 1} {variantsCount}</div>
 	</div>

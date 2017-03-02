@@ -2,6 +2,7 @@ import Immutable from 'immutable';
 import { combineReducers } from 'redux-immutable';
 import emptyQuote from 'data/emptyQuote';
 import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, calcLocations, AutomaticPopupArrangementTypes } from 'utils/Askem/AutoArrangement';
+import { isAspectRatioValid, getImageData  } from 'utils/imageUtils';
 
 const initialState = Immutable.fromJS({});
 
@@ -183,9 +184,16 @@ const quoteReducer = (state = initialState, action) => {
 			if (action.payload.variantID !== undefined) {
 				return stateWithSettingValueInVQariant(state, action.payload.questionID, action.payload.variantID, 'mediaID', action.payload.mediaID);
 			}
-			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'mediaID'], action.payload.mediaID);
+			return state.updateIn(['surveyMetadata', 'questions'], questions => {
+				return questions.updateIn([action.payload.questionID], q => {
+					return q.merge({
+						mediaID:action.payload.mediaID,
+						croppedMetadata:action.payload.croppedMetadata
+					});
+				});
+			});
 		case 'UPLOAD_IMAGE_REQUEST_SUCCESS':
-			const { originalMediaID, newMediaID } = action.payload;
+			const { originalMediaID, newMediaID} = action.payload;
 			return state.updateIn(['surveyMetadata', 'questions'], questions => {
 				const key = questions.findKey(q => q.get('mediaID') === originalMediaID);
 				if (key !== undefined) {
