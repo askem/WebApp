@@ -425,6 +425,8 @@ const quoteReducer = (state = initialState, action) => {
 			return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'descriptions', action.payload.index], action.payload.text);
 		case 'DELETE_CREATIVE_DESCRIPTION':
 			return state.deleteIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'descriptions', action.payload.index]);
+		case 'ADD_CREATIVE_IMAGE':
+			return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images', action.payload.index], action.payload.metadata);			
 		case 'DELETE_CREATIVE_IMAGE':
 			return state.deleteIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images', action.payload.index]);
 		default:

@@ -450,6 +450,16 @@ const deleteCreativeImage = (index) => {
 	}
 }
 
+const addCreativeImage = (index, metadata) => {
+	return {
+		type : 'ADD_CREATIVE_IMAGE',
+		payload : {
+			index,
+			metadata
+		}
+	}
+}
+
 export {
 	requestReach, requestCostEstimates,
 	toggleQuoteAudienceAttribute,
@@ -471,5 +481,5 @@ export {
 	updateCreativeHeadline, addCreativeHeadline, deleteCreativeHeadline,
 	addCreativeText, updateCreativeText, deleteCreativeText,
 	addCreativeDescription, updateCreativeDescription, deleteCreativeDescription,
-	deleteCreativeImage
+	addCreativeImage, deleteCreativeImage
 };

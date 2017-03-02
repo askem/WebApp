@@ -70,6 +70,7 @@ const ManageQuoteContainer = connect(
 			addCreativeDescription : () => dispatch(quoteActions.addCreativeDescription()), 
 			updateCreativeDescription: (index, text) => dispatch(quoteActions.updateCreativeDescription(index, text)),
 			deleteCreativeDescription : (index) => dispatch(quoteActions.deleteCreativeDescription(index)),
+			addCreativeImage : (index, metadata) => dispatch(quoteActions.addCreativeImage(index, metadata)),
 			deleteCreativeImage : (index) => dispatch(quoteActions.deleteCreativeImage(index)),
 			
 			/* Advanced */

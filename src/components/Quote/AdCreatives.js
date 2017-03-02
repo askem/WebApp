@@ -14,6 +14,7 @@ class AdCreatives extends React.Component {
 		this.addDescriptionField = this.addDescriptionField.bind(this);
 		this.onTextFieldChange = this.onTextFieldChange.bind(this);
 		this.refreshPreview = this.refreshPreview.bind(this);
+		this.addCreativeImage = this.addCreativeImage.bind(this);
 
 		this.state = {		
 			previewImage : null,
@@ -128,9 +129,22 @@ class AdCreatives extends React.Component {
 		this.props.deleteCreativeImage(index);
 	}
 
+	addCreativeImage() {
+		// this is 'fake' or mock data
+		//-------------------------------------
+		const metadata = {
+					"crop191x100" : [[0, 0], [954, 499]],
+					"mediaID" : "6d074a8c-6f4e-40b6-86e2-de1c47483513"
+		};
+
+		const index = 0;
+		//-------------------------------------
+		
+		this.props.addCreativeImage(index, metadata);
+	}
+
 	render() {
 		const { headlines = [], texts = [], descriptions = [], images = []} = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
-
 		const headlinesItems = headlines.map((headline, index) => {
 				return (
 					<div key={`headline_key_${index}`} className="input-item-container">
@@ -198,18 +212,6 @@ class AdCreatives extends React.Component {
 		this.props.surveyMetadata.adCreatives.imageAdCreatives.images = fake_images;
 
 		let imagesArr = fake_images.map((image, index) => {
-			// let width, height;	
-			// for (let key in image) {
-			// 	let imageData = image[key];
-			// 	if (Array.isArray(imageData)) {
-			// 		console.log('imageData', imageData);
-			// 		width = imageData[1][0] - imageData[0][0];
-			// 		height = imageData[1][1] - imageData[0][1];
-			// 		console.log('width', width);
-			// 		console.log('height', height);
-			// 	}
-			// }
-
 			return (
 				<div key={image.mediaID} style={{ marginRight:30 + 'px'}}>
 					<img src={blobURL(image.mediaID)}  width="120" height="62"/>
@@ -236,7 +238,7 @@ class AdCreatives extends React.Component {
 					<div className="creative-editable-section">
 						<div>
 							Images
-							<FlatButton label="Add Image" style={{ marginLeft:30 + 'px' }} />
+							<FlatButton label="Add Image" style={{ marginLeft:30 + 'px' }} onClick={this.addCreativeImage} />
 						</div>
 						<div className="ad-creatives-array-container" style={{ display:'flex' }}>
 							{ imagesArr }
