@@ -224,11 +224,14 @@ class AskemAPI {
 
 		const concatAttributes = (includedAttributes, availableAttributes) => {
 			if (includedAttributes) {
-				attributes = attributes.concat(availableAttributes
-				.filter(attr => includedAttributes.includes(attr.id))
-				.map(attr => attr.attribute));
+				let filteredAttrs = availableAttributes.filter(attr => includedAttributes.includes(attr.id));
+
+				filteredAttrs.forEach(arrItem => {
+						attributes = attributes.concat(arrItem.attributes);
+				});
 			}
 		}
+
 		if (audience.demographics.ageGroups.length !== AGE_GROUPS.length) {
 			concatAttributes(audience.demographics.ageGroups, AGE_GROUPS);
 		}

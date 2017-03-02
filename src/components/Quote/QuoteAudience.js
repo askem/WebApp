@@ -11,6 +11,7 @@ import QuoteInterests from 'components/Quote/QuoteInterests';
 import QuoteBehaviors from 'components/Quote/QuoteBehaviors';
 import TargetingList from 'components/Quote/TargetingList';
 import TargetingSearch from 'components/Quote/TargetingSearch';
+import CollapableSection from 'components/Common/CollapableSection';
 
 const TargetingSearchWithTitle = (props) => (
 	<div className="quote-audience">
@@ -95,38 +96,42 @@ class QuoteAudience extends React.Component {
 						<QuoteFBPages {...this.props} />
 					</div>
 				</div>*/}
-				
-				<TargetingList title="Relationship Status"
-					attributeType="relationship"
-					availableAttributes={RELATIONSHIP_STATUS}
-					attributes={this.props.audience.relationship || []}
-					onToggle={this.props.toggleQuoteAudienceAttribute} />
-				
-				<TargetingList title="Household Income"
-					attributeType="householdIncome"
-					availableAttributes={HOUSEHOLD_INCOME}
-					attributes={this.props.audience.householdIncome || []}
-					onToggle={this.props.toggleQuoteAudienceAttribute} />
-				
-				<TargetingSearchWithTitle title="Education Major"
-					attributeType="educationMajors"
-					attributes={this.props.audience.educationMajors || []}
-					onToggle={this.props.toggleQuoteAudienceAttribute} />
 
-				<TargetingSearchWithTitle title="Work Industry"
-						attributeType="industries"
-						attributes={this.props.audience.industries || []}
-						onToggle={this.props.toggleQuoteAudienceAttribute} />
-					
-				<TargetingSearchWithTitle title="Work Position"
-					attributeType="workPositions"
-					attributes={this.props.audience.workPositions || []}
-					onToggle={this.props.toggleQuoteAudienceAttribute} />
-				
-				<TargetingSearchWithTitle title="Employer"
-						attributeType="workEmployers"
-						attributes={this.props.audience.workEmployers || []}
-						onToggle={this.props.toggleQuoteAudienceAttribute} />
+					<CollapableSection title="Advanced" useAnalytics={true} eventName="ADVANCED_TOGGLE" {...this.props }>
+							<TargetingList title="Relationship Status"
+								attributeType="relationship"
+								availableAttributes={RELATIONSHIP_STATUS}
+								attributes={this.props.audience.relationship || []}
+								onToggle={this.props.toggleQuoteAudienceAttribute} />
+
+							<TargetingList title="Household Income"
+								attributeType="householdIncome"
+								availableAttributes={HOUSEHOLD_INCOME}
+								attributes={this.props.audience.householdIncome || []}
+								onToggle={this.props.toggleQuoteAudienceAttribute} />
+
+							<TargetingSearchWithTitle title="Education Major"
+								attributeType="educationMajors"
+								attributes={this.props.audience.educationMajors || []}
+								onToggle={this.props.toggleQuoteAudienceAttribute} />
+
+							<CollapableSection title="Employment" useAnalytics={true} eventName="EMPLOYMENT_TOGGLE" {...this.props }>
+								<TargetingSearchWithTitle title="Work Industry"
+										attributeType="industries"
+										attributes={this.props.audience.industries || []}
+										onToggle={this.props.toggleQuoteAudienceAttribute} />
+
+								<TargetingSearchWithTitle title="Work Position"
+									attributeType="workPositions"
+									attributes={this.props.audience.workPositions || []}
+									onToggle={this.props.toggleQuoteAudienceAttribute} />
+
+								<TargetingSearchWithTitle title="Employer"
+										attributeType="workEmployers"
+										attributes={this.props.audience.workEmployers || []}
+										onToggle={this.props.toggleQuoteAudienceAttribute} />
+							</CollapableSection>
+					</CollapableSection>
 			</div>
 		)
 	}
