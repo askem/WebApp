@@ -243,6 +243,12 @@ header {
 	}
 }
 
+.collapsable-header {
+		display: flex;
+		align-content: center;
+		cursor: pointer;
+}
+
 .quote-fbpage {
 	display: flex;
 	font-family: "Open Sans", Helvetica, Arial, sans-serif;
