@@ -20,6 +20,9 @@ const ManageQuoteContainer = connect(
 		if (lead) { lead = lead.toJS(); }
 		let contact = state.getIn(['data', 'contact']);
 		if (contact) { contact = contact.toJS(); }
+		let researchObjective = state.getIn(['data', 'quote', 'researchObjective']);
+		if (researchObjective) { researchObjective = researchObjective.toJS(); }
+
 		return {
 			lead,
 			audience,
@@ -28,7 +31,8 @@ const ManageQuoteContainer = connect(
 			imageSuggestions,
 			reachEstimate,
 			costEstimate,
-			contact
+			contact,
+			researchObjective
 		};
 	},
 	function mapDispatchToProps(dispatch) {

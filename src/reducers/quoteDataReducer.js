@@ -2,6 +2,7 @@ import Immutable from 'immutable';
 import { combineReducers } from 'redux-immutable';
 import emptyQuote from 'data/emptyQuote';
 import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, calcLocations, AutomaticPopupArrangementTypes } from 'utils/Askem/AutoArrangement';
+import { isAspectRatioValid, getImageData  } from 'utils/imageUtils';
 
 const initialState = Immutable.fromJS({});
 
@@ -19,16 +20,18 @@ const stateWithSettingPAValueInVQariant = (state, questionID, variantID, possibl
 const quoteReducer = (state = initialState, action) => {
 	switch(action.type) {
 		case 'CREATE_NEW_QUOTE':
+			emptyQuote.showResearchObjective =  true;
 			return Immutable.fromJS(emptyQuote);
 		case 'LOAD_QUOTE_REQUEST_SUCCESS':
 			let metadata;
 			if (action.payload.quote && action.payload.quote.metadata && typeof(action.payload.quote.metadata) === 'object') {
 				metadata = action.payload.quote.metadata;
+				delete metadata.showResearchObjective;
 			} else {
 				metadata = emptyQuote;
 			}
 			return Immutable.fromJS(metadata);
-		
+
 		case 'REACH_ESTIMATE_FETCH':
 			return state.mergeIn(['reachEstimate'], {
 				reach: null,
@@ -67,7 +70,7 @@ const quoteReducer = (state = initialState, action) => {
 				error: true,
 				fetching: false
 			});
-			
+
 		case 'SET_QUOTE_DEMO_GENDER':
 			return state.setIn(['audience', 'demographics', 'gender', action.payload.gender], action.payload.value);
 		case 'TOGGLE_QUOTE_DEMO_AGE_GROUP':
@@ -149,7 +152,7 @@ const quoteReducer = (state = initialState, action) => {
 					return q.delete('isMultiAnswerQuestion')
 					.delete('minAnswers')
 					.delete('maxAnswers');
-				}	
+				}
 			});
 		case 'SET_QUOTE_QUESTION_MIN_ANSWERS':
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'minAnswers'], action.payload.minAnswers);
@@ -181,16 +184,23 @@ const quoteReducer = (state = initialState, action) => {
 			if (action.payload.variantID !== undefined) {
 				return stateWithSettingValueInVQariant(state, action.payload.questionID, action.payload.variantID, 'mediaID', action.payload.mediaID);
 			}
-			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID, 'mediaID'], action.payload.mediaID);
+			return state.updateIn(['surveyMetadata', 'questions'], questions => {
+				return questions.updateIn([action.payload.questionID], q => {
+					return q.merge({
+						mediaID:action.payload.mediaID,
+						croppedMetadata:action.payload.croppedMetadata
+					});
+				});
+			});
 		case 'UPLOAD_IMAGE_REQUEST_SUCCESS':
-			const { originalMediaID, newMediaID } = action.payload;
+			const { originalMediaID, newMediaID} = action.payload;
 			return state.updateIn(['surveyMetadata', 'questions'], questions => {
 				const key = questions.findKey(q => q.get('mediaID') === originalMediaID);
 				if (key !== undefined) {
 					return questions.setIn([key, 'mediaID'], newMediaID);
 				}
 				return questions;
-			}).updateIn(['surveyMetadata', 'questionsVariants'], Immutable.List(), allQVariants => 
+			}).updateIn(['surveyMetadata', 'questionsVariants'], Immutable.List(), allQVariants =>
 				allQVariants.map(qVariants => qVariants.update('variants', variants =>
 					variants.map(v => {
 						if (v.get('mediaID') === originalMediaID) {
@@ -235,7 +245,7 @@ const quoteReducer = (state = initialState, action) => {
 			const qVariantsIndex = (state.getIn(['surveyMetadata', 'questionsVariants']) || Immutable.List()).findIndex(v => v.get('questionID') === action.payload.questionID);
 			if (qVariantsIndex > -1) {
 				deletedState = deletedState.updateIn(['surveyMetadata', 'questionsVariants', qVariantsIndex, 'variants'], variants => {
-					return variants.map(v => 
+					return variants.map(v =>
 						v
 						.deleteIn(['paTextValues', paID])
 						.deleteIn(['paLocations', paID]));
@@ -246,20 +256,20 @@ const quoteReducer = (state = initialState, action) => {
 				.delete(paID)
 				.map((pa, idx) => pa.set('possibleAnswerID', idx)))
 				.updateIn(['surveyMetadata', 'questions', action.payload.questionID, 'popupLocations'], locations => {
-				if (locations) { 
+				if (locations) {
 					return locations.delete(paID);
 				}});
 		}
 		case 'SET_QUOTE_POSSIBLE_ANSWER_TEXT':
 			if (action.payload.variantID !== undefined) {
-				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID, 
+				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID,
 					action.payload.possibleAnswerID, 'paTextValues', action.payload.textValue);
 			}
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
 				'possibleAnswers', action.payload.possibleAnswerID, 'textValue'], action.payload.textValue);
 		case 'SET_QUOTE_POSSIBLE_ANSWER_LOCATION':
 			if (action.payload.variantID !== undefined) {
-				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID, 
+				return stateWithSettingPAValueInVQariant(state, action.payload.questionID, action.payload.variantID,
 					action.payload.possibleAnswerID, 'paLocations', action.payload.location);
 			}
 			return state.setIn(['surveyMetadata', 'questions', action.payload.questionID,
@@ -340,7 +350,7 @@ const quoteReducer = (state = initialState, action) => {
 			let newVariant = variantToDuplicate.toJS();
 			newVariant.ID = newVariantID;
 			//newVariant.textValue = `variant text ${newVariantID + 1}`;
-			qVariants = qVariants.update('variants', 
+			qVariants = qVariants.update('variants',
 				variants => variants.push(Immutable.fromJS(newVariant)));
 			allQuestionsVariants = allQuestionsVariants.set(qVariantsIndex, qVariants);
 			return state.setIn(['surveyMetadata', 'questionsVariants'], allQuestionsVariants);
@@ -360,7 +370,7 @@ const quoteReducer = (state = initialState, action) => {
 						textValue,
 					};
 					possibleAnswers.push(pa);
-				});	
+				});
 				const q = {
 					mediaID: lastVariant.mediaID,
 					textValue: lastVariant.textValue,
@@ -378,7 +388,6 @@ const quoteReducer = (state = initialState, action) => {
 				sampleSize: action.payload.sampleSize,
 				moe: action.payload.moe
 			}));
-
 		case 'UPDATE_CREATIVE_HEADLINE': 		
 			return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'headlines', action.payload.index], action.payload.text);
 		case 'ADD_CREATIVE_HEADLINE':
@@ -429,6 +438,12 @@ const quoteReducer = (state = initialState, action) => {
 			return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images', action.payload.index], action.payload.metadata);			
 		case 'DELETE_CREATIVE_IMAGE':
 			return state.deleteIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images', action.payload.index]);
+		case 'SET_RESEARCH_OBJECTIVE':
+			state = state.deleteIn(['showResearchObjective']);
+			return state.set('researchObjective', Immutable.fromJS({
+				id : action.payload.researchId,
+				description : action.payload.description
+			}));
 		default:
 			return state;
 	}

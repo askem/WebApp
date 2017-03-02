@@ -192,13 +192,14 @@ const finishedEditingQText = (questionID, textValue, variantID) => {
 	}
 }
 
-const setQuoteQuestionImage = (questionID, mediaID, variantID) => {
+const setQuoteQuestionImage = (questionID, mediaID, variantID, croppedMetadata) => {
 	return {
 		type: 'SET_QUOTE_QUESTION_IMAGE',
 		payload: {
 			questionID,
 			mediaID,
-			variantID
+			variantID,
+			croppedMetadata
 		}
 	}
 }
@@ -460,6 +461,26 @@ const addCreativeImage = (index, metadata) => {
 	}
 }
 
+const setResearchObjective = (researchId, description, title) => {
+	return {
+		type : 'SET_RESEARCH_OBJECTIVE',
+		payload : {
+			researchId,
+			description
+    }
+  }
+}
+
+const toggleCollapsablePanel = (actionType, eventData) => {
+	return {
+		type : 'TOGGLE_COLLAPSABLE_PANEL',
+		payload : {
+				actionType,
+				eventData
+		}
+	}
+}
+
 export {
 	requestReach, requestCostEstimates,
 	toggleQuoteAudienceAttribute,
@@ -481,5 +502,7 @@ export {
 	updateCreativeHeadline, addCreativeHeadline, deleteCreativeHeadline,
 	addCreativeText, updateCreativeText, deleteCreativeText,
 	addCreativeDescription, updateCreativeDescription, deleteCreativeDescription,
-	addCreativeImage, deleteCreativeImage
+	addCreativeImage, deleteCreativeImage,
+	setResearchObjective,
+	toggleCollapsablePanel,
 };

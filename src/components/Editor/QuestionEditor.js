@@ -8,6 +8,9 @@ import blobURL from 'utils/Askem/blobURL';
 import UploadHiddenControl from 'components/Common/UploadHiddenControl';
 import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, AutomaticPopupArrangementTypes } from 'utils/Askem/AutoArrangement';
 import VariantsEditor from 'components/Editor/VariantsEditor';
+import ImageUpload from 'components/Common/ImageUpload';
+import ImageContainer from 'components/Common/ImageContainer';
+import { getImageData } from 'utils/imageUtils';
 
 const defaultLimits = {
 	maxPossibleAnswers: 8,
@@ -37,11 +40,12 @@ class QuestionEditor extends React.Component {
 		this.deleteVariant = this.deleteVariant.bind(this);
 		this.onChangeVariant = this.onChangeVariant.bind(this);
 		this.state = {
-			errorMessage: ''
+			errorMessage: '',
+			emptyDiv : true
 		}
 	}
 	limits() {
-		return this.props.limits || 
+		return this.props.limits ||
 			(this.props.advanced ? advancedLimits : defaultLimits);
 	}
 	deleteQuestion() {
@@ -96,8 +100,26 @@ class QuestionEditor extends React.Component {
 	handleSuggestionClick(suggestion) {
 		this.props.setQuoteQuestionImage(this.props.question.questionID, suggestion.imageURL, this.props.selectedVariant);
 	}
-	uploadImage(dataURI) {
-		this.props.setQuoteQuestionImage(this.props.question.questionID, dataURI, this.props.selectedVariant);
+
+	uploadImage(croppedImage, originalImage, croppedMetaData) {
+		let dataURI;
+		if (croppedImage) { 
+			croppedMetaData.dataURI = croppedImage.src;
+		}
+
+		let useCropped;
+		if (croppedMetaData) {
+			useCropped = typeof croppedMetaData.useCroppedImage === 'undefined' ? false : croppedMetaData.useCroppedImage;
+		} 
+
+		if (useCropped) {
+			dataURI = this.props.question.mediaID;
+		}
+		else {
+			dataURI = originalImage.src;
+		}
+
+		this.props.setQuoteQuestionImage(this.props.question.questionID, dataURI, this.props.selectedVariant, croppedMetaData);
 	}
 	addVariant(variantID) {
 		this.props.addQuestionVariant(this.props.question.questionID,
@@ -126,24 +148,33 @@ class QuestionEditor extends React.Component {
 	}
 	render() {
 		if (this.state.errorMessage) {
-			
+
 		}
+
 		const maxPossibleAnswers = this.limits().maxPossibleAnswers;
 		const q = this.props.question;
 		const hasVariants = this.props.variants.length > 0;
 		const shownObject = hasVariants ?
 			this.props.variants.find(v => v.ID === this.props.selectedVariant) : q;
-		
+
 		let selectedPopupsArangement;
 		if (shownObject.paArrangement) {
 			selectedPopupsArangement = AutomaticPopupArrangementTypes.find(type => type.title === shownObject.paArrangement).id;
 		} else {
 			selectedPopupsArangement = shownObject.autoArrangement || POPUP_ARRANGEMENT_DEFAULT;
 		}
-		
-		const imageURL = blobURL(shownObject.mediaID);
+
+		let imageURL;
+		if (shownObject.croppedMetadata && shownObject.croppedMetadata.dataURI){
+			imageURL = shownObject.croppedMetadata.dataURI;
+		}
+		else {
+			imageURL = blobURL(shownObject.mediaID);
+		}
+
 		const imageButtonLabel = shownObject.mediaID ? 'Change Image' : 'Upload Image';
 		let imageSuggestionsPicker;
+ 
 		const imageSuggestions = this.props.imageSuggestions[shownObject.textValue];
 		if (!shownObject.mediaID && imageSuggestions && imageSuggestions.suggestions && imageSuggestions.suggestions.length > 0) {
 			imageSuggestionsPicker = <div className="image-suggestions">
@@ -160,16 +191,16 @@ class QuestionEditor extends React.Component {
 		const possibleAnswersCount = q.possibleAnswers.length;
 		const addPAButton = possibleAnswersCount >= maxPossibleAnswers ? null :
 			<FlatButton onClick={this.addPA} label="Add Answer" icon={<MdAdd />} />;
-			
+
 		let advancedImageProperties;
 		let duplicateQuestionButton;
 		if (this.props.advanced) {
 			//duplicateQuestionButton = <FlatButton label="Duplicate" onClick={this.duplicateQuestion} />
-			
+
 			let multiAnswersProperties;
 			if (q.isMultiAnswerQuestion) {
 				const possibleAnswersIndexes = Array.from(Array(possibleAnswersCount).keys());
-				multiAnswersProperties = 
+				multiAnswersProperties =
 				<div>
 					<div>
 						<label>Min Answers </label>
@@ -209,7 +240,7 @@ class QuestionEditor extends React.Component {
 					checked={!!q.isMultiAnswerQuestion}
 					onChange={(e) => this.props.setQuoteQuestionIsMultiAnswer(q.questionID, e.target.checked)} />
 				{multiAnswersProperties}
-				
+
 			</div>;
 		}
 		let nextQuestionsOptions = [];
@@ -241,12 +272,28 @@ class QuestionEditor extends React.Component {
 			}
 			if (this.state.editingVariants) {
 				variantsEditor = <VariantsEditor
-					closeVariantsEditor={() => this.setState({editingVariants: false})} 
+					closeVariantsEditor={() => this.setState({editingVariants: false})}
 					addVariant={this.addVariant} deleteVariant={this.deleteVariant}
-					{...this.props} />;
+					{...this.props} />
 			}
 		}
-		
+
+
+		const emptyImageDiv = <div title={imageButtonLabel}
+														style={{backgroundImage: `url('${imageURL}')`}}
+														className={shownObject.mediaID ? "image-preview" : "image-preview empty-overlay"}
+														onClick={() => this.refs.imageUploadControl.openUploadDialog()} />;
+
+		const croppedImageDiv = <ImageContainer
+															imageURL={imageURL}
+															imageButtonLabel={imageButtonLabel}
+															onChangeImage={() => this.refs.imageUploadControl.openUploadDialog()}
+															onAdjust={() => this.refs.imageUploadControl.showCropper(shownObject.mediaID, true)}
+															{...this.props}
+														/>;
+
+		const imageDiv = shownObject.mediaID ? croppedImageDiv : emptyImageDiv;
+
 		return (
 			<div className="question-creator">
 				{variantsEditor}
@@ -259,16 +306,17 @@ class QuestionEditor extends React.Component {
 				</div>
 				<div className="question-inputs">
 					<div className="image-upload">
-						<UploadHiddenControl ref="imageUploadControl"
-							accept="image/jpeg, image/png"
-							onFileUpload={this.uploadImage}	/>
-						<div title={imageButtonLabel}
-							style={{backgroundImage: `url('${imageURL}')`}}
-							className={shownObject.mediaID ? "image-preview" : "image-preview empty-overlay"}
-							onClick={() => this.refs.imageUploadControl.openUploadDialog()} />
+						<ImageUpload
+							ref="imageUploadControl"
+							onUpload={this.uploadImage}
+							requiredAspectRatio={1.0}
+							minWidth={300}
+							minHeight={300}
+						/>
+						{ imageDiv }
 						{advancedImageProperties}
 					</div>
-					<div className="text-inputs">				
+					<div className="text-inputs">
 						<TextField value={shownObject.textValue} ref="questionText"
 								id={`qvalue-${q.questionID}`}
 								hintText="Question Text"
@@ -286,7 +334,7 @@ class QuestionEditor extends React.Component {
 									if (q.isMultiAnswerQuestion) {
 										multiPAProperties = <div className="properties-row">
 											<label>Multiple Selection</label>
-											<select 
+											<select
 												value={pa.multiBehavior || 'regular'}
 												onChange={(e) => this.props.setQuotePossibleAnswerMultiBehavior(q.questionID, pa.possibleAnswerID, e.target.value)}>
 												<option value="regular">Regular</option>
@@ -295,10 +343,10 @@ class QuestionEditor extends React.Component {
 											</select>
 										</div>;
 									} else {
-										let nextEntity = pa.connection ? 
+										let nextEntity = pa.connection ?
 											`${pa.connection.type}-${pa.connection.ID || ''}` :
 											'sequential';
-										
+
 										advanceTargetProperties = <div className="properties-row">
 											<label>Advance to</label>
 											<select
@@ -313,7 +361,7 @@ class QuestionEditor extends React.Component {
 														};
 													}
 													this.props.setQuotePossibleAnswerConnection(q.questionID, pa.possibleAnswerID, entity);
-													
+
 												}}>
 												<option value="sequential">(Sequential)</option>
 												{nextQuestionsOptions}
@@ -321,7 +369,7 @@ class QuestionEditor extends React.Component {
 											</select>
 										</div>;
 									}
-									
+
 									advancedPAProperties = <div className="possible-answer-advanced">
 										<div className="properties-row">
 											<label htmlFor={`random-${pa.possibleAnswerID}`}>Randomize Location</label>
