@@ -94,6 +94,11 @@ const quoteAnalytics = store => next => action => {
 				} catch (e) { }
 			}
 			break;
+			case 'TOGGLE_COLLAPSABLE_PANEL':
+				eventAction = action.payload.actionType;
+				eventLabel = action.payload.eventData.eventName;
+				eventValue = true; 
+				break;
 		default:
 			sendEvent = false;
 			break;
@@ -108,7 +113,9 @@ const quoteAnalytics = store => next => action => {
 				eventLabel,
 				eventValue
 			});
-		} catch (e) { }
+		} catch (e) {
+				console.error('error in ga', e);
+	  }
 		if (isFacebookCustomEvent) {
 			try {
 				fbq('trackCustom', eventAction, {
@@ -118,7 +125,7 @@ const quoteAnalytics = store => next => action => {
 			} catch (e) { }
 		}
 	}
-	
+
 	const result = next(action)
 	return result
 }
