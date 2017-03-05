@@ -177,7 +177,7 @@ class ManageQuote extends React.Component {
 						<button className="askem-button-white edit-button"
 							onClick={()=>this.setState({editing: 'creatives'})}>Edit</button>
 					</div>
-					<div className="title">creative</div>
+					<div className="title">Ad Images</div>
 					{ (this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.images) &&
 							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.images.length} images `}</div>
 					}
