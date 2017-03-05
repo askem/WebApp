@@ -757,6 +757,23 @@ header {
 			margin-left: 32px;
 		}
 	}
+}
 
+.quote-wizard-description-container {
+	width:80%;
+	margin:3px auto 16px;
 
+	.quote-upper-stage-title-container {
+		font-size:1.8em;
+		color: $askem-purple;
+		display: flex;
+
+		.quote-upper-stage-title {
+			margin-left:10px;
+		}
+	}
+
+	.quote-upper-stage-description {
+		margin:10px 0 20px 0;
+	}
 }
