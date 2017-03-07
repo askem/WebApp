@@ -22,6 +22,8 @@ class ManageQuote extends React.Component {
     	super(props);
 
 		this.getReseachObjectiveTitle = this.getReseachObjectiveTitle.bind(this);
+		this.checkAdCreatives = this.checkAdCreatives.bind(this);
+		this.changeEmptyValuesModalFlag = this.changeEmptyValuesModalFlag.bind(this);
 
 		this.state = {
 			selectedQuestion: null,
@@ -42,6 +44,37 @@ class ManageQuote extends React.Component {
 
 		return title;
 	}
+
+	changeEmptyValuesModalFlag() {
+		this.setState({ emptyAdCreativeValues : false});
+	}
+
+	checkAdCreatives() {
+		if (this.props.surveyMetadata.adCreatives) {
+			let hasEmptyValues = false;
+			const { images, headlines, texts, descriptions } = this.props.surveyMetadata.adCreatives.imageAdCreatives;
+
+			if (headlines.some(item => item === '')) {
+				hasEmptyValues = true;
+			}	
+
+			if (texts.some(item => item === '')) {
+				hasEmptyValues = true;
+			}	
+
+			if (descriptions.some(item => item === '')) {
+				hasEmptyValues = true;
+			}	
+			
+			if (hasEmptyValues) {
+				this.setState({ emptyAdCreativeValues : true });
+			}
+			else {
+				this.setState({editing: null, emptyAdCreativeValues:false});
+			}
+		}
+	}
+
 
 	render() {
 		if (!this.props.lead.loaded) {
@@ -85,11 +118,11 @@ class ManageQuote extends React.Component {
 		else if (this.state.editing === 'creatives') {
 			return <div className="quote-manage">
 				<div className="done-botton-container">
-					<button className="askem-button-white" onClick={()=>this.setState({editing: null})}>Done Editing</button>
+					<button className="askem-button-white" onClick={this.checkAdCreatives}>Done Editing</button>
 				</div>
 				<div className="quote-wizard-main">
 					<div className="quote-wizard-maincontent">
-						<AdCreatives {...this.props} />
+						<AdCreatives {...this.props} showEmptyValuesModal={this.state.emptyAdCreativeValues} onCloseModal={this.changeEmptyValuesModalFlag }/>
 					</div>
 
 				</div>
@@ -256,7 +289,6 @@ class ManageQuote extends React.Component {
 					}}
 				>{this.state.duplicatingLead ? 'Please Wait...' : 'Duplicate Quote'}</button>
 			</div>
-
 			</div>
 		)
 	}

@@ -6,6 +6,7 @@ import FaRefresh from 'react-icons/lib/fa/refresh';
 import blobURL from 'utils/Askem/blobURL';
 import ImageUpload from 'components/Common/ImageUpload';
 import { getImageData } from 'utils/ImageUtils';
+import Dialog from 'material-ui/Dialog';
 
 class AdCreatives extends React.Component {
 	constructor(props) {
@@ -84,6 +85,9 @@ class AdCreatives extends React.Component {
 		const min = 0;
 		const max = arr.length - 1;
 
+		if (arr.length === 0)
+			return null;
+
 		if (arr.length === 1) {
 			return 0;
 		}
@@ -115,12 +119,10 @@ class AdCreatives extends React.Component {
 		let { previewHeadline, previewText, previewDescription, previewImage } =  this.state;
 		let { headlines = [], texts = [], descriptions = [], images =[]} = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
 
-		// debugger;
 		previewHeadline = this.getRandomElementFromArr(headlines, previewHeadline);
 		previewText = this.getRandomElementFromArr(texts, previewText);
 		previewDescription = this.getRandomElementFromArr(descriptions, previewDescription);
 		previewImage = this.getRandomNumber(images, previewImage);
-
 
 		if (images.length > 0) {
 			const metadata = this.getMetadataFromImage(images[previewImage]);
@@ -181,14 +183,17 @@ class AdCreatives extends React.Component {
 					previewHeadline : headline_preview,
 					previewText : text_preview,
 					previewDescription : description_preview,
-					previewImage : imagePreviewNumber
+					previewImage : imagePreviewNumber,
+					showEmptyValuesModal : this.props.showEmptyValuesModal
 				})
 			}
 		}
 	}
 
 	handleBigImagePreview(imageObject) {
+		if (!imageObject) return;
 		const metadata = this.getMetadataFromImage(imageObject);
+
 		getImageData(metadata)
 				.then(data => {
 					this.setState({
@@ -206,6 +211,11 @@ class AdCreatives extends React.Component {
 			const images = nextProps.surveyMetadata.adCreatives.imageAdCreatives.images || [];
 			this.handleImagesStrip(images);
 		}	
+	
+		if (nextProps.showEmptyValuesModal !== this.props.showEmptyValuesModal) {
+			console.log('set state is firing....');
+			this.setState({ showEmptyValuesModal : nextProps.showEmptyValuesModal });
+		}
 	}
 	
 	handleImagesStrip(arr) {
@@ -351,10 +361,10 @@ class AdCreatives extends React.Component {
 
 		let imagePreview;
 		if (this.state.previewImage === null) {
-			imagePreview = <div style={{ backgroundImage:'../images/emptyMediaID.png', height:'474px', width:'248px' }}></div>
+			// imagePreview = <div style={{ backgroundImage:'url(../images/emptyMediaID.png)', height:'474px', width:'248px' }}></div>
+			imagePreview = <img src="../images/emptyMediaID.png"  style={{ width:'474px', height:'246px' }} />
 		}
 		else {
-			// const linkToImage = blobURL(this.props.surveyMetadata.adCreatives.imageAdCreatives.images[this.state.previewImage].mediaID);
 			if (this.state.bigImagePreview) {
 				imagePreview = <div style={{ backgroundImage:'url(' + this.state.bigImagePreview + ')', backgroundSize:'cover', width:'474px', height:'248px' }}></div>
 			}
@@ -435,6 +445,21 @@ class AdCreatives extends React.Component {
 						</div>
 					</div>
 				</div>
+					 <Dialog
+							title="Oops..."
+							modal={true}
+							open={typeof this.state.showEmptyValuesModal === 'undefined' ? false : this.state.showEmptyValuesModal}
+							actions={
+									<FlatButton
+										label="ok"
+										primary={false}
+										onTouchTap={this.props.onCloseModal} />
+									}
+							autoDetectWindowHeight={true}>
+							<div className="on-image-upload-error">
+								You have some empty fields in your creative ads!
+							</div>
+					</Dialog>
 			</div>
 		)
 	}
