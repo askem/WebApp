@@ -156,6 +156,41 @@ const uploadImageLogic = createLogic({
 	}
 });
 
+const uploadCreativeImageLogic = createLogic({
+	type: 'ADD_CREATIVE_IMAGE',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = getState().getIn(['data', 'lead', 'quoteID']);
+		if (!quoteID) { return; }	
+		const mediaID = action.payload.metadata.mediaID;
+		const imageIndex = action.payload.index;
+
+		if (!mediaID.startsWith('data:')) { return; }
+		const blob = dataURIToBlob(mediaID);
+		dispatch({ type: 'UPLOAD_CREATIVE_IMAGE_REQUEST_START' }, { allowMore: true });
+		return api.uploadFileForLead(blob, quoteID)
+		.then(newMediaID => {
+			// Preload image to make visual transition seamless
+			const img = new Image();
+			img.onload = (img) => {
+				dispatch({
+					type: 'UPLOAD_CREATIVE_IMAGE_REQUEST_SUCCESS',
+					payload: {
+						mediaID:newMediaID,
+						index:imageIndex
+					}
+				});
+			};
+			img.src = blobURL(newMediaID);
+		})
+		.catch(error => {
+			console.error(error);
+			dispatch({ type: 'UPLOAD_CREATIVE_IMAGE_REQUEST_FAIL', payload: {
+				error
+			}, error: true });
+		});
+	}
+});
+
 const submitQuoteLogic = createLogic({
 	type: 'SUBMIT_LEAD',
 	process({ getState, action, api }, dispatch) {
@@ -356,5 +391,6 @@ export default [
 	uploadImageLogic,
 	reachInvalidationLogic,
 	fetchCostEstimateLogic,
-	imageSuggestionsLogic
+	imageSuggestionsLogic,
+	uploadCreativeImageLogic
 ];

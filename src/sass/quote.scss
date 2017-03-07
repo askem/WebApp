@@ -718,9 +718,38 @@ header {
 
 		.ad-creatives-array-container {
 			margin-top: 35px;
+			
 
 			.input-item-container {
 				display: flex;
+			}
+		}
+
+		.ad-images-array-container {
+			display: flex;
+			width:550px;
+			border:solid 1px silver;
+			overflow-x:auto;
+			overflow-y: hidden;
+			align-items: center;
+			height:120px;
+		}
+
+		.ad-creative-image-strip {
+			display:flex;
+			flex-direction: row;
+			margin-left:15px;
+
+			.creative-img {
+				width:120px;
+				height:62px;
+				margin-top:10px;
+			}
+
+			.delete-button-container {
+				position:relative;
+				top:-5px;
+				left:-12px; 
 			}
 		}
 	}
@@ -878,3 +907,6 @@ header {
 	}
 }
 }
+
+
+

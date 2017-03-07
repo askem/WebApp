@@ -5,6 +5,7 @@ import XButton from 'components/Common/XButton';
 import FaRefresh from 'react-icons/lib/fa/refresh';
 import blobURL from 'utils/Askem/blobURL';
 import ImageUpload from 'components/Common/ImageUpload';
+import { getImageData } from 'utils/ImageUtils';
 
 class AdCreatives extends React.Component {
 	constructor(props) {
@@ -16,12 +17,14 @@ class AdCreatives extends React.Component {
 		this.onTextFieldChange = this.onTextFieldChange.bind(this);
 		this.refreshPreview = this.refreshPreview.bind(this);
 		this.onUpload = this.onUpload.bind(this);
+		this.handleImagesStrip = this.handleImagesStrip.bind(this);
 
 		this.state = {		
 			previewImage : null,
 			previewHeadline : null,
 			previewText : null,
-			previewDescription : null
+			previewDescription : null,
+			localComponentImages : null
 		}
 	}
 
@@ -48,47 +51,50 @@ class AdCreatives extends React.Component {
 		this.props.addCreativeText();
 	}
 
-
 	addDescriptionField() {
 		this.props.addCreativeDescription();
 	}
 
 	getRandomElementFromArr(arr, originalValue) {
-		const min = 0;
-		const max = arr.length - 1;
-		
-		let isImage = originalValue === Object(originalValue);
-		let newRandomValue;
+		//filter all the empty items
+		const filteredArray = arr.filter(item => item !== '');
 
-		if (!isImage) {
-			newRandomValue = originalValue || '';
-			while (newRandomValue === originalValue || newRandomValue === '') {
-				let randomNumber = Math.floor(Math.random()*(max-min+1)+min);
-				newRandomValue= arr[randomNumber];
-			}
+		if (filteredArray.length === 0) {
+			return '';
 		}
-		else {
-			// const originalIndex = arr.findIndex(item => {
-			// 	item.mediaID === originalValue.mediaID && item['crop191x100'][0][0] === originalValue['crop191x100'][0][0] &&
-			// 	 item['crop191x100'][0][1] === originalValue['crop191x100'][0][1] && 
 
-			
-			
-			// 	item === originalValue
-			// });
+		if (filteredArray.length == 1) {
+			return filteredArray[0];
+		}
 
-			const originalIndex = arr.findIndex(item => item === originalValue);
-			
-			let newIndex = originalIndex;
-			while (newIndex === originalIndex) {
-			 	let randomNumber = Math.floor(Math.random()*(max-min+1)+min);
-			 	newIndex = randomNumber;
-			}
+		const min = 0;
+		const max = filteredArray.length - 1;
+		let newRandomValue = originalValue || '';
 
-			newRandomValue = newIndex;
+
+		while (newRandomValue === originalValue || newRandomValue === '') {
+			let randomNumber = Math.floor(Math.random()*(max-min+1)+min);
+			newRandomValue= filteredArray[randomNumber];
 		}
 
 		return newRandomValue;
+	}
+
+	getRandomNumber(arr, currentValue) {	
+		const min = 0;
+		const max = arr.length - 1;
+
+		if (arr.length === 1) {
+			return 0;
+		}
+		else {
+			let newValue = currentValue;
+			while (newValue === currentValue) {
+				newValue = Math.floor(Math.random()*(max-min+1)+min);
+			}
+
+			return newValue;
+		}
 	}
 
 	removeField(event, arrayName, index) {
@@ -107,24 +113,42 @@ class AdCreatives extends React.Component {
 
 	refreshPreview() {
 		let { previewHeadline, previewText, previewDescription, previewImage } =  this.state;
-		// let previewHeadline, previewText, previewDescription, previewImage 
 		let { headlines = [], texts = [], descriptions = [], images =[]} = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
 
+		// debugger;
 		previewHeadline = this.getRandomElementFromArr(headlines, previewHeadline);
 		previewText = this.getRandomElementFromArr(texts, previewText);
 		previewDescription = this.getRandomElementFromArr(descriptions, previewDescription);
-		previewImage = this.getRandomElementFromArr(images, previewImage);
+		previewImage = this.getRandomNumber(images, previewImage);
 
-		this.setState({
-			previewHeadline,
-			previewText,
-			previewDescription,
-			previewImage
-		});
+
+		if (images.length > 0) {
+			const metadata = this.getMetadataFromImage(images[previewImage]);
+
+			getImageData(metadata)
+				.then(newData => {
+					this.setState({
+						previewHeadline,
+						previewText,
+						previewDescription,
+						previewImage,
+						bigImagePreview : newData.dataURI
+					});
+				})
+				.catch(err => { console.error(err)});
+		}
+		else {
+			this.setState({
+				previewHeadline,
+				previewText,
+				previewDescription,
+				previewImage
+			});
+		}
 	}
 
 	componentWillMount() {
-		let headline_preview, text_preview, description_preview, imagePreview;
+		let headline_preview, text_preview, description_preview, imagePreviewNumber;
 		let hasAtLeastOneItem = false;
 
 		if (this.props.surveyMetadata.adCreatives) {
@@ -144,50 +168,122 @@ class AdCreatives extends React.Component {
 			}
 
 			if (this.props.surveyMetadata.adCreatives.imageAdCreatives.images) {
-				imagePreview = this.getRandomElementFromArr(this.props.surveyMetadata.adCreatives.imageAdCreatives.images, this.state.previewImage);
+				imagePreviewNumber = this.getRandomNumber(this.props.surveyMetadata.adCreatives.imageAdCreatives.images, this.state.previewImage);
 				hasAtLeastOneItem = true;
-			}
-			
-		}
 
-		if (hasAtLeastOneItem) {
-			this.setState({
-				previewHeadline : headline_preview,
-				previewText : text_preview,
-				previewDescription : description_preview,
-				// previewImage : {
-				// 	mediaID : '6d074a8c-6f4e-40b6-86e2-de1c47483513' // -->  TODO: this is fake image!!!!
-				// } 
-				previewImage : imagePreview
-			})
+				const { images } = this.props.surveyMetadata.adCreatives.imageAdCreatives || [];
+				this.handleImagesStrip(images);
+				this.handleBigImagePreview(this.props.surveyMetadata.adCreatives.imageAdCreatives.images[imagePreviewNumber]);
+			}
+
+			if (hasAtLeastOneItem) {
+				this.setState({
+					previewHeadline : headline_preview,
+					previewText : text_preview,
+					previewDescription : description_preview,
+					previewImage : imagePreviewNumber
+				})
+			}
 		}
 	}
+
+	handleBigImagePreview(imageObject) {
+		const metadata = this.getMetadataFromImage(imageObject);
+		getImageData(metadata)
+				.then(data => {
+					this.setState({
+						bigImagePreview: data.dataURI
+					});
+				})
+				.catch(err => {
+					console.error(err);
+				});
+		
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if ((nextProps.surveyMetadata.adCreatives.imageAdCreatives.images && !this.props.surveyMetadata.adCreatives) || (nextProps.surveyMetadata.adCreatives.imageAdCreatives.images.length !== this.props.surveyMetadata.adCreatives.imageAdCreatives.images.length)) {
+			const images = nextProps.surveyMetadata.adCreatives.imageAdCreatives.images || [];
+			this.handleImagesStrip(images);
+		}	
+	}
+	
+	handleImagesStrip(arr) {
+		const promisesArr = arr.map((image, index) => {
+			const metadata = this.getMetadataFromImage(image, index);
+			return getImageData(metadata);
+		});
+
+		Promise
+			.all(promisesArr)
+			.then(values => {
+				// sort by index
+				values = values.sort((a,b) => a.extraData.index - b.extraData.index);
+				const imagesArr = values.map((image, index) => {
+					return {
+						dataURI:image.dataURI,
+						index
+					}
+				})
+
+				this.setState({
+					localComponentImages : imagesArr
+				});
+			})
+			.catch(err => {
+				console.error('something got wrong....', err);
+			})
+	}
+
+	getMetadataFromImage(imageData, index) {
+		const imageSrc = imageData.mediaID ? blobURL(imageData.mediaID) : imageData.dataURI;
+		const crop = imageData['crop191x100'][0];
+		const [x1, y1] = crop;
+		const [x2, y2] = imageData['crop191x100'][1];
+		const width = x2 - x1;
+		const height = y2 - y1;
+
+		return {
+			width,
+			height,
+			x: x1,
+			y: y1,
+			dataURI : imageSrc,
+			extraData : {
+				index
+			}
+		}
+	}
+
 
 	deleteImage(index) {
 		this.props.deleteCreativeImage(index);
+
+		if (this.state.localComponentImages) {
+			let images = [...this.state.localComponentImages];
+			images.splice(index, 1);
+
+			//change the index order
+			images.forEach((item, index) => {
+				item.index = index;
+			});
+
+			this.setState({
+				localComponentImages : images
+			})
+
+		}
 	}
 
 	onUpload(croppedImage, originalImage, metadata) {
-		// this is 'fake' or mock data
-		//-------------------------------------
-		// const metadata = {
-		// 			"crop191x100" : [[0, 0], [954, 499]],
-		// 			"mediaID" : "6d074a8c-6f4e-40b6-86e2-de1c47483513"
-		// };
-
-		// const index = 0;
-		// //-------------------------------------
-		
 		const imageMetadata = {
 			"crop191x100" : [
 				[metadata.x, metadata.y],
 				[metadata.x + metadata.width, metadata.y + metadata.height]
 			],
-			"mediaID" : metadata.mediaID || null
+			"mediaID" : originalImage.src
 		}
 
-
-		debugger;
 		let { images }  = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
 		const index = images ? images.length : 0;
 		this.props.addCreativeImage(index, imageMetadata);
@@ -196,6 +292,15 @@ class AdCreatives extends React.Component {
 
 	render() {
 		const { headlines = [], texts = [], descriptions = [], images = []} = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
+
+		 let imagesArr;
+		 if (this.state.localComponentImages) {
+		 	imagesArr = this.state.localComponentImages;
+		 }
+		 else {
+			 imagesArr = images;
+		 }
+
 		const headlinesItems = headlines.map((headline, index) => {
 				return (
 					<div key={`headline_key_${index}`} className="input-item-container">
@@ -244,47 +349,15 @@ class AdCreatives extends React.Component {
 			)
 		});
 
-
-		/******************************/	 
-		/*	mock data 			
-			replace afake_images with 
-			the real images array	
-		/******************************/	 
-		// const fake_images = [
-		// 	{
-		// 			"crop191x100" : [[0, 0], [954, 499]],
-		// 			"mediaID" : "6d074a8c-6f4e-40b6-86e2-de1c47483513"
-		// 	},
-		// 	{
-		// 			"crop191x100" : [[545, 1025], [1499, 1524]],
-		// 			"mediaID" : "a35f46e1-a0c9-49fd-9e8b-e335bd4d6d5e"
-		// 	}
-		// ]
-		// this.props.surveyMetadata.adCreatives.imageAdCreatives.images = fake_images;
-		// //this.setState()
-
-		//const { images } = this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives || {};
-
-		debugger;
-
-		let imagesArr = images.map((image, index) => {
-			return (
-				<div key={image.mediaID} style={{ marginRight:10 + 'px'}}>
-					<img src={blobURL(image.mediaID)}  width="120" height="62"/>
-					<span style={{ position:'relative', top:-33 + 'px', left:-9 + 'px' }}>
-						<XButton onClick={() => this.deleteImage(index)} />
-					</span>
-				</div>
-			)
-		})
-
 		let imagePreview;
-		if (!this.state.previewImage) {
-			imagePreview = <img src="../images/emptyMediaID.png" width="474" height="248" />
+		if (this.state.previewImage === null) {
+			imagePreview = <div style={{ backgroundImage:'../images/emptyMediaID.png', height:'474px', width:'248px' }}></div>
 		}
 		else {
-			const linkToImage = blobURL(this.props.surveyMetadata.adCreatives.imageAdCreatives.images[this.state.previewImage].mediaID);
-			imagePreview = <img src={linkToImage} width="474" height="248"/>
+			// const linkToImage = blobURL(this.props.surveyMetadata.adCreatives.imageAdCreatives.images[this.state.previewImage].mediaID);
+			if (this.state.bigImagePreview) {
+				imagePreview = <div style={{ backgroundImage:'url(' + this.state.bigImagePreview + ')', backgroundSize:'cover', width:'474px', height:'248px' }}></div>
+			}
 		}
 
 		return (
@@ -299,15 +372,22 @@ class AdCreatives extends React.Component {
 								 style={{ marginLeft:30 + 'px' }}
 								 onClick={() => this.refs.imageUploadControl.openUploadDialog()} />
 						</div>
-						<div className="ad-creatives-array-container" style={{ display:'flex' }}>
-							<div className="image-upload-container">
-								<ImageUpload
+						<div className="image-upload-container">
+							<ImageUpload
 									ref="imageUploadControl"
 									onUpload={this.onUpload}
 									requiredAspectRatio={1.91}
-									aspectRatioTolerance={0} />
-							</div>
-							{ imagesArr }
+									aspectRatioTolerance={0} />		
+						</div>
+						<div className="ad-images-array-container">
+							{ imagesArr.map((image, index) => 
+									<div key={`img_${index}`} className="ad-creative-image-strip">
+										<img src={blobURL(image.dataURI)} className="creative-img" />
+										<span className="delete-button-container">
+											<XButton onClick={() => this.deleteImage(index)} />
+										</span>
+									</div>
+							)}
 						</div>
 						<div className="ad-creatives-array-container">
 							<div className="title">
