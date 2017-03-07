@@ -20,6 +20,8 @@ const QuoteWizardContainer = connect(
 		if (lead) { lead = lead.toJS(); }
 		let contact = state.getIn(['data', 'contact']);
 		if (contact) { contact = contact.toJS(); }
+    let showResearchObjective  = state.getIn(['data', 'quote', 'showResearchObjective']);
+
 		return {
 			lead,
 			audience,
@@ -28,7 +30,8 @@ const QuoteWizardContainer = connect(
 			imageSuggestions,
 			reachEstimate,
 			costEstimate,
-			contact
+			contact,
+			showResearchObjective
 		};
 	},
 	function mapDispatchToProps(dispatch) {
@@ -49,7 +52,7 @@ const QuoteWizardContainer = connect(
 			swapQuoteQuestions: (oldIndex, newIndex) => dispatch(quoteActions.swapQuoteQuestions(oldIndex, newIndex)),
 			setQuoteQuestionText: (questionID, textValue) => dispatch(quoteActions.setQuoteQuestionText(questionID, textValue)),
 			finishedEditingQText: (questionID, textValue) => dispatch(quoteActions.finishedEditingQText(questionID, textValue)),
-			setQuoteQuestionImage: (questionID, mediaID) => dispatch(quoteActions.setQuoteQuestionImage(questionID, mediaID)),
+			setQuoteQuestionImage: (questionID, mediaID, variantId, croppedMetaData) => dispatch(quoteActions.setQuoteQuestionImage(questionID, mediaID, variantId, croppedMetaData)),
 			addQuotePossibleAnswer: (questionID) => dispatch(quoteActions.addQuotePossibleAnswer(questionID)),
 			deleteQuotePossibleAnswer: (questionID, possibleAnswerID) => dispatch(quoteActions.deleteQuotePossibleAnswer(questionID, possibleAnswerID)),
 			setQuotePossibleAnswerText: (questionID, possibleAnswerID, textValue) => dispatch(quoteActions.setQuotePossibleAnswerText(questionID, possibleAnswerID, textValue)),
@@ -61,7 +64,8 @@ const QuoteWizardContainer = connect(
 			closeSuccessSubmitLead: () => dispatch(quoteActions.closeSuccessSubmitLead()),
 			cancelFailedSubmitLead: () => dispatch(quoteActions.cancelFailedSubmitLead()),
 			quoteUIAction: (actionType, metadata) => dispatch(quoteActions.quoteUIAction(actionType, metadata)),
-			toggleCollapsablePanel : (actionType, metaData) => dispatch(quoteActions.toggleCollapsablePanel(actionType, metaData)),
+	    setResearchObjective: (researchId, description) => dispatch(quoteActions.setResearchObjective(researchId, description)),
+			toggleCollapsablePanel: (actionType, metaData) => dispatch(quoteActions.toggleCollapsablePanel(actionType, metaData)),
 
 			/* Advanced */
 			setQuoteQuestionIsMultiAnswer: (questionID, isMultiAnswer) => dispatch(quoteActions.setQuoteQuestionIsMultiAnswer(questionID, isMultiAnswer)),

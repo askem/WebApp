@@ -6,6 +6,7 @@ import Cookies from 'cookies-js';
 import dateStringToDate from 'utils/dateStringToDate';
 import leadMetadataToQuestion from 'utils/Askem/leadMetadataToQuestion';
 import leadMetadataToSurvey from 'utils/Askem/leadMetadataToSurvey';
+import genGUID from 'utils/Askem/genGUID';
 
 const defaultModelData = {
 	"modelID": "dce",
@@ -95,7 +96,7 @@ class AskemAPI {
 				headers
 			});
 		} else {
-			fetchAccessToken = Promise.resolve({"error":"","errorCode":200,"status":"ok","accessToken":"45158d44fcfa43208777d0f73f2cd8bc","accessTokenTTL":"Sat Feb 18 2017 15:29:12","refreshToken":"b9e14fbd3e244a7d88a52fd03125e4fa","refreshTokenTTL":"Sat Feb 18 2017 15:29:12"});
+				fetchAccessToken = Promise.resolve({"error":"","errorCode":200,"status":"ok","accessToken":"5ebd10eb797a44c5bda17f6f6193ad94","accessTokenTTL":"Sat May 27 2017 22:52:46 GMT+0800 (CST)","refreshToken":"4b1b421d47e54184b6dc5889b1ec30c1","refreshTokenTTL":"Sat May 27 2017 22:52:46 GMT+0800 (CST)"});
 		}
 		return fetchAccessToken
 		.then(results => {
@@ -118,7 +119,7 @@ class AskemAPI {
 	}
 
 	/* API */
-	
+
 	uploadMedia(mediaBlob, bypassProcessing) {
 		const mimeType = mediaBlob.type;
         if (mimeType !== 'image/jpeg' && mimeType !== 'video/mp4' && mimeType !== 'image/png') {
@@ -137,11 +138,11 @@ class AskemAPI {
 			cors: true,
 			method: 'POST',
 			body: fd
-		};		
+		};
 		return this.fetchURL(`${this._baseURI}${endpoint}`, options).
 		then(results => results.mediaID);
 	}
-	
+
 	uploadFileForLead(blob, leadID) {
 		const mimeType = blob.type;
         const fd = new FormData();
@@ -154,11 +155,11 @@ class AskemAPI {
 			cors: true,
 			method: 'POST',
 			body: fd
-		};		
+		};
 		return this.fetchURL(`${this._baseURI}${endpoint}`, options).
 		then(results => results.mediaID);
 	}
-	
+
 	getSurvey(surveyID) {
 		return this.fetchEndpoint(`surveys/${surveyID}`)
 		.then(results => results.survey);
@@ -167,7 +168,7 @@ class AskemAPI {
 		return this.fetchEndpoint(`surveys/${surveyID}/report`)
 		.then(results => results.report);
 	}
-	
+
 	fetchResearchCampaign(researchID) {
 		return this.fetchEndpoint(`researchCampaigns/${researchID}`)
 		.then(results => results.researchCampaign);
@@ -237,7 +238,7 @@ class AskemAPI {
 		}
 		concatAttributes(audience.householdIncome, HOUSEHOLD_INCOME);
 		concatAttributes(audience.relationship, RELATIONSHIP_STATUS);
-		
+
 		// Attributes stored as complete entities
 		attributes = attributes.concat(audience.interests || []);
 		attributes = attributes.concat(audience.behaviors || []);
@@ -245,7 +246,7 @@ class AskemAPI {
 		attributes = attributes.concat(audience.industries || []);
 		attributes = attributes.concat(audience.workPositions || []);
 		attributes = attributes.concat(audience.workEmployers || []);
-		
+
 		const phrase = {
 			attributes
 		};
@@ -263,7 +264,7 @@ class AskemAPI {
 	tempFetchAllCostEstimates(audience) {
 		const phrase = this._audienceToAttributePhraseUSA(audience);
 		const sampleSizes = [200, 500, 2000];
-		const promises = sampleSizes.map(size => 
+		const promises = sampleSizes.map(size =>
 			this.fetchEndpoint(`segments/cost/estimate?reponders=${size}`, phrase));
 		return Promise.all(promises)
 		.then(resultsArray => {
@@ -335,7 +336,7 @@ class AskemAPI {
 				lead.dateCreated = dateStringToDate(lead.dateCreated);
 				lead.dateModified = dateStringToDate(lead.dateModified);
 				if (lead.metadata) {
-					lead.metadata = JSON.parse(lead.metadata);
+						lead.metadata = this.parseMetaData(lead.metadata);
 				}
 				const { firstName, lastName, email, phone, company, jobTitle } = lead;
 				lead.contact = { firstName, lastName, email, phone, company, jobTitle };
@@ -345,6 +346,19 @@ class AskemAPI {
 			}
 		});
 	}
+
+	parseMetaData(metadata) {
+		let parsedMetaData = JSON.parse(metadata);
+		if (!parsedMetaData.researchObjective) {
+			parsedMetaData.researchObjective = {
+				id : 'custom',
+				description : null
+			}
+		}
+
+		return parsedMetaData;
+	}
+
 	getAllQuotes() {
 		return this.fetchEndpoint('leads')
 		.then(results => results.leads);
@@ -379,14 +393,14 @@ class AskemAPI {
 				const newQuestionID = result.postID;
 				newQuestionIDs[originalQID] = newQuestionID;
 				newPossibleAnswerIDs.set(newQuestionID, result.possibleAnswersID);
-				
+
 				questions[originalQID].questionID = newQuestionID;
 				questions[originalQID].possibleAnswers.forEach((pa, idx) => {
 					pa.possibleAnswerID = result.possibleAnswersID[idx];
 				});
 			});
 		});
-		
+
 		return Promise.all(qPromises)
 		.then(qResults => {
 			let questionsVariants;
@@ -406,7 +420,7 @@ class AskemAPI {
 				};
 			});
 			survey.connections.possibleAnswers = transformConnectionsDictionary(survey.connections.possibleAnswers);
-			
+
 			return this.fetchEndpoint(`surveys/add`, survey)
 			.then(sResults => {
 				newSurveyID = sResults.surveyID;

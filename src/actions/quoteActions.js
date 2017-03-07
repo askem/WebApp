@@ -192,13 +192,14 @@ const finishedEditingQText = (questionID, textValue, variantID) => {
 	}
 }
 
-const setQuoteQuestionImage = (questionID, mediaID, variantID) => {
+const setQuoteQuestionImage = (questionID, mediaID, variantID, croppedMetadata) => {
 	return {
 		type: 'SET_QUOTE_QUESTION_IMAGE',
 		payload: {
 			questionID,
 			mediaID,
-			variantID
+			variantID,
+			croppedMetadata
 		}
 	}
 }
@@ -365,6 +366,111 @@ const quoteUIAction = (actionType, metadata = '') => {
 	}
 }
 
+const updateCreativeHeadline = (index, text) => {
+	return {
+		type : 'UPDATE_CREATIVE_HEADLINE',
+		payload :{
+			index,
+			text
+		}
+	}
+}
+
+
+const addCreativeHeadline = () => {
+	return {
+		type : 'ADD_CREATIVE_HEADLINE'
+	}
+}
+
+const deleteCreativeHeadline = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_HEADLINE',
+		payload : {
+			index
+		}
+	}
+}
+
+const addCreativeText = () => {
+	return {
+		type : 'ADD_CREATIVE_TEXT'
+	}
+}
+
+const updateCreativeText = (index, text) => {
+	return {
+		type : 'UPDATE_CREATIVE_TEXT',
+		payload : {
+			index, 
+			text
+		}
+	}
+}
+
+const deleteCreativeText = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_TEXT',
+		payload : {
+			index
+		}
+	}
+}
+
+const addCreativeDescription = () => {
+	return {
+		type : 'ADD_CREATIVE_DESCRIPTION'
+	}
+}
+
+const updateCreativeDescription = (index, text) => {
+	return {
+		type : 'UPDATE_CREATIVE_DESCRIPTION',
+		payload : {
+			index, 
+			text
+		}
+	}
+}
+
+const deleteCreativeDescription = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_DESCRIPTION',
+		payload : {
+			index
+		}
+	}
+}
+
+const deleteCreativeImage = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_IMAGE',
+		payload: {
+			index
+		}
+	}
+}
+
+const addCreativeImage = (index, metadata) => {
+	return {
+		type : 'ADD_CREATIVE_IMAGE',
+		payload : {
+			index,
+			metadata
+		}
+	}
+}
+
+const setResearchObjective = (researchId, description, title) => {
+	return {
+		type : 'SET_RESEARCH_OBJECTIVE',
+		payload : {
+			researchId,
+			description
+    }
+  }
+}
+
 const toggleCollapsablePanel = (actionType, eventData) => {
 	return {
 		type : 'TOGGLE_COLLAPSABLE_PANEL',
@@ -393,5 +499,10 @@ export {
 	setQuoteContactValue, finishedEditingContactValue,
 	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead,
 	quoteUIAction,
-	toggleCollapsablePanel
+	updateCreativeHeadline, addCreativeHeadline, deleteCreativeHeadline,
+	addCreativeText, updateCreativeText, deleteCreativeText,
+	addCreativeDescription, updateCreativeDescription, deleteCreativeDescription,
+	addCreativeImage, deleteCreativeImage,
+	setResearchObjective,
+	toggleCollapsablePanel,
 };
