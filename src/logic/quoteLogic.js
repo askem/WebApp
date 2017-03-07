@@ -63,7 +63,12 @@ const autoSaveLogic = createLogic({
 		'ADD_QUOTE_POSSIBLE_ANSWER', 'DELETE_QUOTE_POSSIBLE_ANSWER', 'SET_QUOTE_POSSIBLE_ANSWER_TEXT',
 		'SET_QUOTE_POSSIBLE_ANSWER_LOCATION', 'SET_QUOTE_POSSIBLE_ANSWER_RANDOM_LOCATION', 'SET_QUOTE_POSSIBLE_ANSWER_CONNECTION', 'SET_QUOTE_POSSIBLE_ANSWER_MULTI_BEHAVIOR',
 		'SET_QUOTE_SAMPLE_SIZE',
-		'FINISHED_EDITING_QUOTE_CONTACT_VALUE'
+		'FINISHED_EDITING_QUOTE_CONTACT_VALUE',
+		'ADD_CREATIVE_IMAGE', 'DELETE_CREATIVE_IMAGE',
+		'ADD_CREATIVE_DESCRIPTION','UPDATE_CREATIVE_DESCRIPTION', 'DELETE_CREATIVE_DESCRIPTION',
+		'ADD_CREATIVE_TEXT', 'UPDATE_CREATIVE_TEXT', 'DELETE_CREATIVE_TEXT',
+		'ADD_CREATIVE_HEADLINE', 'UPDATE_CREATIVE_HEADLINE' ,'DELETE_CREATIVE_HEADLINE'
+
 	],
 	process({ getState, action, api }, dispatch) {
 		dispatch({type: 'AUTO_SAVE_QUOTE'});
@@ -145,6 +150,41 @@ const uploadImageLogic = createLogic({
 		.catch(error => {
 			console.error(error);
 			dispatch({ type: 'UPLOAD_IMAGE_REQUEST_FAIL', payload: {
+				error
+			}, error: true });
+		});
+	}
+});
+
+const uploadCreativeImageLogic = createLogic({
+	type: 'ADD_CREATIVE_IMAGE',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = getState().getIn(['data', 'lead', 'quoteID']);
+		if (!quoteID) { return; }	
+		const mediaID = action.payload.metadata.mediaID;
+		const imageIndex = action.payload.index;
+
+		if (!mediaID.startsWith('data:')) { return; }
+		const blob = dataURIToBlob(mediaID);
+		dispatch({ type: 'UPLOAD_CREATIVE_IMAGE_REQUEST_START' }, { allowMore: true });
+		return api.uploadFileForLead(blob, quoteID)
+		.then(newMediaID => {
+			// Preload image to make visual transition seamless
+			const img = new Image();
+			img.onload = (img) => {
+				dispatch({
+					type: 'UPLOAD_CREATIVE_IMAGE_REQUEST_SUCCESS',
+					payload: {
+						mediaID:newMediaID,
+						index:imageIndex
+					}
+				});
+			};
+			img.src = blobURL(newMediaID);
+		})
+		.catch(error => {
+			console.error(error);
+			dispatch({ type: 'UPLOAD_CREATIVE_IMAGE_REQUEST_FAIL', payload: {
 				error
 			}, error: true });
 		});
@@ -351,5 +391,6 @@ export default [
 	uploadImageLogic,
 	reachInvalidationLogic,
 	fetchCostEstimateLogic,
-	imageSuggestionsLogic
+	imageSuggestionsLogic,
+	uploadCreativeImageLogic
 ];

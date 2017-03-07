@@ -7,6 +7,7 @@ import consolidateAgeGroups from 'utils/array/consolidateAgeGroups';
 import numeral from 'numeral';
 import quoteContactFields from 'constants/quoteContactFields';
 import genGUID from 'utils/Askem/genGUID';
+import AdCreatives from 'components/Quote/AdCreatives';
 import RESEARCH_OBJECTIVE_CATEGORIES from 'constants/RESEARCH_OBJECTIVE_CATEGORIES';
 
 const renderContactValue = (field, contact) => {
@@ -21,6 +22,8 @@ class ManageQuote extends React.Component {
     	super(props);
 
 		this.getReseachObjectiveTitle = this.getReseachObjectiveTitle.bind(this);
+		this.checkAdCreatives = this.checkAdCreatives.bind(this);
+		this.changeEmptyValuesModalFlag = this.changeEmptyValuesModalFlag.bind(this);
 
 		this.state = {
 			selectedQuestion: null,
@@ -41,6 +44,37 @@ class ManageQuote extends React.Component {
 
 		return title;
 	}
+
+	changeEmptyValuesModalFlag() {
+		this.setState({ emptyAdCreativeValues : false});
+	}
+
+	checkAdCreatives() {
+		if (this.props.surveyMetadata.adCreatives) {
+			let hasEmptyValues = false;
+			const { images, headlines, texts, descriptions } = this.props.surveyMetadata.adCreatives.imageAdCreatives;
+
+			if (headlines.some(item => item === '')) {
+				hasEmptyValues = true;
+			}	
+
+			if (texts.some(item => item === '')) {
+				hasEmptyValues = true;
+			}	
+
+			if (descriptions.some(item => item === '')) {
+				hasEmptyValues = true;
+			}	
+			
+			if (hasEmptyValues) {
+				this.setState({ emptyAdCreativeValues : true });
+			}
+			else {
+				this.setState({editing: null, emptyAdCreativeValues:false});
+			}
+		}
+	}
+
 
 	render() {
 		if (!this.props.lead.loaded) {
@@ -81,7 +115,20 @@ class ManageQuote extends React.Component {
 
 			</div>;
 		}
+		else if (this.state.editing === 'creatives') {
+			return <div className="quote-manage">
+				<div className="done-botton-container">
+					<button className="askem-button-white" onClick={this.checkAdCreatives}>Done Editing</button>
+				</div>
+				<div className="quote-wizard-main">
+					<div className="quote-wizard-maincontent">
+						<AdCreatives {...this.props} showEmptyValuesModal={this.state.emptyAdCreativeValues} onCloseModal={this.changeEmptyValuesModalFlag }/>
+					</div>
 
+				</div>
+				
+			</div>;
+		}
 		let genderDescription;
 		if (this.props.audience.demographics.gender.female && this.props.audience.demographics.gender.male) {
 			genderDescription = 'Female and Male';
@@ -156,6 +203,26 @@ class ManageQuote extends React.Component {
 					<div className="title">Survey</div>
 					<div className="value">{surveyDescription}</div>
 					<a style={{padding: 0}} href={`/${this.props.lead.quoteID}/preview`} target="_blank">Preview</a>
+
+
+					<div className="quote-wizard-side-title">
+						ad creatives
+						<button className="askem-button-white edit-button"
+							onClick={()=>this.setState({editing: 'creatives'})}>Edit</button>
+					</div>
+					<div className="title">Ad Images</div>
+					{ (this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.images) &&
+							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.images.length} images `}</div>
+					}
+					{ this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines && 
+							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines.length} headlines`}</div>
+					}
+					{ this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.texts && 
+							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.texts.length} texts`}</div>
+					}
+					{ this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions && 
+							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions.length} descriptions`}</div>
+					}
 				</div>
 
 				<div className="manage-pane">
@@ -222,7 +289,6 @@ class ManageQuote extends React.Component {
 					}}
 				>{this.state.duplicatingLead ? 'Please Wait...' : 'Duplicate Quote'}</button>
 			</div>
-
 			</div>
 		)
 	}

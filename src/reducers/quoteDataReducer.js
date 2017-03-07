@@ -210,6 +210,10 @@ const quoteReducer = (state = initialState, action) => {
 					})
 				)
 			));
+		case 'UPLOAD_CREATIVE_IMAGE_REQUEST_SUCCESS': {
+			const { mediaID, index } = action.payload;
+			return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images', index, 'mediaID'], mediaID);
+		}
 		case 'ADD_QUOTE_POSSIBLE_ANSWER': {
 			let newPAID;
 			let addedState = state.updateIn(['surveyMetadata', 'questions', action.payload.questionID], q => {
@@ -388,6 +392,65 @@ const quoteReducer = (state = initialState, action) => {
 				sampleSize: action.payload.sampleSize,
 				moe: action.payload.moe
 			}));
+		case 'UPDATE_CREATIVE_HEADLINE': 		
+			return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'headlines', action.payload.index], action.payload.text);
+		case 'ADD_CREATIVE_HEADLINE':
+			const headlines = state.getIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'headlines']);
+
+			if (!headlines) {
+				return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'headlines'], Immutable.fromJS(['']));
+			}
+			else {
+				return state.updateIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'headlines'], headlines => {
+					return headlines.push('');
+				});
+			}
+		case 'DELETE_CREATIVE_HEADLINE':
+			return state.deleteIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'headlines', action.payload.index]);
+
+		case 'ADD_CREATIVE_TEXT':
+			const texts = state.getIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'texts']);
+
+			if (!texts) {
+				return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'texts'], Immutable.fromJS(['']));
+			}
+			else {
+				return state.updateIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'texts'], texts => {
+					return texts.push('');
+				});
+			}
+		case 'UPDATE_CREATIVE_TEXT': 		
+			return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'texts', action.payload.index], action.payload.text);
+		case 'DELETE_CREATIVE_TEXT':
+			return state.deleteIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'texts', action.payload.index]);
+		case 'ADD_CREATIVE_DESCRIPTION':
+			const descriptions = state.getIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'descriptions']);
+
+			if (!descriptions) {
+				return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'descriptions'], Immutable.fromJS(['']));
+			}
+			else {
+				return state.updateIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'descriptions'], descriptions => {
+					return descriptions.push('');
+				});
+			}
+		case 'UPDATE_CREATIVE_DESCRIPTION': 		
+			return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'descriptions', action.payload.index], action.payload.text);
+		case 'DELETE_CREATIVE_DESCRIPTION':
+			return state.deleteIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'descriptions', action.payload.index]);
+		case 'ADD_CREATIVE_IMAGE':{
+			let images = state.getIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images']);
+			if (!images) {
+				return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images'], Immutable.fromJS([action.payload.metadata]));
+			}
+			else {
+				return state.updateIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images'], images => {
+					return images.push(Immutable.fromJS(action.payload.metadata));
+				});
+			}
+		}
+		case 'DELETE_CREATIVE_IMAGE':
+			return state.deleteIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images', action.payload.index]);
 		case 'SET_RESEARCH_OBJECTIVE':
 			state = state.deleteIn(['showResearchObjective']);
 			return state.set('researchObjective', Immutable.fromJS({

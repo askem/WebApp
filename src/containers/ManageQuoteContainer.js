@@ -65,7 +65,18 @@ const ManageQuoteContainer = connect(
 			closeSuccessSubmitLead: () => dispatch(quoteActions.closeSuccessSubmitLead()),
 			cancelFailedSubmitLead: () => dispatch(quoteActions.cancelFailedSubmitLead()),
 			quoteUIAction: (actionType, metadata) => dispatch(quoteActions.quoteUIAction(actionType, metadata)),
-
+			updateCreativeHeadline: (index, text) => dispatch(quoteActions.updateCreativeHeadline(index, text)),
+			addCreativeHeadline : () => dispatch(quoteActions.addCreativeHeadline()), 
+			deleteCreativeHeadline : (index) => dispatch(quoteActions.deleteCreativeHeadline(index)),
+			addCreativeText : () => dispatch(quoteActions.addCreativeText()), 
+			updateCreativeText: (index, text) => dispatch(quoteActions.updateCreativeText(index, text)),
+			deleteCreativeText : (index) => dispatch(quoteActions.deleteCreativeText(index)),
+			addCreativeDescription : () => dispatch(quoteActions.addCreativeDescription()), 
+			updateCreativeDescription: (index, text) => dispatch(quoteActions.updateCreativeDescription(index, text)),
+			deleteCreativeDescription : (index) => dispatch(quoteActions.deleteCreativeDescription(index)),
+			addCreativeImage : (index, metadata) => dispatch(quoteActions.addCreativeImage(index, metadata)),
+			deleteCreativeImage : (index) => dispatch(quoteActions.deleteCreativeImage(index)),
+			
 			/* Advanced */
 			addQuestionVariant: (questionID, duplicateVariantID) => dispatch(quoteActions.addQuestionVariant(questionID, duplicateVariantID)),
 			deleteQuestionVariant: (questionID, variantID) => dispatch(quoteActions.deleteQuestionVariant(questionID, variantID)),
