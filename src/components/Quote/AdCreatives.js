@@ -207,11 +207,14 @@ class AdCreatives extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if ((nextProps.surveyMetadata.adCreatives.imageAdCreatives.images && !this.props.surveyMetadata.adCreatives) || (nextProps.surveyMetadata.adCreatives.imageAdCreatives.images.length !== this.props.surveyMetadata.adCreatives.imageAdCreatives.images.length)) {
-			const images = nextProps.surveyMetadata.adCreatives.imageAdCreatives.images || [];
-			this.handleImagesStrip(images);
-		}	
+		// if ((nextProps.surveyMetadata.adCreatives.imageAdCreatives.images && !this.props.surveyMetadata.adCreatives) || (nextProps.surveyMetadata.adCreatives.imageAdCreatives.images && this.props.surveyMetadata.adCreatives.imageAdCreatives.images && nextProps.surveyMetadata.adCreatives.imageAdCreatives.images.length !== this.props.surveyMetadata.adCreatives.imageAdCreatives.images.length)) {
+		// 	const images = nextProps.surveyMetadata.adCreatives.imageAdCreatives.images || [];
+		// 	this.handleImagesStrip(images);
+		// }	
 	
+		const images = nextProps.surveyMetadata.adCreatives.imageAdCreatives.images || [];
+		this.handleImagesStrip(images);
+
 		if (nextProps.showEmptyValuesModal !== this.props.showEmptyValuesModal) {
 			console.log('set state is firing....');
 			this.setState({ showEmptyValuesModal : nextProps.showEmptyValuesModal });
