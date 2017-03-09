@@ -546,7 +546,8 @@ header {
 }
 
 .quote-manage {
-	width: 1100px;
+	// width: 1100px;
+	width: 1600px;
 	margin: 0 auto;
 
 	.manage-pane {
@@ -707,14 +708,18 @@ header {
 	}
 }
 
+
+.ad-creative-main-content-container {
+	width: 1600px;
+}
+
 .creative-container {
 	display: flex;
 	justify-content: space-between;
-	width:1100px;
 
 	.creative-editable-section {
 		margin-left: 20px;
-		width: 50%;
+		width: calc(70% - 70px);
 
 		.ad-creatives-array-container {
 			margin-top: 35px;
@@ -727,8 +732,8 @@ header {
 
 		.ad-images-array-container {
 			display: flex;
-			width:550px;
-			border:solid 1px silver;
+			width:calc(100% - 20px);
+			border:solid 1px $border-gray;
 			overflow-x:auto;
 			overflow-y: hidden;
 			align-items: center;
@@ -744,6 +749,7 @@ header {
 				width:120px;
 				height:62px;
 				margin-top:10px;
+				cursor:pointer;
 			}
 
 			.delete-button-container {
@@ -757,7 +763,6 @@ header {
 	.creative-preview-section {
 		.ad-creative-facebook-title{
 			font-size:22px;
-			// margin-bottom: 9px;
 
 			.refresh-preview {
 				margin-left: 30px;
@@ -768,7 +773,7 @@ header {
 		.ad-creatives-preview {
 			height:453px;
 			width: 500px;
-			border:solid 1px silver;
+			border:solid 1px $border-gray;
 			margin-right: 15px;
 			margin-bottom: 23px;
 			padding:12px 12px 0 12px;
@@ -826,11 +831,12 @@ header {
 				font-size: 14px;
 				margin-top: 20px;
 				margin-bottom: 15px;
+				height:22px;
 
 			}
 
 			.creative-preview-images {
-				border: solid 1px silver;
+				border: solid 1px $border-gray;
 				width:476px;
 				height: 248px;
 			}

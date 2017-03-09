@@ -7,6 +7,7 @@ import blobURL from 'utils/Askem/blobURL';
 import ImageUpload from 'components/Common/ImageUpload';
 import { getImageData } from 'utils/ImageUtils';
 import Dialog from 'material-ui/Dialog';
+import genGUID from 'utils/Askem/genGUID';
 
 class AdCreatives extends React.Component {
 	constructor(props) {
@@ -18,14 +19,15 @@ class AdCreatives extends React.Component {
 		this.onTextFieldChange = this.onTextFieldChange.bind(this);
 		this.refreshPreview = this.refreshPreview.bind(this);
 		this.onUpload = this.onUpload.bind(this);
-		this.handleImagesStrip = this.handleImagesStrip.bind(this);
+		this.handleFocus = this.handleFocus.bind(this);
+		this.handleClickOnImage = this.handleClickOnImage.bind(this);
 
 		this.state = {		
 			previewImage : null,
 			previewHeadline : null,
 			previewText : null,
 			previewDescription : null,
-			localComponentImages : null
+			localImagesStorage : null
 		}
 	}
 
@@ -34,12 +36,31 @@ class AdCreatives extends React.Component {
 		switch(arrayType) {
 			case 'headline':
 				this.props.updateCreativeHeadline(index, value);
+				this.setState({ previewHeadline : value });
 				break;
 			case 'text':
 				this.props.updateCreativeText(index, value);
+				this.setState({ previewText : value})
 				break;
 			case 'description':
 				this.props.updateCreativeDescription(index, value);
+				this.setState({ previewDescription : value})
+				break;
+		}
+	}
+
+
+	handleFocus(event, type) {
+		const { value } = event.target;
+		switch(type) {
+			case 'headline':
+				this.setState({ previewHeadline : value });
+				break;
+			case 'text'	:
+				this.setState({ previewText : value})
+				break;
+			case 'description':
+				this.setState({ previewDescription : value})
 				break;
 		}
 	}
@@ -101,23 +122,32 @@ class AdCreatives extends React.Component {
 		}
 	}
 
-	removeField(event, arrayName, index) {
+	deleteField(event, arrayName, index) {
+		let { previewHeadline, previewText, previewDescription, previewImage } =  this.state;
+		let { headlines = [], texts = [], descriptions = []} = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
 		switch(arrayName) {
 			case 'headlines':
 				this.props.deleteCreativeHeadline(index);
+				previewHeadline = this.getRandomElementFromArr(headlines, previewHeadline);
+				this.setState({ previewHeadline});
 				break;
 			case 'texts':
 				this.props.deleteCreativeText(index);
+				previewText = this.getRandomElementFromArr(texts, previewText);
+				this.setState({ previewText });
 				break;
 			case 'descriptions':
 				this.props.deleteCreativeDescription(index);
+				previewDescription = this.getRandomElementFromArr(descriptions, previewDescription);
+				this.setState({ previewDescription });
 				break;
 		}
 	}
 
 	refreshPreview() {
 		let { previewHeadline, previewText, previewDescription, previewImage } =  this.state;
-		let { headlines = [], texts = [], descriptions = [], images =[]} = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
+		let { headlines = [], texts = [], descriptions = []} = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
+		let images = this.props.surveyMetadata.croppedImages;
 
 		previewHeadline = this.getRandomElementFromArr(headlines, previewHeadline);
 		previewText = this.getRandomElementFromArr(texts, previewText);
@@ -125,19 +155,17 @@ class AdCreatives extends React.Component {
 		previewImage = this.getRandomNumber(images, previewImage);
 
 		if (images.length > 0) {
-			const metadata = this.getMetadataFromImage(images[previewImage]);
+			const key = this.state.localImagesStorage[previewImage];
+			const img = images.find(image => image.key === key);
+			const bigImagePreview = img ? img.cropData.croppedSrc : null;
 
-			getImageData(metadata)
-				.then(newData => {
-					this.setState({
+			this.setState({
 						previewHeadline,
 						previewText,
 						previewDescription,
 						previewImage,
-						bigImagePreview : newData.dataURI
-					});
-				})
-				.catch(err => { console.error(err)});
+						bigImagePreview
+			});
 		}
 		else {
 			this.setState({
@@ -152,6 +180,7 @@ class AdCreatives extends React.Component {
 	componentWillMount() {
 		let headline_preview, text_preview, description_preview, imagePreviewNumber;
 		let hasAtLeastOneItem = false;
+		let mediaID_Array;
 
 		if (this.props.surveyMetadata.adCreatives) {
 			if (this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines) {
@@ -173,9 +202,9 @@ class AdCreatives extends React.Component {
 				imagePreviewNumber = this.getRandomNumber(this.props.surveyMetadata.adCreatives.imageAdCreatives.images, this.state.previewImage);
 				hasAtLeastOneItem = true;
 
-				const { images } = this.props.surveyMetadata.adCreatives.imageAdCreatives || [];
-				this.handleImagesStrip(images);
-				this.handleBigImagePreview(this.props.surveyMetadata.adCreatives.imageAdCreatives.images[imagePreviewNumber]);
+				const images = this.props.surveyMetadata.croppedImages || [];
+				this.handleBigImagePreview(images[imagePreviewNumber]);
+				mediaID_Array = images.map(item => item.key);
 			}
 
 			if (hasAtLeastOneItem) {
@@ -184,7 +213,8 @@ class AdCreatives extends React.Component {
 					previewText : text_preview,
 					previewDescription : description_preview,
 					previewImage : imagePreviewNumber,
-					showEmptyValuesModal : this.props.showEmptyValuesModal
+					showEmptyValuesModal : this.props.showEmptyValuesModal,
+					localImagesStorage: mediaID_Array
 				})
 			}
 		}
@@ -192,127 +222,89 @@ class AdCreatives extends React.Component {
 
 	handleBigImagePreview(imageObject) {
 		if (!imageObject) return;
-		const metadata = this.getMetadataFromImage(imageObject);
-
-		getImageData(metadata)
-				.then(data => {
-					this.setState({
-						bigImagePreview: data.dataURI
-					});
-				})
-				.catch(err => {
-					console.error(err);
-				});
-		
+		this.setState({ bigImagePreview: imageObject.cropData.croppedSrc });
 	}
 
 	componentWillReceiveProps(nextProps) {
-		// if ((nextProps.surveyMetadata.adCreatives.imageAdCreatives.images && !this.props.surveyMetadata.adCreatives) || (nextProps.surveyMetadata.adCreatives.imageAdCreatives.images && this.props.surveyMetadata.adCreatives.imageAdCreatives.images && nextProps.surveyMetadata.adCreatives.imageAdCreatives.images.length !== this.props.surveyMetadata.adCreatives.imageAdCreatives.images.length)) {
-		// 	const images = nextProps.surveyMetadata.adCreatives.imageAdCreatives.images || [];
-		// 	this.handleImagesStrip(images);
-		// }	
-	
-		const images = nextProps.surveyMetadata.adCreatives.imageAdCreatives.images || [];
-		this.handleImagesStrip(images);
-
-		if (nextProps.showEmptyValuesModal !== this.props.showEmptyValuesModal) {
-			console.log('set state is firing....');
-			this.setState({ showEmptyValuesModal : nextProps.showEmptyValuesModal });
-		}
+		const croppedImagesArray = nextProps.surveyMetadata.croppedImages ? [...nextProps.surveyMetadata.croppedImages] : [];
+		const localKeys = croppedImagesArray.map(item => item.key);
 	}
-	
-	handleImagesStrip(arr) {
-		const promisesArr = arr.map((image, index) => {
-			const metadata = this.getMetadataFromImage(image, index);
-			return getImageData(metadata);
-		});
-
-		Promise
-			.all(promisesArr)
-			.then(values => {
-				// sort by index
-				values = values.sort((a,b) => a.extraData.index - b.extraData.index);
-				const imagesArr = values.map((image, index) => {
-					return {
-						dataURI:image.dataURI,
-						index
-					}
-				})
-
-				this.setState({
-					localComponentImages : imagesArr
-				});
-			})
-			.catch(err => {
-				console.error('something got wrong....', err);
-			})
-	}
-
-	getMetadataFromImage(imageData, index) {
-		const imageSrc = imageData.mediaID ? blobURL(imageData.mediaID) : imageData.dataURI;
-		const crop = imageData['crop191x100'][0];
-		const [x1, y1] = crop;
-		const [x2, y2] = imageData['crop191x100'][1];
-		const width = x2 - x1;
-		const height = y2 - y1;
-
-		return {
-			width,
-			height,
-			x: x1,
-			y: y1,
-			dataURI : imageSrc,
-			extraData : {
-				index
-			}
-		}
-	}
-
 
 	deleteImage(index) {
-		this.props.deleteCreativeImage(index);
+		let images = [...this.state.localImagesStorage];
+		const key = images[index];
 
-		if (this.state.localComponentImages) {
-			let images = [...this.state.localComponentImages];
-			images.splice(index, 1);
+		this.props.deleteCreativeImage(index, key);
 
-			//change the index order
-			images.forEach((item, index) => {
-				item.index = index;
-			});
+		images.splice(index, 1);
+		const randomNumber = this.getRandomNumber(images, this.state.previewImage);
+		if (randomNumber !== null) {
+			const newKey = images[randomNumber];
+			const croppedImage = this.props.surveyMetadata.croppedImages.find(item => item.key === newKey);
 
+			if (croppedImage) {
+				const src = croppedImage.cropData.croppedSrc;
+				this.setState({
+					localImagesStorage : images,
+					bigImagePreview : src
+				})
+			}
+			else {
+				this.setState({
+					localImagesStorage : images,
+					previewImage : null
+				})
+			}
+		}
+		else {
 			this.setState({
-				localComponentImages : images
+				localImagesStorage : images,
+				previewImage : null
 			})
-
 		}
 	}
 
 	onUpload(croppedImage, originalImage, metadata) {
+		const key = genGUID();
 		const imageMetadata = {
-			"crop191x100" : [
+			crop191x100 : [
 				[metadata.x, metadata.y],
 				[metadata.x + metadata.width, metadata.y + metadata.height]
 			],
-			"mediaID" : originalImage.src
+			mediaID : originalImage.src,
+			croppedSrc : croppedImage.src,
+			key
 		}
+
 
 		let { images }  = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
 		const index = images ? images.length : 0;
+
+		const localImagesStorage = this.state.localImagesStorage === null ? [] : [...this.state.localImagesStorage];
+		localImagesStorage.push(key);
+
+		this.setState({
+			localImagesStorage,
+			bigImagePreview : croppedImage.src,
+			previewImage : index
+		 });
 		this.props.addCreativeImage(index, imageMetadata);
+	}
+
+	handleClickOnImage(index) {
+		const key = this.state.localImagesStorage[index];
+		const croppedImageObject = this.props.surveyMetadata.croppedImages.find(croppedImage => croppedImage.key === key);
+		this.setState({ 
+			previewImage : index,
+			bigImagePreview : croppedImageObject.cropData.croppedSrc
+		});
 	}
 
 
 	render() {
 		const { headlines = [], texts = [], descriptions = [], images = []} = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
 
-		 let imagesArr;
-		 if (this.state.localComponentImages) {
-		 	imagesArr = this.state.localComponentImages;
-		 }
-		 else {
-			 imagesArr = images;
-		 }
+		let imagesArr = this.props.surveyMetadata.croppedImages;
 
 		const headlinesItems = headlines.map((headline, index) => {
 				return (
@@ -322,9 +314,10 @@ class AdCreatives extends React.Component {
 							id={`headline_${index}`}
 							inputStyle={{color: 'black'}}
 							fullWidth={true}
-							onChange={(event) => this.onTextFieldChange(event, 'headline', index)} />
+							onChange={(event) => this.onTextFieldChange(event, 'headline', index)}
+							onFocus={(event) => this.handleFocus(event, 'headline')} />
 						<div>
-							<XButton onClick={() => this.removeField(event, 'headlines', index)} />
+							<XButton onClick={() => this.deleteField(event, 'headlines', index)} />
 						</div>
 					</div>				
 				)
@@ -338,9 +331,10 @@ class AdCreatives extends React.Component {
 							id={`text_${index}`}
 							inputStyle={{color: 'black'}}
 							fullWidth={true}
-							onChange={(event) => this.onTextFieldChange(event, 'text', index)} />
+							onChange={(event) => this.onTextFieldChange(event, 'text', index)} 
+							onFocus={(event) => this.handleFocus(event, 'text')} />
 						<div>
-							<XButton onClick={() => this.removeField(event, 'texts', index)} />
+							<XButton onClick={() => this.deleteField(event, 'texts', index)} />
 						</div>
 					</div>
 			)
@@ -354,9 +348,10 @@ class AdCreatives extends React.Component {
 							id={`desc_${index}`}
 							inputStyle={{color: 'black'}}
 							fullWidth={true}
-							onChange={(event) => this.onTextFieldChange(event, 'description', index)} />
+							onChange={(event) => this.onTextFieldChange(event, 'description', index)}
+							onFocus={(event) => this.handleFocus(event, 'description')} />
 						<div>
-							<XButton onClick={() => this.removeField(event, 'descriptions', index)} />
+							<XButton onClick={() => this.deleteField(event, 'descriptions', index)} />
 						</div>
 					</div>
 			)
@@ -364,7 +359,6 @@ class AdCreatives extends React.Component {
 
 		let imagePreview;
 		if (this.state.previewImage === null) {
-			// imagePreview = <div style={{ backgroundImage:'url(../images/emptyMediaID.png)', height:'474px', width:'248px' }}></div>
 			imagePreview = <img src="../images/emptyMediaID.png"  style={{ width:'474px', height:'246px' }} />
 		}
 		else {
@@ -374,7 +368,7 @@ class AdCreatives extends React.Component {
 		}
 
 		return (
-			<div>
+			<div className="ad-creative-main-content-container">
 				<div className="quote-wizard-side-title" style={{ padding:'10px 0 20px 20px' }}>Ad Creatives</div>
 				<div className="creative-container">
 					<div className="creative-editable-section">
@@ -393,11 +387,11 @@ class AdCreatives extends React.Component {
 									aspectRatioTolerance={0} />		
 						</div>
 						<div className="ad-images-array-container">
-							{ imagesArr.map((image, index) => 
+							{ imagesArr && imagesArr.map((image, index) => 
 									<div key={`img_${index}`} className="ad-creative-image-strip">
-										<img src={blobURL(image.dataURI)} className="creative-img" />
+										<img src={blobURL(image.cropData.croppedSrc)} className="creative-img" onClick={this.handleClickOnImage.bind(this, index)} />
 										<span className="delete-button-container">
-											<XButton onClick={() => this.deleteImage(index)} />
+											<XButton onClick={this.deleteImage.bind(this, index)} />
 										</span>
 									</div>
 							)}
@@ -452,12 +446,17 @@ class AdCreatives extends React.Component {
 							title="Oops..."
 							modal={true}
 							open={typeof this.state.showEmptyValuesModal === 'undefined' ? false : this.state.showEmptyValuesModal}
-							actions={
+							actions={[
 									<FlatButton
-										label="ok"
+										label="Fix it!"
 										primary={false}
-										onTouchTap={this.props.onCloseModal} />
-									}
+										onTouchTap={this.props.onModalStay} />
+									,
+									<FlatButton
+										label="continue"
+										primary={false}
+										onTouchTap={this.props.onModalLeave} />
+							]}
 							autoDetectWindowHeight={true}>
 							<div className="on-image-upload-error">
 								You have some empty fields in your creative ads!

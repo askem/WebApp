@@ -74,8 +74,8 @@ const ManageQuoteContainer = connect(
 			addCreativeDescription : () => dispatch(quoteActions.addCreativeDescription()), 
 			updateCreativeDescription: (index, text) => dispatch(quoteActions.updateCreativeDescription(index, text)),
 			deleteCreativeDescription : (index) => dispatch(quoteActions.deleteCreativeDescription(index)),
-			addCreativeImage : (index, metadata) => dispatch(quoteActions.addCreativeImage(index, metadata)),
-			deleteCreativeImage : (index) => dispatch(quoteActions.deleteCreativeImage(index)),
+			addCreativeImage : (index, metadata, croppedImage) => dispatch(quoteActions.addCreativeImage(index, metadata, croppedImage)),
+			deleteCreativeImage : (index, key) => dispatch(quoteActions.deleteCreativeImage(index, key)),
 			
 			/* Advanced */
 			addQuestionVariant: (questionID, duplicateVariantID) => dispatch(quoteActions.addQuestionVariant(questionID, duplicateVariantID)),

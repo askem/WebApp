@@ -442,21 +442,23 @@ const deleteCreativeDescription = (index) => {
 	}
 }
 
-const deleteCreativeImage = (index) => {
+const deleteCreativeImage = (index, key) => {
 	return {
 		type : 'DELETE_CREATIVE_IMAGE',
 		payload: {
-			index
+			index,
+			key
 		}
 	}
 }
 
-const addCreativeImage = (index, metadata) => {
+const addCreativeImage = (index, metadata, croppedImage) => {
 	return {
 		type : 'ADD_CREATIVE_IMAGE',
 		payload : {
 			index,
-			metadata
+			metadata,
+			croppedImage
 		}
 	}
 }

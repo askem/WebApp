@@ -102,6 +102,9 @@ const updateQuoteLogic = createLogic({
 
 			return q; 
 		});
+
+		// do not save the cropped images
+		delete quote.surveyMetadata.croppedImages;
 		//------------------------------------------------
 
 		let contact = getState().getIn(['data', 'contact']);
@@ -163,6 +166,7 @@ const uploadCreativeImageLogic = createLogic({
 		if (!quoteID) { return; }	
 		const mediaID = action.payload.metadata.mediaID;
 		const imageIndex = action.payload.index;
+		const key = action.payload.metadata.key;
 
 		if (!mediaID.startsWith('data:')) { return; }
 		const blob = dataURIToBlob(mediaID);
@@ -176,7 +180,8 @@ const uploadCreativeImageLogic = createLogic({
 					type: 'UPLOAD_CREATIVE_IMAGE_REQUEST_SUCCESS',
 					payload: {
 						mediaID:newMediaID,
-						index:imageIndex
+						index:imageIndex,
+						key
 					}
 				});
 			};
@@ -244,17 +249,56 @@ const loadQuoteLogic = createLogic({
 							}							
 						});
 
-						dispatch({
-							type: 'LOAD_QUOTE_REQUEST_SUCCESS',
-							payload: {
-								quote
-							}
-						}, { allowMore: true });
+						//if (!delayDispatch) {
+							dispatch({
+								type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+								payload: {
+									quote
+								}
+							}, { allowMore: true });
+						//}
 
 					})
 					.catch(err => {
 						console.error('quote.Logic.js -> loadQuoteLogic -> err', err);
 						throw err;
+					})
+			}
+			
+			if (quote.metadata.surveyMetadata.adCreatives.imageAdCreatives && quote.metadata.surveyMetadata.adCreatives.imageAdCreatives.images) {
+				const promises = quote.metadata.surveyMetadata.adCreatives.imageAdCreatives.images.map((item, index) => {
+					const uri = blobURL(item.mediaID);
+					const x = item.crop191x100[0][0];
+					const y = item.crop191x100[0][1];
+					const width = item.crop191x100[1][0] - x;
+					const height = item.crop191x100[1][1] - y;
+					const newMetadata = { x, y, height, width, dataURI : uri, extraData: { mediaID:item.mediaID, index }};
+					return getImageData(newMetadata);
+				})
+
+				Promise
+					.all(promises)
+					.then(values => {
+						values = values.sort((a,b) => a.index - b.index);
+						const arr = values.map(item => {
+							const { width, height, dataURI:croppedSrc } = item;
+							const { mediaID } = item.extraData;
+							return {
+								key : mediaID, 
+								cropData : { croppedSrc },
+							}
+							
+						})
+
+						quote.metadata.surveyMetadata.croppedImages = arr;
+
+						dispatch({
+							type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+							payload: {  quote }
+						}, { allowMore: true });
+					})
+					.catch(err => {
+						console.error(err);
 					})
 			}
 			else {

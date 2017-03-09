@@ -211,8 +211,10 @@ const quoteReducer = (state = initialState, action) => {
 				)
 			));
 		case 'UPLOAD_CREATIVE_IMAGE_REQUEST_SUCCESS': {
-			const { mediaID, index } = action.payload;
-			return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images', index, 'mediaID'], mediaID);
+			const { mediaID, index, key } = action.payload;
+			let imagesState = state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images', index, 'mediaID'], mediaID);
+			let itemIndex = imagesState.getIn(['surveyMetadata', 'croppedImages']).findIndex(item => item.get('key') === key);
+			return imagesState.setIn(['surveyMetadata', 'croppedImages', itemIndex, 'key'], mediaID);
 		}
 		case 'ADD_QUOTE_POSSIBLE_ANSWER': {
 			let newPAID;
@@ -439,18 +441,43 @@ const quoteReducer = (state = initialState, action) => {
 		case 'DELETE_CREATIVE_DESCRIPTION':
 			return state.deleteIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'descriptions', action.payload.index]);
 		case 'ADD_CREATIVE_IMAGE':{
+			let croppedImages = state.getIn(['surveyMetadata','croppedImages']);
+			const croppedImageObject = { 
+						key : action.payload.metadata.key,
+						cropData : {
+							croppedSrc : action.payload.metadata.croppedSrc
+						}
+			}
+
+			if (!croppedImages) {
+				state = state.setIn(['surveyMetadata','croppedImages'], Immutable.fromJS([croppedImageObject]));
+			}
+			else {
+				state = state.updateIn(['surveyMetadata','croppedImages'], croppedImages => {
+					return croppedImages.push(Immutable.fromJS(croppedImageObject));
+				});
+			}
+
 			let images = state.getIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images']);
+			const creativeImageData = {
+				crop191x100 : action.payload.metadata.crop191x100,
+				mediaID : action.payload.metadata.mediaID
+			}
+
+
 			if (!images) {
-				return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images'], Immutable.fromJS([action.payload.metadata]));
+				return state.setIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images'], Immutable.fromJS([creativeImageData]));
 			}
 			else {
 				return state.updateIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images'], images => {
-					return images.push(Immutable.fromJS(action.payload.metadata));
-				});
+					return images.push(Immutable.fromJS(creativeImageData));
+				})
 			}
 		}
 		case 'DELETE_CREATIVE_IMAGE':
-			return state.deleteIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images', action.payload.index]);
+			let modifiedState = state.deleteIn(['surveyMetadata', 'adCreatives', 'imageAdCreatives', 'images', action.payload.index]);
+			const index = modifiedState.getIn(['surveyMetadata', 'croppedImages']).findIndex(image => image.get('key') === action.payload.key);
+			return modifiedState.deleteIn(['surveyMetadata', 'croppedImages', index]);
 		case 'SET_RESEARCH_OBJECTIVE':
 			state = state.deleteIn(['showResearchObjective']);
 			return state.set('researchObjective', Immutable.fromJS({

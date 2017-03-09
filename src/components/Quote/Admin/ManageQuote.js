@@ -24,6 +24,7 @@ class ManageQuote extends React.Component {
 		this.getReseachObjectiveTitle = this.getReseachObjectiveTitle.bind(this);
 		this.checkAdCreatives = this.checkAdCreatives.bind(this);
 		this.changeEmptyValuesModalFlag = this.changeEmptyValuesModalFlag.bind(this);
+		this.doneEditingCreative = this.doneEditingCreative.bind(this);
 
 		this.state = {
 			selectedQuestion: null,
@@ -48,6 +49,14 @@ class ManageQuote extends React.Component {
 	changeEmptyValuesModalFlag() {
 		this.setState({ emptyAdCreativeValues : false});
 	}
+
+	doneEditingCreative() { 
+		this.setState({
+			 emptyAdCreativeValues : false,
+			 editing : null
+		});
+	}
+
 
 	checkAdCreatives() {
 		if (this.props.surveyMetadata.adCreatives) {
@@ -122,7 +131,10 @@ class ManageQuote extends React.Component {
 				</div>
 				<div className="quote-wizard-main">
 					<div className="quote-wizard-maincontent">
-						<AdCreatives {...this.props} showEmptyValuesModal={this.state.emptyAdCreativeValues} onCloseModal={this.changeEmptyValuesModalFlag }/>
+						<AdCreatives {...this.props}
+						 showEmptyValuesModal={this.state.emptyAdCreativeValues}
+						 onModalStay={this.changeEmptyValuesModalFlag }
+						 onModalLeave={this.doneEditingCreative} />
 					</div>
 
 				</div>
