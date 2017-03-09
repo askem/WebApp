@@ -123,26 +123,31 @@ class AdCreatives extends React.Component {
 	}
 
 	deleteField(event, arrayName, index) {
-		let { previewHeadline, previewText, previewDescription, previewImage } =  this.state;
-		let { headlines = [], texts = [], descriptions = []} = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
 		switch(arrayName) {
 			case 'headlines':
 				this.props.deleteCreativeHeadline(index);
-				previewHeadline = this.getRandomElementFromArr(headlines, previewHeadline);
-				this.setState({ previewHeadline});
+				let headlines = [...this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines];
+				headlines = [...headlines.slice(0, index), ...headlines.slice(index+1)];
+				const previewHeadline = this.getRandomElementFromArr(headlines, this.state.previewHeadline);
+				this.setState({ previewHeadline });
 				break;
 			case 'texts':
 				this.props.deleteCreativeText(index);
-				previewText = this.getRandomElementFromArr(texts, previewText);
+				let texts = [...this.props.surveyMetadata.adCreatives.imageAdCreatives.texts];
+				texts = [...texts.slice(0, index), ...texts.slice(index+1)];
+				const previewText = this.getRandomElementFromArr(texts, this.state.previewText);
 				this.setState({ previewText });
 				break;
 			case 'descriptions':
 				this.props.deleteCreativeDescription(index);
-				previewDescription = this.getRandomElementFromArr(descriptions, previewDescription);
+				let descriptions = [...this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions];
+				descriptions = [...descriptions.slice(0, index), ...descriptions.slice(index+1)];
+				const previewDescription = this.getRandomElementFromArr(descriptions, this.state.previewText);
 				this.setState({ previewDescription });
 				break;
 		}
 	}
+
 
 	refreshPreview() {
 		let { previewHeadline, previewText, previewDescription, previewImage } =  this.state;
@@ -228,6 +233,9 @@ class AdCreatives extends React.Component {
 	componentWillReceiveProps(nextProps) {
 		const croppedImagesArray = nextProps.surveyMetadata.croppedImages ? [...nextProps.surveyMetadata.croppedImages] : [];
 		const localKeys = croppedImagesArray.map(item => item.key);
+
+		this.setState({ localImagesStorage : localKeys, showEmptyValuesModal:nextProps.showEmptyValuesModal });
+
 	}
 
 	deleteImage(index) {
