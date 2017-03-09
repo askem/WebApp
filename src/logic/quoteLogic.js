@@ -103,7 +103,7 @@ const updateQuoteLogic = createLogic({
 			return q; 
 		});
 
-		// do not save the cropped images
+		// do not save the cropped images to DB
 		delete quote.surveyMetadata.croppedImages;
 		//------------------------------------------------
 
