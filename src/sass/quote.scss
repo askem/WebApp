@@ -983,6 +983,7 @@ header {
 		text-overflow: ellipsis;
 		overflow: hidden;
 		max-width: 300px;
+		height:18px;
 	}
 
 	.creative-preview-description-mobile-news-feed {
@@ -995,6 +996,7 @@ header {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
+		height:18px;
 	}
 
 	.creative-preview-headline-mobile-news-feed {
@@ -1008,6 +1010,8 @@ header {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
+		height:17px;
+		
 	}
 
 	.bottom-askem {
@@ -1026,7 +1030,7 @@ header {
 		align-items: center;
 
 		position: relative;
-		bottom:-35px;
+		bottom:-39px;
 		border-bottom: solid 7px $askem-light-gray;
 
 		.social-container {
