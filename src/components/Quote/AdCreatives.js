@@ -345,7 +345,7 @@ class AdCreatives extends React.Component {
 							onChange={(event) => this.onTextFieldChange(event, 'headline', index)}
 							onFocus={(event) => this.handleFocus(event, 'headline')} />
 						<div>
-							<XButton onClick={() => this.deleteField(event, 'headlines', index)} />
+							<XButton onClick={(event) => this.deleteField(event, 'headlines', index)} />
 						</div>
 					</div>				
 				)
@@ -362,7 +362,7 @@ class AdCreatives extends React.Component {
 							onChange={(event) => this.onTextFieldChange(event, 'text', index)} 
 							onFocus={(event) => this.handleFocus(event, 'text')} />
 						<div>
-							<XButton onClick={() => this.deleteField(event, 'texts', index)} />
+							<XButton onClick={(event) => this.deleteField(event, 'texts', index)} />
 						</div>
 					</div>
 			)
@@ -379,7 +379,7 @@ class AdCreatives extends React.Component {
 							onChange={(event) => this.onTextFieldChange(event, 'description', index)}
 							onFocus={(event) => this.handleFocus(event, 'description')} />
 						<div>
-							<XButton onClick={() => this.deleteField(event, 'descriptions', index)} />
+							<XButton onClick={(event) => this.deleteField(event, 'descriptions', index)} />
 						</div>
 					</div>
 			)
@@ -387,12 +387,10 @@ class AdCreatives extends React.Component {
 
 		let imagePreview;
 		if (this.state.previewImage === null) {
-			// imagePreview = <img src="../images/emptyMediaID.png"  style={{ width:'474px', height:'246px' }} />
 			imagePreview = null;
 		}
 		else {
 			if (this.state.bigImagePreview) {
-				// imagePreview = <div style={{ backgroundImage:'url(' + this.state.bigImagePreview + ')', backgroundSize:'cover', width:'474px', height:'248px' }}></div>
 				imagePreview = this.state.bigImagePreview ;
 			}
 		}
