@@ -8,6 +8,9 @@ import ImageUpload from 'components/Common/ImageUpload';
 import { getImageData } from 'utils/ImageUtils';
 import Dialog from 'material-ui/Dialog';
 import genGUID from 'utils/Askem/genGUID';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import AdPreview from 'components/Quote/AdPreview';
 
 class AdCreatives extends React.Component {
 	constructor(props) {
@@ -21,13 +24,15 @@ class AdCreatives extends React.Component {
 		this.onUpload = this.onUpload.bind(this);
 		this.handleFocus = this.handleFocus.bind(this);
 		this.handleClickOnImage = this.handleClickOnImage.bind(this);
+		this.onAdTypeChange = this.onAdTypeChange.bind(this);
 
 		this.state = {		
 			previewImage : null,
 			previewHeadline : null,
 			previewText : null,
 			previewDescription : null,
-			localImagesStorage : null
+			localImagesStorage : null,
+			selectedAdType : 'desktop_news_feed'
 		}
 	}
 
@@ -121,6 +126,21 @@ class AdCreatives extends React.Component {
 			return newValue;
 		}
 	}
+
+	onAdTypeChange(event, key, payload) {
+		switch(payload) {
+			case 'audience_network_interstitial':
+			case 'audience_network_native':
+				this.refs["preview-main-wrapper"].className = 'ad-creatives-preview height_audience_network_auto';
+				break;
+			default:
+				this.refs["preview-main-wrapper"].className = 'ad-creatives-preview';
+				break;
+		}
+
+		this.setState({ selectedAdType:payload });
+	}
+
 
 	deleteField(event, arrayName, index) {
 		switch(arrayName) {
@@ -273,7 +293,7 @@ class AdCreatives extends React.Component {
 	}
 
 	onUpload(croppedImage, originalImage, metadata) {
-		const key = genGUID();
+		const key = `temp_${genGUID()}`;
 		const imageMetadata = {
 			crop191x100 : [
 				[metadata.x, metadata.y],
@@ -367,11 +387,13 @@ class AdCreatives extends React.Component {
 
 		let imagePreview;
 		if (this.state.previewImage === null) {
-			imagePreview = <img src="../images/emptyMediaID.png"  style={{ width:'474px', height:'246px' }} />
+			// imagePreview = <img src="../images/emptyMediaID.png"  style={{ width:'474px', height:'246px' }} />
+			imagePreview = null;
 		}
 		else {
 			if (this.state.bigImagePreview) {
-				imagePreview = <div style={{ backgroundImage:'url(' + this.state.bigImagePreview + ')', backgroundSize:'cover', width:'474px', height:'248px' }}></div>
+				// imagePreview = <div style={{ backgroundImage:'url(' + this.state.bigImagePreview + ')', backgroundSize:'cover', width:'474px', height:'248px' }}></div>
+				imagePreview = this.state.bigImagePreview ;
 			}
 		}
 
@@ -433,20 +455,28 @@ class AdCreatives extends React.Component {
 								<FaRefresh onClick={this.refreshPreview}/>
 							</span>
 						</div>
-						<div className="ad-creatives-preview">
-							<div className="ad-creative-company-title">
-								<img src="../images/color-logo.jpg" width="40" height="40"/>
-								<div className="askem-title">askem</div>
-								<div className="sponsered-text">sponsered</div>
-							</div>
-							<div className="creative-preview-headline">{ this.state.previewHeadline }</div>
-							<div className="creative-preview-images">
-							 	{ imagePreview }
-							</div>
-							<div className="creative-preview-text">{ this.state.previewText }</div>
-							<div className="creative-preview-description">{ this.state.previewDescription }</div>
-							<div className="askem-com-title">askem.com</div>
-
+						<div className="">
+							<SelectField
+									value={this.state.selectedAdType}
+									onChange={(event, key, payload) => {this.onAdTypeChange(event, key, payload)}}>
+										<MenuItem value={'desktop_news_feed'} primaryText="Desktop News Feed" /> 
+										<MenuItem value={'mobile_news_feed'} primaryText="Mobile News Feed" /> 
+										<MenuItem value={'feature_phone'} primaryText="Feature Phone" /> 
+										<MenuItem value={'instant_articles'} primaryText="Instant Articles" /> 
+										<MenuItem value={'desktop_right_column'} primaryText="Desktop Right Column" /> 
+										<MenuItem value={'audience_network_banner'} primaryText="Audience Network Banner" /> 
+										<MenuItem value={'audience_network_interstitial'} primaryText="Audience Network Interstitial" /> 
+										<MenuItem value={'audience_network_native'} primaryText="Audience Network Native" /> 
+							</SelectField>
+						</div>
+						<div className="ad-creatives-preview" ref="preview-main-wrapper">
+							<AdPreview 
+								headlinePreview={this.state.previewHeadline}
+								imagePreview={imagePreview}
+								textPreview={this.state.previewText}
+								descriptionPreview={this.state.previewDescription}
+								adType={this.state.selectedAdType}
+							/>							
 						</div>
 					</div>
 				</div>
