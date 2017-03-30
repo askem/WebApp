@@ -67,7 +67,8 @@ const autoSaveLogic = createLogic({
 		'ADD_CREATIVE_IMAGE', 'DELETE_CREATIVE_IMAGE',
 		'ADD_CREATIVE_DESCRIPTION','UPDATE_CREATIVE_DESCRIPTION', 'DELETE_CREATIVE_DESCRIPTION',
 		'ADD_CREATIVE_TEXT', 'UPDATE_CREATIVE_TEXT', 'DELETE_CREATIVE_TEXT',
-		'ADD_CREATIVE_HEADLINE', 'UPDATE_CREATIVE_HEADLINE' ,'DELETE_CREATIVE_HEADLINE'
+		'ADD_CREATIVE_HEADLINE', 'UPDATE_CREATIVE_HEADLINE' ,'DELETE_CREATIVE_HEADLINE',
+		'DELETE_CAROUSEL', 'UPLOAD_CAROUSEL_CREATIVE_IMAGE_REQUEST_SUCCESS', 'UPDATE_CAROUSEL_DESCRIPTION', 'DELETE_CAROUSEL_DESCRIPTION'
 
 	],
 	process({ getState, action, api }, dispatch) {
@@ -105,6 +106,7 @@ const updateQuoteLogic = createLogic({
 
 		// do not save the cropped images to DB
 		delete quote.surveyMetadata.croppedImages;
+		delete quote.surveyMetadata.croppedCarouselImages;
 		//------------------------------------------------
 
 		let contact = getState().getIn(['data', 'contact']);
@@ -196,6 +198,46 @@ const uploadCreativeImageLogic = createLogic({
 	}
 });
 
+const uploadCarouselCreativeImageLogic = createLogic({
+	type: 'REPLACE_IMAGE_IN_CAROUSEL_FOR_SET',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = getState().getIn(['data', 'lead', 'quoteID']);
+		if (!quoteID) { return; }	
+		const { mediaID,  key} = action.payload.metadata
+		const { setIndex, imageIndex} = action.payload;
+
+		if (!mediaID.startsWith('data:')) { return; }
+		const blob = dataURIToBlob(mediaID);
+		dispatch({ type: 'UPLOAD_CAROUSEL_CREATIVE_IMAGE_REQUEST_START' }, { allowMore: true });
+		return api.uploadFileForLead(blob, quoteID)
+		.then(newMediaID => {
+			// Preload image to make visual transition seamless
+			const img = new Image();
+			img.onload = (img) => {
+				dispatch({
+					type: 'UPLOAD_CAROUSEL_CREATIVE_IMAGE_REQUEST_SUCCESS',
+					payload: {
+						mediaID:newMediaID,
+						setIndex,
+						imageIndex,
+						key,
+					}
+				});
+			};
+			img.src = blobURL(newMediaID);
+		})
+		.catch(error => {
+			console.error(error);
+			dispatch({ type: 'UPLOAD_CAROUSEL_CREATIVE_IMAGE_REQUEST_FAIL', payload: {
+				error
+			}, error: true });
+		});
+	}
+});
+
+
+
+
 const submitQuoteLogic = createLogic({
 	type: 'SUBMIT_LEAD',
 	process({ getState, action, api }, dispatch) {
@@ -265,7 +307,7 @@ const loadQuoteLogic = createLogic({
 					})
 			}
 			
-			if (quote.metadata.surveyMetadata.adCreatives.imageAdCreatives && quote.metadata.surveyMetadata.adCreatives.imageAdCreatives.images) {
+			if (quote.metadata.surveyMetadata.adCreatives && quote.metadata.surveyMetadata.adCreatives.imageAdCreatives && quote.metadata.surveyMetadata.adCreatives.imageAdCreatives.images) {
 				const promises = quote.metadata.surveyMetadata.adCreatives.imageAdCreatives.images.map((item, index) => {
 					const uri = blobURL(item.mediaID);
 					const x = item.crop191x100[0][0];
@@ -287,10 +329,74 @@ const loadQuoteLogic = createLogic({
 								key : mediaID, 
 								cropData : { croppedSrc },
 							}
-							
 						})
 
 						quote.metadata.surveyMetadata.croppedImages = arr;
+
+						dispatch({
+							type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+							payload: {  quote }
+						}, { allowMore: true });
+					})
+					.catch(err => {
+						console.error(err);
+					})
+			}
+			// else {
+			// 	dispatch({
+			// 		type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+			// 		payload: {
+			// 			quote
+			// 		}
+			// 	}, { allowMore: true });
+			// }
+
+			if (quote.metadata.surveyMetadata.adCreatives && quote.metadata.surveyMetadata.adCreatives.carouselCreatives) {
+				const promises = quote.metadata.surveyMetadata.adCreatives.carouselCreatives.map((item, index) => {
+					return new Promise((resolve, reject) => {
+						const innerPromises = item.images.map(img => {
+							const uri = blobURL(img.mediaID);
+							const x = img.crop100x100[0][0];
+							const y = img.crop100x100[0][1];
+							const width = img.crop100x100[1][0] - x;
+							const height = img.crop100x100[1][1] - y;
+							const newMetadata = { x, y, height, width, dataURI : uri, extraData: { mediaID:img.mediaID, setIndex: item.setIndex, imageIndex : img.imageIndex }};
+							return getImageData(newMetadata);
+						})
+
+						Promise
+							.all(innerPromises)
+							.then(vals => {
+								resolve(vals);
+							})
+							.catch(err => {
+								console.log('err', err);
+								reject(err);
+							})
+					});
+
+				})
+
+				Promise
+					.all(promises)
+					.then(values => {
+						//values = values.sort((a,b) => a.index - b.index);
+						const arr = [];
+						values.forEach(item => {
+							item.forEach(elm => {
+								const { width, height, dataURI:croppedSrc } = elm;
+								const { mediaID, imageIndex, setIndex } = elm.extraData;
+								arr.push({
+									key : mediaID, 
+									cropData : { croppedSrc },
+									imageIndex,
+									setIndex,
+
+								});
+							});							
+						})
+
+						quote.metadata.surveyMetadata.croppedCarouselImages = arr;
 
 						dispatch({
 							type: 'LOAD_QUOTE_REQUEST_SUCCESS',
@@ -436,5 +542,6 @@ export default [
 	reachInvalidationLogic,
 	fetchCostEstimateLogic,
 	imageSuggestionsLogic,
-	uploadCreativeImageLogic
+	uploadCreativeImageLogic,
+	uploadCarouselCreativeImageLogic
 ];

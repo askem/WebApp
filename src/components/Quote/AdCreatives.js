@@ -207,7 +207,7 @@ class AdCreatives extends React.Component {
 		let hasAtLeastOneItem = false;
 		let mediaID_Array;
 
-		if (this.props.surveyMetadata.adCreatives) {
+		if (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) {
 			if (this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines) {
 				headline_preview = this.getRandomElementFromArr(this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines, this.state.previewHeadline);
 				hasAtLeastOneItem = true;

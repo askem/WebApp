@@ -76,7 +76,13 @@ const ManageQuoteContainer = connect(
 			deleteCreativeDescription : (index) => dispatch(quoteActions.deleteCreativeDescription(index)),
 			addCreativeImage : (index, metadata, croppedImage) => dispatch(quoteActions.addCreativeImage(index, metadata, croppedImage)),
 			deleteCreativeImage : (index, key) => dispatch(quoteActions.deleteCreativeImage(index, key)),
-			
+			replaceImageCarouselInSet : (setIndex, imageIndex, metadata) => dispatch(quoteActions.replaceImageCarouselInSet(setIndex, imageIndex, metadata)),
+			addNewSet : (setIndex) => dispatch(quoteActions.addNewSet(setIndex)),
+			deleteCarousel : (setIndex) => dispatch(quoteActions.deleteCarousel(setIndex)),
+			addNewDescriptionInCarousels: () => dispatch(quoteActions.addNewDescriptionInCarousels()),
+			updateCarouselDescription : (index, text) => dispatch(quoteActions.updateCarouselDescription(index, text)),
+			deleteCarouselDescription : (index) => dispatch(quoteActions.deleteCarouselDescription(index)),
+
 			/* Advanced */
 			addQuestionVariant: (questionID, duplicateVariantID) => dispatch(quoteActions.addQuestionVariant(questionID, duplicateVariantID)),
 			deleteQuestionVariant: (questionID, variantID) => dispatch(quoteActions.deleteQuestionVariant(questionID, variantID)),

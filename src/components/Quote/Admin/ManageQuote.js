@@ -9,6 +9,7 @@ import quoteContactFields from 'constants/quoteContactFields';
 import genGUID from 'utils/Askem/genGUID';
 import AdCreatives from 'components/Quote/AdCreatives';
 import RESEARCH_OBJECTIVE_CATEGORIES from 'constants/RESEARCH_OBJECTIVE_CATEGORIES';
+import CarouselCreatives from 'components/Quote/CarouselCreatives';
 
 const renderContactValue = (field, contact) => {
 	let value = contact[field.id];
@@ -63,15 +64,15 @@ class ManageQuote extends React.Component {
 			let hasEmptyValues = false;
 			const { images, headlines, texts, descriptions } = this.props.surveyMetadata.adCreatives.imageAdCreatives;
 
-			if (headlines.some(item => item === '')) {
+			if (headlines && headlines.some(item => item === '')) {
 				hasEmptyValues = true;
 			}	
 
-			if (texts.some(item => item === '')) {
+			if (texts && texts.some(item => item === '')) {
 				hasEmptyValues = true;
 			}	
 
-			if (descriptions.some(item => item === '')) {
+			if (descriptions && descriptions.some(item => item === '')) {
 				hasEmptyValues = true;
 			}	
 			
@@ -136,7 +137,13 @@ class ManageQuote extends React.Component {
 						 onModalStay={this.changeEmptyValuesModalFlag }
 						 onModalLeave={this.doneEditingCreative} />
 					</div>
-
+				</div>
+				<div className="carousel-container">
+					{ this.props.surveyMetadata.questions && 
+						<CarouselCreatives 
+							selectedQuestion={ this.props.surveyMetadata.questions[0] } 
+							{ ...this.props } />
+					}
 				</div>
 				
 			</div>;
@@ -223,16 +230,16 @@ class ManageQuote extends React.Component {
 							onClick={()=>this.setState({editing: 'creatives'})}>Edit</button>
 					</div>
 					<div className="title">Ad Images</div>
-					{ (this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.images) &&
+					{ (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives.images) &&
 							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.images.length} images `}</div>
 					}
-					{ this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines && 
+					{ this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines && 
 							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines.length} headlines`}</div>
 					}
-					{ this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.texts && 
+					{ this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives  && this.props.surveyMetadata.adCreatives.imageAdCreatives.texts && 
 							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.texts.length} texts`}</div>
 					}
-					{ this.props.surveyMetadata.adCreatives &&  this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions && 
+					{ this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions && 
 							<div className="value">{` ${this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions.length} descriptions`}</div>
 					}
 				</div>

@@ -483,6 +483,62 @@ const toggleCollapsablePanel = (actionType, eventData) => {
 	}
 }
 
+const replaceImageCarouselInSet = (setIndex, imageIndex, metadata) => {
+	return {
+		type : 'REPLACE_IMAGE_IN_CAROUSEL_FOR_SET',
+		payload : {
+			setIndex,
+			imageIndex,
+			metadata
+		}
+	}
+}
+
+
+const addNewSet = (setIndex) => {
+	return {
+		type : 'ADD_NEW_CAROUSEL_SET',
+		payload : {
+			setIndex
+		}
+	}
+}
+
+const deleteCarousel = (setIndex) => {
+	return {
+		type : 'DELETE_CAROUSEL',
+		payload : {
+			setIndex
+		}
+	}
+}
+
+const addNewDescriptionInCarousels = () => {
+	return {
+		type: 'ADD_NEW_DESCRIPTION_IN_CAROUSEL',
+		payload : {}
+	}
+}
+
+const updateCarouselDescription = (index, text) => {
+	return {
+		type : 'UPDATE_CAROUSEL_DESCRIPTION',
+		payload :{
+			index, 
+			text
+		}
+	}
+}
+
+const deleteCarouselDescription = (index) => {
+	return {
+		type : 'DELETE_CAROUSEL_DESCRIPTION',
+		payload : {
+			index
+		}
+	}
+}
+
 export {
 	requestReach, requestCostEstimates,
 	toggleQuoteAudienceAttribute,
@@ -507,4 +563,5 @@ export {
 	addCreativeImage, deleteCreativeImage,
 	setResearchObjective,
 	toggleCollapsablePanel,
+	replaceImageCarouselInSet, deleteCarousel, addNewSet, addNewDescriptionInCarousels, updateCarouselDescription, deleteCarouselDescription
 };
