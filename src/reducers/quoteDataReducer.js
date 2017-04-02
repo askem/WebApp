@@ -236,11 +236,8 @@ const quoteReducer = (state = initialState, action) => {
 				});
 			}
 
-			const index = state.getIn(['surveyMetadata', 'adCreatives', 'carouselCreatives']).findIndex(item => item.get('setIndex') === action.payload.setIndex);
-			const innerIndex = state.getIn(['surveyMetadata', 'adCreatives', 'carouselCreatives', index, 'images']).findIndex(item => item.get('imageIndex') === action.payload.imageIndex);
-			return state.updateIn(['surveyMetadata', 'adCreatives', 'carouselCreatives', index, 'images', innerIndex], img => {
-				return img.set('mediaID', mediaID)
-						  .set('key', mediaID);
+			return state.updateIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives', 'carousels', setIndex, imageIndex], img => {
+				return img.set('mediaID', mediaID);						
 
 			})
 		}
@@ -541,61 +538,40 @@ const quoteReducer = (state = initialState, action) => {
 				}
 			}
 
-			const carouselCreatives = state.getIn(['surveyMetadata', 'adCreatives', 'carouselCreatives']);
+			const carouselCreatives = state.getIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives', 'carousels']);
 			const { crop100x100, key, mediaID } = action.payload.metadata;
 
-			if (!carouselCreatives) {
-				return state.setIn(['surveyMetadata', 'adCreatives', 'carouselCreatives'], Immutable.fromJS([
-					{
-						setIndex : action.payload.setIndex,
-						images : [{ crop100x100, key, mediaID, imageIndex : action.payload.imageIndex }]
-					}
-				]));
-			}
-			else {
-				const carouselSetIndex = carouselCreatives.findIndex(carousel => carousel.get('setIndex') === action.payload.setIndex);
-				return state.updateIn(['surveyMetadata', 'adCreatives', 'carouselCreatives', carouselSetIndex, 'images'], images => {
-					const indexInArray = images.findIndex(image => image.get('imageIndex') === action.payload.imageIndex);
-					if (indexInArray === -1) {
-						return images.push(Immutable.fromJS({ crop100x100, key, mediaID, imageIndex : action.payload.imageIndex }));
-					}
-					else {
-						return images.setIn([indexInArray], Immutable.fromJS({ crop100x100, key, mediaID, imageIndex : action.payload.imageIndex }));
-					}
-				});
-			}
+			return state.updateIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives', 'carousels', action.payload.setIndex, action.payload.imageIndex], img => {
+				return img.set('crop100x100', Immutable.fromJS(crop100x100))
+						  .set('mediaID', Immutable.fromJS(mediaID));
+
+			});
 		}
 		case 'ADD_NEW_CAROUSEL_SET' : {
-			const emptySet = Immutable.fromJS({
-				setIndex : action.payload.setIndex,
-				images : []
-			});
+			const emptyImage = {
+				crop100x100 : null,
+				mediaID : null
+			};
 
-			const carouselCreatives = state.getIn(['surveyMetadata', 'adCreatives', 'carouselCreatives']);
+			let emptySet = [];
+			for (let i=0; i<action.payload.totalPossibleAnswers; i++) {
+				emptySet.push(emptyImage);
+			}
+
+			emptySet = Immutable.fromJS(emptySet);
+
+			const carouselCreatives = state.getIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives', 'carousels']);
 			if (!carouselCreatives) {
-				return state.setIn(['surveyMetadata', 'adCreatives', 'carouselCreatives'], emptySet)
+				return state.setIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives', 'carousels'], Immutable.fromJS([emptySet]));
 			}
 			else {
-				return state.updateIn(['surveyMetadata', 'adCreatives', 'carouselCreatives'], carousels => {
+				return state.updateIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives', 'carousels'], carousels => {
 					return carousels.push(emptySet);
 				});
 			}
 		}
 		case 'DELETE_CAROUSEL':{
-			state = state.deleteIn(['surveyMetadata', 'adCreatives', 'carouselCreatives', action.payload.setIndex]);
-
-			state = state.updateIn(['surveyMetadata', 'adCreatives', 'carouselCreatives'], carousel => {
-				const sets = carousel.sort((a,b) => a.get('setIndex') - b.get('setIndex'));
-				return carousel.map(item => { 
-						if (item.get('setIndex') > action.payload.setIndex) {
-							return item.set('setIndex', item.get('setIndex') - 1);
-						}
-						else {
-							return item;
-						}
-					})
-			});
-
+			state = state.deleteIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives', 'carousels', action.payload.setIndex]);
 			state = state.setIn(['surveyMetadata', 'croppedCarouselImages'], state.getIn(['surveyMetadata', 'croppedCarouselImages']).filter(carousel => carousel.get('setIndex') !== action.payload.setIndex));
 			return state.updateIn(['surveyMetadata', 'croppedCarouselImages'], carousel => {
 				return carousel.map(item => {
@@ -609,20 +585,20 @@ const quoteReducer = (state = initialState, action) => {
 			});
 		}
 		case 'ADD_NEW_DESCRIPTION_IN_CAROUSEL':{
-			if (!state.getIn(['surveyMetadata', 'adCreatives', 'carouselDescriptions'])) {
-				return state = state.setIn(['surveyMetadata', 'adCreatives', 'carouselDescriptions'], Immutable.fromJS([''])); 
+			if (!state.getIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives', 'descriptions'])) {
+				return state = state.setIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives', 'descriptions' ], Immutable.fromJS([''])); 
 			}
 			else {
-				return state.updateIn(['surveyMetadata', 'adCreatives', 'carouselDescriptions'], descriptions => {
+				return state.updateIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives', 'descriptions'], descriptions => {
 				 	return descriptions.push('');
 				});
 			}
 		}
 		case 'UPDATE_CAROUSEL_DESCRIPTION':{
-			return state.setIn(['surveyMetadata', 'adCreatives', 'carouselDescriptions', action.payload.index], action.payload.text);
+			return state.setIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives','descriptions', action.payload.index], action.payload.text);
 		}
 		case 'DELETE_CAROUSEL_DESCRIPTION':{
-			return state.deleteIn(['surveyMetadata', 'adCreatives', 'carouselDescriptions', action.payload.index]);
+			return state.deleteIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives','descriptions', action.payload.index]);
 		}
 		default:
 			return state;

@@ -495,11 +495,11 @@ const replaceImageCarouselInSet = (setIndex, imageIndex, metadata) => {
 }
 
 
-const addNewSet = (setIndex) => {
+const addNewSet = (totalPossibleAnswers) => {
 	return {
 		type : 'ADD_NEW_CAROUSEL_SET',
 		payload : {
-			setIndex
+			totalPossibleAnswers
 		}
 	}
 }

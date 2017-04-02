@@ -180,6 +180,7 @@ class AskemAPI {
 	fetchSamplingKPIs(samplingID) {
 		return this.fetchEndpoint(`samplings/${samplingID}/kpis`);
 	}
+
 	updateResearchData(researchID, modelData, kpiBindings, surveyID) {
 		return this.fetchEndpoint(`researchCampaigns/${researchID}`, {
 			modelData: JSON.stringify(modelData),
@@ -193,6 +194,17 @@ class AskemAPI {
 			description,
 			modelData: JSON.stringify(modelData)
 		});
+	}
+
+	createSamplings(researchID) {
+		return this.fetchEndpoint(`researchCampaigns/${researchID}/samplings`, {
+			surveyID : null
+		});
+	}
+
+
+	setCreatives(sampleID, creatives) {
+		return this.fetchEndpoint(`samplings/${sampleID}/creatives`, creatives);
 	}
 
 	_audienceToAttributePhraseUSA(audience) {
@@ -433,6 +445,23 @@ class AskemAPI {
 		});
 	}
 
+	setAudience(id, audience, sampleSize) {
+		const attributes = this._audienceToAttributePhraseUSA(audience);
+		const sample = [{
+			name : 'TEMP_Dummy_name',
+			sampleMixSource : null,	
+			population : {
+				ID : 0,
+				description : null,
+				attributes: attributes.attributes,
+				excludedAttributes:null
+			},
+			sampleSize,
+			dynamicDimension : null
+		}]
+
+		return this.fetchEndpoint(`samplings/${id}/samples`, sample);
+	}
 
 	/* API - Not yet implemented */
 	fetchMediaPlan(researchID) {

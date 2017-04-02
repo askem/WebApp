@@ -351,18 +351,18 @@ const loadQuoteLogic = createLogic({
 			// 	}, { allowMore: true });
 			// }
 
-			if (quote.metadata.surveyMetadata.adCreatives && quote.metadata.surveyMetadata.adCreatives.carouselCreatives) {
-				const promises = quote.metadata.surveyMetadata.adCreatives.carouselCreatives.map((item, index) => {
+			if (quote.metadata.surveyMetadata.adCreatives && quote.metadata.surveyMetadata.adCreatives.carouselAdCreatives) {
+				const promises = quote.metadata.surveyMetadata.adCreatives.carouselAdCreatives.carousels.map((item, index) => {
 					return new Promise((resolve, reject) => {
-						const innerPromises = item.images.map(img => {
+						const innerPromises = item.map(img => {
 							const uri = blobURL(img.mediaID);
-							const x = img.crop100x100[0][0];
-							const y = img.crop100x100[0][1];
-							const width = img.crop100x100[1][0] - x;
-							const height = img.crop100x100[1][1] - y;
+							const x = img.crop100x100 ? img.crop100x100[0][0] : 0;
+							const y = img.crop100x100 ? img.crop100x100[0][1] : 0;
+							const width = img.crop100x100 ? img.crop100x100[1][0] - x : 100;
+							const height = img.crop100x100 ? img.crop100x100[1][1] - y : 100;
 							const newMetadata = { x, y, height, width, dataURI : uri, extraData: { mediaID:img.mediaID, setIndex: item.setIndex, imageIndex : img.imageIndex }};
 							return getImageData(newMetadata);
-						})
+						});
 
 						Promise
 							.all(innerPromises)
@@ -380,12 +380,11 @@ const loadQuoteLogic = createLogic({
 				Promise
 					.all(promises)
 					.then(values => {
-						//values = values.sort((a,b) => a.index - b.index);
 						const arr = [];
-						values.forEach(item => {
-							item.forEach(elm => {
+						values.forEach((item, setIndex) => {
+							item.forEach((elm, imageIndex) => {
 								const { width, height, dataURI:croppedSrc } = elm;
-								const { mediaID, imageIndex, setIndex } = elm.extraData;
+								const { mediaID } = elm.extraData;
 								arr.push({
 									key : mediaID, 
 									cropData : { croppedSrc },

@@ -294,10 +294,16 @@ class AdCreatives extends React.Component {
 
 	onUpload(croppedImage, originalImage, metadata) {
 		const key = `temp_${genGUID()}`;
+		let { x, y, width, height } = metadata;
+		x = parseInt(x);
+		y = parseInt(y);
+		width = parseInt(width);
+		height = parseInt(height);
+
 		const imageMetadata = {
 			crop191x100 : [
-				[metadata.x, metadata.y],
-				[metadata.x + metadata.width, metadata.y + metadata.height]
+				[x, y],
+				[x + width-1, y + height-1]
 			],
 			mediaID : originalImage.src,
 			croppedSrc : croppedImage.src,

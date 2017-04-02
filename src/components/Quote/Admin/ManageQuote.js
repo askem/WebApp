@@ -10,6 +10,10 @@ import genGUID from 'utils/Askem/genGUID';
 import AdCreatives from 'components/Quote/AdCreatives';
 import RESEARCH_OBJECTIVE_CATEGORIES from 'constants/RESEARCH_OBJECTIVE_CATEGORIES';
 import CarouselCreatives from 'components/Quote/CarouselCreatives';
+import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+
 
 const renderContactValue = (field, contact) => {
 	let value = contact[field.id];
@@ -26,12 +30,22 @@ class ManageQuote extends React.Component {
 		this.checkAdCreatives = this.checkAdCreatives.bind(this);
 		this.changeEmptyValuesModalFlag = this.changeEmptyValuesModalFlag.bind(this);
 		this.doneEditingCreative = this.doneEditingCreative.bind(this);
+		this.createResearchCampaign = this.createResearchCampaign.bind(this);
+		this.uploadCreatives =this.uploadCreatives.bind(this);
+		this.proceedWithResearchCampaignFlow = this.proceedWithResearchCampaignFlow.bind(this);
+		this.handleTextChange = this.handleTextChange.bind(this);
 
 		this.state = {
 			selectedQuestion: null,
 			editing: null,
 			creatingSurvey: false,
 			duplicatingLead: false,
+			showModal : false,
+			uploadCreativesDisabled : true,
+			surveyID : null,
+			sampleID: null, 
+			researchCampaignName : null,
+			researchCampaignDescription : null
 		};
 	}
 
@@ -62,7 +76,7 @@ class ManageQuote extends React.Component {
 	checkAdCreatives() {
 		if (this.props.surveyMetadata.adCreatives) {
 			let hasEmptyValues = false;
-			const { images, headlines, texts, descriptions } = this.props.surveyMetadata.adCreatives.imageAdCreatives;
+			const { images, headlines, texts, descriptions } = this.props.surveyMetadata.adCreatives.imageAdCreatives || {};
 
 			if (headlines && headlines.some(item => item === '')) {
 				hasEmptyValues = true;
@@ -82,9 +96,89 @@ class ManageQuote extends React.Component {
 			else {
 				this.setState({editing: null, emptyAdCreativeValues:false});
 			}
+
 		}
 	}
 
+	createResearchCampaign() {
+		const name = this.refs.research_campaign_name.input.value;
+		const description = this.refs.research_campaign_description.input.value;
+
+		this.setState({ showModal : true });
+		
+		api.createResearchCampaign(name, description)
+			.then(data => {
+				if (this.state.surveyID) {
+					this.refs.modalInnerDescription.innerHTML = 'Updating SurveyID....Please wait...';
+					api.updateResearchData(data.entityID, null, null, this.state.surveyID)
+						.then(result => {
+							this.proceedWithResearchCampaignFlow(data)
+						})
+						.catch(err => {
+							console.log('error updating surveyID', err);
+						});
+				}
+				else {
+					this.proceedWithResearchCampaignFlow(data);
+				}
+			})
+			.catch(err => {
+				console.error('error on createResearchCampaign', err);
+				this.refs.modalInnerDescription.innerHTML = 'Error in Creating Research Campaign!';
+			})
+	}
+	
+	proceedWithResearchCampaignFlow(data) {
+		this.refs.modalInnerDescription.innerHTML = 'Creating Sampling....Please wait...';
+		this.setState({ researchCampaignID : data.entityID });
+		api.createSamplings(data.entityID)
+			.then(data => {
+				this.setState({ sampleID : data.entityID });
+				this.refs.modalInnerDescription.innerHTML = 'Setting Audience....please wait....';
+				api.setAudience(data.entityID, this.props.audience, this.props.sample.sampleSize)
+					.then(data => {
+						this.refs.modalInnerDescription.innerHTML = 'Set Audience Completed successfully!';
+					})
+					.catch(err => {
+						console.error('error in setting audience', err);
+						this.refs.modalInnerDescription.innerHTML = 'Error in Setting Audience!';
+					})
+			})
+			.catch(err => {
+				console.error('error creatingSampling', err);
+				this.refs.modalInnerDescription.innerHTML = 'Error in Creating Sampling!';
+			})
+	}
+
+	uploadCreatives() {
+		const creatives = {
+			imageAdCreatives : this.props.surveyMetadata.adCreatives.imageAdCreatives,
+			carouselAdCreatives : {
+				carousels : this.props.surveyMetadata.adCreatives.carouselAdCreatives.carousels,
+				descriptions : this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions
+			}
+		}
+
+		this.setState({ showModal : true });
+		api.setCreatives(this.state.sampleID, creatives)		
+			.then(data => {
+				this.refs.modalInnerDescription.innerHTML = 'Creatives uploaded successfully!';
+			})
+			.catch(err => {
+				console.error('error in uploading creatives', err);
+				this.refs.modalInnerDescription.innerHTML = 'Error in uploading creatives!';
+			})
+	}
+
+	handleTextChange(event, type) {
+		if (type == 'name') {
+			this.setState({ researchCampaignName : event.target.value });
+		}
+		else {
+			this.setState({ researchCampaignDescription : event.target.value });
+
+		}
+	}
 
 	render() {
 		if (!this.props.lead.loaded) {
@@ -266,13 +360,40 @@ class ManageQuote extends React.Component {
 			</div>
 
 			<div>
+				<div>
+					<TextField
+							ref="research_campaign_name"
+							inputStyle={{color: 'black'}}
+							fullWidth={true}
+							hintText={'Research campaign name' } 
+							onChange={(event) => { this.handleTextChange(event, 'name') }}/> 
+					
+					<TextField
+							ref="research_campaign_description"
+							inputStyle={{color: 'black'}}
+							fullWidth={true}
+							hintText={'Research campaign description' } 
+							onChange={(event) => { this.handleTextChange(event, 'desc') }} /> 
+							 
+				</div>
+
+				<div>
+					<FlatButton
+						label="Create Research Campaign"
+						onTouchTap={ this.createResearchCampaign }
+						disabled={ (this.state.researchCampaignName === null || this.state.researchCampaignName === '') || (this.state.researchCampaignDescription === null || this.state.researchCampaignDescription === '')  }/> 
+					<FlatButton
+						label="Upload Creatives" 
+						onTouchTap={ this.uploadCreatives }
+						disabled={ this.state.surveyID === null || this.state.sampleID === null }/> 
+				</div>
 				<button
 					disabled={this.state.creatingSurvey}
 					onClick={() => {
 						this.setState({creatingSurvey: true});
 						api.createSurvey(this.props.surveyMetadata.questions, this.props.surveyMetadata.questionsVariants, this.props.lead.quoteID)
 						.then(results => {
-							this.setState({creatingSurvey: false});
+							this.setState({creatingSurvey: false, uploadCreativesDisabled : false, surveyID : results.surveyID });
 							console.info(results);
 							alert(`Created survey with ID: ${results.surveyID}`);
 						}).catch(error => {
@@ -308,6 +429,24 @@ class ManageQuote extends React.Component {
 					}}
 				>{this.state.duplicatingLead ? 'Please Wait...' : 'Duplicate Quote'}</button>
 			</div>
+
+			<Dialog
+				title="Creating research campaign"
+				modal={true}
+				open={this.state.showModal}
+				autoDetectWindowHeight={true}
+				actions={[
+					<FlatButton
+						label="close"
+						primary={false}
+						onTouchTap={() => { this.setState({ showModal : false }) }} />
+				]}
+				>
+				<div className="on-image-upload-error" ref="modalInnerDescription">
+					Creating Research Campaign....Please wait...
+				</div>
+			</Dialog>
+
 			</div>
 		)
 	}

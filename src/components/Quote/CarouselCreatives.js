@@ -12,7 +12,6 @@ class CarouselCreatives extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onUpload = this.onUpload.bind(this);
-		this.deleteImage = this.deleteImage.bind(this);
 		this.renderCarouselSet = this.renderCarouselSet.bind(this);
 		this.addNewSet = this.addNewSet.bind(this);	
 		this.onDescriptionChange = this.onDescriptionChange.bind(this);
@@ -26,6 +25,11 @@ class CarouselCreatives extends React.Component {
 
 	componentDidMount() {
 		window.addEventListener('scroll',this.stickCarouselPreview);
+
+		if (!this.props.surveyMetadata.adCreatives || (!this.props.surveyMetadata.adCreatives.carouselAdCreatives.carousels || this.props.surveyMetadata.adCreatives.carouselAdCreatives.carousels.length === 0)) {
+			this.props.addNewSet(this.props.selectedQuestion.possibleAnswers.length);
+		}
+
 	}
 
 	componentWillUnmount() {
@@ -48,7 +52,6 @@ class CarouselCreatives extends React.Component {
 		}
 		else {
 			titleForPreview.style.position = 'static';
-			//titleForPreview.style.top = '90px';;
 			carouselContainer.style.position = 'relative';
 			carouselContainer.style.top = '-70px';
 		}
@@ -62,7 +65,7 @@ class CarouselCreatives extends React.Component {
 		const carouselJson = {
 			crop100x100 : [
 				[x, y],
-				[x + width, y + height]
+				[x + width-1, y + height-1]
 			],
 			mediaID : originalImage.src,
 			croppedSrc : croppedImage ? croppedImage.src : originalImage.src,
@@ -84,9 +87,7 @@ class CarouselCreatives extends React.Component {
 		});
 	}
 
-	deleteImage(imageIndex, answerIndex, key) {
-		this.props.deleteCarouselImage(imageIndex, answerIndex, key);
-	}
+	
 
 	renderCarouselSet(set, setIndex = 0) {
 		return this.props.selectedQuestion.possibleAnswers.map((possibleAnswer, index) => {
@@ -118,7 +119,7 @@ class CarouselCreatives extends React.Component {
 	}
 
 	addNewSet() {
-		this.props.addNewSet(this.props.surveyMetadata.adCreatives.carouselCreatives.length);
+		this.props.addNewSet(this.props.selectedQuestion.possibleAnswers.length);
 	}	
 
 	deleteSet(setIndex) {
@@ -156,19 +157,19 @@ class CarouselCreatives extends React.Component {
 	}
 
 	getRandomDescription() {
-		if (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselDescriptions) {
-			if (this.props.surveyMetadata.adCreatives.carouselDescriptions.length === 1) {
-				return this.props.surveyMetadata.adCreatives.carouselDescriptions[0];
+		if (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions) {
+			if (this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions.length === 1) {
+				return this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions[0];
 			}
 
 			const min = 0;
-			const max = this.props.surveyMetadata.adCreatives.carouselDescriptions.length-1;
+			const max = this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions.length-1;
 			let newRandomValue = '';
 			let originalValue = '';
 
 			while (newRandomValue === originalValue || newRandomValue === '') {
 				let randomNumber = Math.floor(Math.random()*(max-min+1)+min);
-				newRandomValue= this.props.surveyMetadata.adCreatives.carouselDescriptions[randomNumber];
+				newRandomValue= this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions[randomNumber];
 			}
 
 			return newRandomValue;
@@ -184,8 +185,8 @@ class CarouselCreatives extends React.Component {
 		let descriptions = null;
 		let selectedDescription = null;
 
-		if (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselCreatives) {
-			carousels = this.props.surveyMetadata.adCreatives.carouselCreatives.map((item, index) => {
+		if (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselAdCreatives.carousels) {
+			carousels = this.props.surveyMetadata.adCreatives.carouselAdCreatives.carousels.map((item, index) => {
 				return (
 					<div key={ `set_${index}`} onClick={ this.setSelectedSet.bind(this, index) }> 
 						<div className="set-title">
@@ -201,7 +202,7 @@ class CarouselCreatives extends React.Component {
 				);
 			});
 
-		previewImages = this.props.surveyMetadata.croppedCarouselImages.filter(item => item.setIndex === this.state.selectedSet);
+		previewImages = this.props.surveyMetadata.croppedCarouselImages ? this.props.surveyMetadata.croppedCarouselImages.filter(item => item.setIndex === this.state.selectedSet) : null;
 			
 		}
 		else {
@@ -215,8 +216,8 @@ class CarouselCreatives extends React.Component {
 			)
 		}
 
-		if (this.props.surveyMetadata.adCreatives.carouselDescriptions) {
-			descriptions = this.props.surveyMetadata.adCreatives.carouselDescriptions.map((item, index) => {
+		if (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions) {
+			descriptions = this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions.map((item, index) => {
 				return (
 					<div key={`desc_${index}`} className="description-in-carousel">
 						<TextField

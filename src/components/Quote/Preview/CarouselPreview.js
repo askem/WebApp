@@ -75,7 +75,7 @@ class CarouselPreview extends React.Component {
 		let rightArrowStyle = null;
 		let leftArrowStyle = null;
 
-		const length = (this.props.images.length + 1) * 312;
+		const length = this.props.images ? (this.props.images.length + 1) * 312 : null;
 
 		if (direction) {
 			style = { transform:`translateX(${this.state.nextPosition}px)`, width:`${length}px`}
@@ -97,7 +97,7 @@ class CarouselPreview extends React.Component {
 				</div>
 
 				<div className="carousel-preview-main-container animation" style={ style }>
-					{ this.props.images
+					{ this.props.images && this.props.images
 							.sort((a,b) => a.imageIndex - b.imageIndex)
 							.map((item, index) => {
 								let divClass = 'image-in-carousel';
