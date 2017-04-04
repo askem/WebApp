@@ -600,6 +600,15 @@ const quoteReducer = (state = initialState, action) => {
 		case 'DELETE_CAROUSEL_DESCRIPTION':{
 			return state.deleteIn(['surveyMetadata', 'adCreatives', 'carouselAdCreatives','descriptions', action.payload.index]);
 		}
+		case 'SET_RESEARCH_CAMPAIGN_DATA': {
+			const { researchCampaignID, campaignName, campaignDescription, sampleID, surveyID } = action.payload;
+			return state.set('researchCampaign', Immutable.fromJS({ researchCampaignID, campaignName, campaignDescription}))
+				   		.set('sampleID', sampleID)
+				   		.set('surveyID', surveyID)
+		}
+		case 'SET_SURVEYID':{
+			return state.set('surveyID', action.payload.surveyID);
+		}
 		default:
 			return state;
 	}

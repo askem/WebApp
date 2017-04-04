@@ -463,6 +463,11 @@ class AskemAPI {
 		return this.fetchEndpoint(`samplings/${id}/samples`, sample);
 	}
 
+	getSamplePlan(sampleID, sampleAccounts) {
+		return this.fetchEndpoint(`samplings/${sampleID}/samplePlan?sampleAccounts=${sampleAccounts}`);
+	}
+
+
 	/* API - Not yet implemented */
 	fetchMediaPlan(researchID) {
 		return this.fetchURL(`/mockdata/${researchID}/mediaPlan.json`)

@@ -22,6 +22,10 @@ const ManageQuoteContainer = connect(
 		if (contact) { contact = contact.toJS(); }
 		let researchObjective = state.getIn(['data', 'quote', 'researchObjective']);
 		if (researchObjective) { researchObjective = researchObjective.toJS(); }
+		let researchCampaign = state.getIn(['data', 'quote', 'researchCampaign']);
+		if (researchCampaign) { researchCampaign = researchCampaign.toJS(); }
+		let surveyID = state.getIn(['data', 'quote', 'surveyID']);
+		let sampleID = state.getIn(['data', 'quote', 'sampleID']);
 
 		return {
 			lead,
@@ -32,7 +36,10 @@ const ManageQuoteContainer = connect(
 			reachEstimate,
 			costEstimate,
 			contact,
-			researchObjective
+			researchObjective,
+			researchCampaign,
+			surveyID,
+			sampleID
 		};
 	},
 	function mapDispatchToProps(dispatch) {
@@ -82,6 +89,8 @@ const ManageQuoteContainer = connect(
 			addNewDescriptionInCarousels: () => dispatch(quoteActions.addNewDescriptionInCarousels()),
 			updateCarouselDescription : (index, text) => dispatch(quoteActions.updateCarouselDescription(index, text)),
 			deleteCarouselDescription : (index) => dispatch(quoteActions.deleteCarouselDescription(index)),
+			setResearchCampaignData : (researchCampaignID, campaignName, campaignDescription, sampleID, surveyID) => dispatch(quoteActions.setResearchCampaignData(researchCampaignID, campaignName, campaignDescription, sampleID, surveyID)),
+			setSurveyID : (surveyID) => dispatch(quoteActions.setSurveyID(surveyID)),
 
 			/* Advanced */
 			addQuestionVariant: (questionID, duplicateVariantID) => dispatch(quoteActions.addQuestionVariant(questionID, duplicateVariantID)),

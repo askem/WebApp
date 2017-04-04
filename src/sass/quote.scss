@@ -596,6 +596,24 @@ header {
 		text-align: right;
 		padding: 10px 0;
 	}
+
+	.research-campaign-container {
+		.campaign-input-fields {
+			margin-left: 20px;
+			width : 800px;
+		}
+
+		.research-campaign-data {
+			margin: 20px 0 10px 0;
+			font-weight: bold;
+			font-size: 17px;
+
+			 .research-stats {
+				 margin-left: 20px;
+			 }
+		}
+	}
+
 }
 
 .external-preview {
@@ -1946,3 +1964,17 @@ header {
 
 }
 
+.manage-buttons-panel {
+	display: flex;
+
+	.sample-account-value-radio-button {
+		width: 170px !important;
+	}
+}
+
+.sample-accounts {
+	display:flex;
+	padding-top: 6px;
+	width: 500px;
+
+}

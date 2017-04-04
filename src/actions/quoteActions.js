@@ -539,6 +539,28 @@ const deleteCarouselDescription = (index) => {
 	}
 }
 
+const setResearchCampaignData = (researchCampaignID, campaignName, campaignDescription, sampleID, surveyID) => {
+	return {
+		type:'SET_RESEARCH_CAMPAIGN_DATA',
+		payload : {
+			researchCampaignID, 
+			campaignName,
+			campaignDescription,
+			sampleID,
+			surveyID
+		}
+	}
+}
+
+const setSurveyID = (surveyID) => {
+	return {
+		type :'SET_SURVEYID',
+		payload : {
+			surveyID
+		}
+	}
+}
+
 export {
 	requestReach, requestCostEstimates,
 	toggleQuoteAudienceAttribute,
@@ -563,5 +585,6 @@ export {
 	addCreativeImage, deleteCreativeImage,
 	setResearchObjective,
 	toggleCollapsablePanel,
-	replaceImageCarouselInSet, deleteCarousel, addNewSet, addNewDescriptionInCarousels, updateCarouselDescription, deleteCarouselDescription
+	replaceImageCarouselInSet, deleteCarousel, addNewSet, addNewDescriptionInCarousels, updateCarouselDescription, deleteCarouselDescription,
+	setResearchCampaignData, setSurveyID
 };

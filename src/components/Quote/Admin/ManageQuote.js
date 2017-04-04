@@ -13,7 +13,7 @@ import CarouselCreatives from 'components/Quote/CarouselCreatives';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 
 const renderContactValue = (field, contact) => {
 	let value = contact[field.id];
@@ -34,6 +34,9 @@ class ManageQuote extends React.Component {
 		this.uploadCreatives =this.uploadCreatives.bind(this);
 		this.proceedWithResearchCampaignFlow = this.proceedWithResearchCampaignFlow.bind(this);
 		this.handleTextChange = this.handleTextChange.bind(this);
+		this.createSurvey = this.createSurvey.bind(this);
+		this.getSamplePlan = this.getSamplePlan.bind(this);
+		this.onSampleAccountsChange = this.onSampleAccountsChange.bind(this);
 
 		this.state = {
 			selectedQuestion: null,
@@ -42,10 +45,11 @@ class ManageQuote extends React.Component {
 			duplicatingLead: false,
 			showModal : false,
 			uploadCreativesDisabled : true,
-			surveyID : null,
-			sampleID: null, 
 			researchCampaignName : null,
-			researchCampaignDescription : null
+			researchCampaignDescription : null,
+			researchCampaignHasSurveyID : null,
+			processCompleted : null,
+			sampleAccounts : 'Test'
 		};
 	}
 
@@ -104,15 +108,17 @@ class ManageQuote extends React.Component {
 		const name = this.refs.research_campaign_name.input.value;
 		const description = this.refs.research_campaign_description.input.value;
 
-		this.setState({ showModal : true });
+		this.setState({ showModal : true, processCompleted: false });
 		
 		api.createResearchCampaign(name, description)
 			.then(data => {
-				if (this.state.surveyID) {
+				if (this.props.surveyID) {
 					this.refs.modalInnerDescription.innerHTML = 'Updating SurveyID....Please wait...';
-					api.updateResearchData(data.entityID, null, null, this.state.surveyID)
+					const researchCampaignID = data.entityID;
+					api.updateResearchData(researchCampaignID, null, null, this.props.surveyID)
 						.then(result => {
 							this.proceedWithResearchCampaignFlow(data)
+							this.setState({ researchCampaignHasSurveyID :true });
 						})
 						.catch(err => {
 							console.log('error updating surveyID', err);
@@ -125,28 +131,34 @@ class ManageQuote extends React.Component {
 			.catch(err => {
 				console.error('error on createResearchCampaign', err);
 				this.refs.modalInnerDescription.innerHTML = 'Error in Creating Research Campaign!';
+				this.setState({ processCompleted : true });
 			})
 	}
 	
 	proceedWithResearchCampaignFlow(data) {
 		this.refs.modalInnerDescription.innerHTML = 'Creating Sampling....Please wait...';
-		this.setState({ researchCampaignID : data.entityID });
-		api.createSamplings(data.entityID)
+		const researchCampaignID = data.entityID;
+		api.createSamplings(researchCampaignID)
 			.then(data => {
-				this.setState({ sampleID : data.entityID });
+				const sampleID = data.entityID;
+				this.setState({ sampleID : sampleID });
 				this.refs.modalInnerDescription.innerHTML = 'Setting Audience....please wait....';
-				api.setAudience(data.entityID, this.props.audience, this.props.sample.sampleSize)
+				api.setAudience(sampleID, this.props.audience, this.props.sample.sampleSize)
 					.then(data => {
 						this.refs.modalInnerDescription.innerHTML = 'Set Audience Completed successfully!';
+						this.setState({ processCompleted : true });
+						this.props.setResearchCampaignData(researchCampaignID, this.state.researchCampaignName, this.state.researchCampaignDescription,  sampleID, this.props.surveyID);
 					})
 					.catch(err => {
 						console.error('error in setting audience', err);
 						this.refs.modalInnerDescription.innerHTML = 'Error in Setting Audience!';
+						this.setState({ processCompleted : true });
 					})
 			})
 			.catch(err => {
 				console.error('error creatingSampling', err);
 				this.refs.modalInnerDescription.innerHTML = 'Error in Creating Sampling!';
+				this.setState({ processCompleted : true });
 			})
 	}
 
@@ -159,15 +171,46 @@ class ManageQuote extends React.Component {
 			}
 		}
 
-		this.setState({ showModal : true });
-		api.setCreatives(this.state.sampleID, creatives)		
-			.then(data => {
-				this.refs.modalInnerDescription.innerHTML = 'Creatives uploaded successfully!';
-			})
-			.catch(err => {
-				console.error('error in uploading creatives', err);
-				this.refs.modalInnerDescription.innerHTML = 'Error in uploading creatives!';
-			})
+		this.setState({ showModal : true, processCompleted : false });
+
+		setTimeout(function() {
+			if (!this.state.researchCampaignHasSurveyID) {
+				this.refs.modalInnerDescription.innerHTML = 'Updating research campaign with surveryID... please wait...';
+				api.updateResearchData(this.props.researchCampaignID, null, null, this.props.surveyID)
+					.then(result => {
+						this.setState({ researchCampaignHasSurveyID : true });
+						this.refs.modalInnerDescription.innerHTML = 'Uploading creatives... please wait...';
+						
+						api.setCreatives(this.props.sampleID, creatives)		
+							.then(data => {
+								this.refs.modalInnerDescription.innerHTML = 'Creatives uploaded successfully!';
+								this.setState({ processCompleted : true });
+							})
+							.catch(err => {
+								console.error('error in uploading creatives', err);
+								this.refs.modalInnerDescription.innerHTML = 'Error in uploading creatives!';
+								this.setState({ processCompleted : true });
+							})
+					})
+					.catch(err => {
+						console.log('error updating surveyID', err);
+						this.setState({ processCompleted : true });
+					});
+			}
+			else {
+				this.refs.modalInnerDescription.innerHTML = 'Uploading creatives... please wait...';
+				api.setCreatives(this.props.sampleID, creatives)		
+					.then(data => {
+						this.refs.modalInnerDescription.innerHTML = 'Creatives uploaded successfully!';
+						this.setState({ processCompleted : true });
+					})
+					.catch(err => {
+						console.error('error in uploading creatives', err);
+						this.refs.modalInnerDescription.innerHTML = 'Error in uploading creatives!';
+						this.setState({ processCompleted : true });
+					})
+			}
+		}.bind(this), 200);
 	}
 
 	handleTextChange(event, type) {
@@ -178,6 +221,79 @@ class ManageQuote extends React.Component {
 			this.setState({ researchCampaignDescription : event.target.value });
 
 		}
+	}
+
+	createSurvey() {
+		this.setState({ showModal : true, creatingSurvey : true, processCompleted: false});
+
+		// delay by 500 ms to allow modal to open
+		setTimeout(function() {
+			this.refs.modalDialog.title = "Creating survey"
+			this.refs.modalInnerDescription.innerHTML = 'Creating Survey....please wait...';
+			api.createSurvey(this.props.surveyMetadata.questions, this.props.surveyMetadata.questionsVariants, this.props.lead.quoteID)
+				.then(results => {
+					this.setState({creatingSurvey: false, uploadCreativesDisabled : false });
+					console.info(results);
+					//alert(`Created survey with ID: ${results.surveyID}`);
+					this.refs.modalInnerDescription.innerHTML = 'Survey was created successfully!';
+
+					if (this.props.researchCampaign && this.props.researchCampaign.researchCampaignID) {
+						this.refs.modalInnerDescription.innerHTML = 'Updating research campaign with surveyID';
+						
+						api.updateResearchData(this.props.researchCampaign.researchCampaignID, null, null, results.surveyID)
+							.then(data => {
+								this.refs.modalInnerDescription.innerHTML = 'Update research campaign with surveryID completed successfully!';
+								this.setState({ processCompleted : true });
+
+								this.props.setSurveyID(results.surveyID);
+
+							})
+							.catch(err => {
+								console.error(err);
+								this.refs.modalInnerDescription.innerHTML = 'Error updating research campaign with surveyID!';
+								this.setState({ processCompleted : true });
+							});
+					}
+					else {
+						this.setState({ processCompleted : true });
+						this.props.setSurveyID(results.surveyID);
+						
+					}
+				}).catch(error => {
+					this.setState({creatingSurvey: false});
+					console.error(error);
+					//alert('Error, see console for details');
+					this.refs.modalInnerDescription.innerHTML = 'Error creating survey';
+					this.setState({ processCompleted : true });
+				});
+		}.bind(this), 250);
+	}
+
+
+	getSamplePlan() {
+		this.setState({ showModal : true, processCompleted: false});
+		
+		setTimeout(function() {
+			this.refs.modalInnerDescription.innerHTML = 'Getting sample plan... please wait....';
+			api.getSamplePlan(this.props.sampleID, this.state.sampleAccounts)
+				.then(data => {
+					this.refs.modalInnerDescription.innerHTML = 'Sample plan successfull!';
+					console.group('Sample Plan')
+					console.log('data', data);
+					console.groupEnd();
+					this.setState({ processCompleted: true });
+				})
+				.catch(err => {
+					this.refs.modalInnerDescription.innerHTML = 'Error getting sample plan!';
+					
+					console.error(err);
+					this.setState({ processCompleted: true });
+				})
+		}.bind(this), 200);
+	}
+
+	onSampleAccountsChange(event, value) {
+		this.setState({ sampleAccounts : value });
 	}
 
 	render() {
@@ -282,6 +398,9 @@ class ManageQuote extends React.Component {
 
 		const reserachObjectiveTitle = this.getReseachObjectiveTitle(this.props.researchObjective.id);
 
+
+		const { researchCampaignID, campaignName, campaignDescription } = this.props.researchCampaign;
+
 		return (
 			<div className="quote-manage">
 
@@ -360,49 +479,83 @@ class ManageQuote extends React.Component {
 			</div>
 
 			<div>
-				<div>
-					<TextField
-							ref="research_campaign_name"
-							inputStyle={{color: 'black'}}
-							fullWidth={true}
-							hintText={'Research campaign name' } 
-							onChange={(event) => { this.handleTextChange(event, 'name') }}/> 
-					
-					<TextField
-							ref="research_campaign_description"
-							inputStyle={{color: 'black'}}
-							fullWidth={true}
-							hintText={'Research campaign description' } 
-							onChange={(event) => { this.handleTextChange(event, 'desc') }} /> 
-							 
-				</div>
+				<div className="research-campaign-container">
+					<div className="campaign-input-fields">
+						{ !campaignName && 
+							<TextField
+								ref="research_campaign_name"
+								inputStyle={{color: 'black'}}
+								fullWidth={true}
+								hintText={'Research campaign name' } 
+								onChange={(event) => { this.handleTextChange(event, 'name') }}/> 
+						}
+						{ !campaignDescription && 
+							<TextField
+								ref="research_campaign_description"
+								inputStyle={{color: 'black'}}
+								fullWidth={true}
+								hintText={'Research campaign description' } 
+								onChange={(event) => { this.handleTextChange(event, 'desc') }} /> 
+						}
+					</div>
+					<div className="research-campaign-data">
+						{ campaignName && 
+							<div className="research-stats"> Research campaign name : { campaignName }</div>
+						}
 
-				<div>
-					<FlatButton
-						label="Create Research Campaign"
-						onTouchTap={ this.createResearchCampaign }
-						disabled={ (this.state.researchCampaignName === null || this.state.researchCampaignName === '') || (this.state.researchCampaignDescription === null || this.state.researchCampaignDescription === '')  }/> 
-					<FlatButton
-						label="Upload Creatives" 
-						onTouchTap={ this.uploadCreatives }
-						disabled={ this.state.surveyID === null || this.state.sampleID === null }/> 
+						{ campaignDescription && 
+							<div className="research-stats">Research campaign description : { campaignDescription }</div>
+						}
+
+						{ researchCampaignID && 
+							<div className="research-stats">Research Campaign ID : { researchCampaignID }</div>
+						}
+
+						{ this.props.surveyID && 
+							<div className="research-stats">Survery ID : { this.props.surveyID }</div>
+						 }	
+						
+					</div>
+					<div className="manage-buttons-panel">
+						<FlatButton
+							label="Create Survey"
+							disabled={this.state.creatingSurvey || (typeof this.props.surveyID !== 'undefined' && this.props.surveyID !== null)}
+							onClick={ this.createSurvey } /> { /*this.state.creatingSurvey ? 'Please Wait ...' : 'Create Survey' */}
+						
+						<FlatButton
+							label="Create Research Campaign"
+							onTouchTap={ this.createResearchCampaign }
+							disabled={ (this.state.researchCampaignName === null || this.state.researchCampaignName === '') || (this.state.researchCampaignDescription === null || this.state.researchCampaignDescription === '')  }/> 
+						
+						<FlatButton
+							label="Upload Creatives" 
+							onTouchTap={ this.uploadCreatives }
+							disabled={ !this.props.surveyID || !this.props.sampleID }/> 
+
+						<FlatButton
+							label="Get sample plan" 
+							onTouchTap={ this.getSamplePlan }
+							disabled={ !this.props.sampleID }/> 
+
+						<div style={{ display: this.props.sampleID === null ? 'none' : 'block' }}>
+							<RadioButtonGroup
+								name="sampleAccounts"
+								defaultSelected="Test"
+								onChange={ this.onSampleAccountsChange }
+								className="sample-accounts">
+									<RadioButton
+										value="Test"
+										label="Test" 
+										className="sample-account-value-radio-button" />
+
+									<RadioButton
+										value="US"
+										label="Production (US)"
+										className="sample-account-value-radio-button" />
+						  	</RadioButtonGroup>
+						</div>
+					</div>
 				</div>
-				<button
-					disabled={this.state.creatingSurvey}
-					onClick={() => {
-						this.setState({creatingSurvey: true});
-						api.createSurvey(this.props.surveyMetadata.questions, this.props.surveyMetadata.questionsVariants, this.props.lead.quoteID)
-						.then(results => {
-							this.setState({creatingSurvey: false, uploadCreativesDisabled : false, surveyID : results.surveyID });
-							console.info(results);
-							alert(`Created survey with ID: ${results.surveyID}`);
-						}).catch(error => {
-							this.setState({creatingSurvey: false});
-							console.error(error);
-							alert('Error, see console for details');
-						});
-					}
-				}>{this.state.creatingSurvey ? 'Please Wait ...' : 'Create Survey'}</button>
 			</div>
 			<div>
 				<button
@@ -439,9 +592,10 @@ class ManageQuote extends React.Component {
 					<FlatButton
 						label="close"
 						primary={false}
-						onTouchTap={() => { this.setState({ showModal : false }) }} />
+						onTouchTap={() => { this.setState({ showModal : false }) }}
+						style={{ display:(this.state.processCompleted ? 'inline' : 'none')}} />
 				]}
-				>
+				ref="modalDialog">
 				<div className="on-image-upload-error" ref="modalInnerDescription">
 					Creating Research Campaign....Please wait...
 				</div>
