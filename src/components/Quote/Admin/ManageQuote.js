@@ -37,6 +37,7 @@ class ManageQuote extends React.Component {
 		this.createSurvey = this.createSurvey.bind(this);
 		this.getSamplePlan = this.getSamplePlan.bind(this);
 		this.onSampleAccountsChange = this.onSampleAccountsChange.bind(this);
+		this.validateCreatives = this.validateCreatives.bind(this);
 
 		this.state = {
 			selectedQuestion: null,
@@ -49,7 +50,8 @@ class ManageQuote extends React.Component {
 			researchCampaignDescription : null,
 			researchCampaignHasSurveyID : null,
 			processCompleted : null,
-			sampleAccounts : 'Test'
+			sampleAccounts : 'Test',
+			showErrorDialog : false
 		};
 	}
 
@@ -105,6 +107,11 @@ class ManageQuote extends React.Component {
 	}
 
 	createResearchCampaign() {
+		if (!this.validateCreatives()) {
+			this.setState({ showErrorDialog : true})
+			return;
+		}
+
 		const name = this.refs.research_campaign_name.input.value;
 		const description = this.refs.research_campaign_description.input.value;
 
@@ -224,6 +231,9 @@ class ManageQuote extends React.Component {
 	}
 
 	createSurvey() {
+		
+
+
 		this.setState({ showModal : true, creatingSurvey : true, processCompleted: false});
 
 		// delay by 500 ms to allow modal to open
@@ -294,6 +304,46 @@ class ManageQuote extends React.Component {
 
 	onSampleAccountsChange(event, value) {
 		this.setState({ sampleAccounts : value });
+	}
+
+
+	validateCreatives() {
+		if (!this.props.surveyMetadata.adCreatives) {
+			return false;
+		}
+
+
+		if (!this.props.surveyMetadata.adCreatives.imageAdCreatives) {
+			return false;
+		}
+
+
+		if (!this.props.surveyMetadata.adCreatives.imageAdCreatives.images)	{
+			return false;
+		}
+
+		if (!this.props.surveyMetadata.adCreatives.imageAdCreatives.texts || (this.props.surveyMetadata.adCreatives.imageAdCreatives.texts && this.props.surveyMetadata.adCreatives.imageAdCreatives.texts.length === 0)) {
+			return false;
+		}
+
+		if (!this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines || (this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines && this.props.surveyMetadata.adCreatives.imageAdCreatives.headlines.length === 0)) {
+			return false;
+		}
+
+		if (!this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions || (this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions && this.props.surveyMetadata.adCreatives.imageAdCreatives.descriptions.length === 0)) {
+			return false;
+		}
+
+		const hasEmptyImages = this.props.surveyMetadata.adCreatives.carouselAdCreatives.carousels.some(set => set.some(item => item.mediaID === null));
+
+		if (hasEmptyImages)
+			return false;
+
+		if (!this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions || (this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions && this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions.length === 0))	{
+			return false;
+		}
+
+		return true;
 	}
 
 	render() {
@@ -397,9 +447,7 @@ class ManageQuote extends React.Component {
 			<div>Created {this.props.lead.dateCreated.toDateString()}</div> : null;
 
 		const reserachObjectiveTitle = this.getReseachObjectiveTitle(this.props.researchObjective.id);
-
-
-		const { researchCampaignID, campaignName, campaignDescription } = this.props.researchCampaign;
+		const { researchCampaignID, campaignName, campaignDescription } = this.props.researchCampaign || {};
 
 		return (
 			<div className="quote-manage">
@@ -600,6 +648,25 @@ class ManageQuote extends React.Component {
 					Creating Research Campaign....Please wait...
 				</div>
 			</Dialog>
+
+			<Dialog
+				title="Error"
+				modal={true}
+				open={ this.state.showErrorDialog }
+				autoDetectWindowHeight={true}
+				actions={[
+					<FlatButton
+						label="close"
+						primary={false}
+						onTouchTap={() => { this.setState({ showErrorDialog : false }) }} />
+				]}
+				ref="modalDialog">
+				<div className="on-image-upload-error" ref="modalInnerDescription">
+					Creatives are missing or not valid! please correct and try again...
+				</div>
+			</Dialog>
+
+
 
 			</div>
 		)
