@@ -26,6 +26,12 @@ const ManageQuoteContainer = connect(
 		if (researchCampaign) { researchCampaign = researchCampaign.toJS(); }
 		let surveyID = state.getIn(['data', 'quote', 'surveyID']);
 		let sampleID = state.getIn(['data', 'quote', 'sampleID']);
+		let channelConsumptionData = state.getIn(['data', 'quote', 'channelConsumptionData']);
+		if (channelConsumptionData)  { channelConsumptionData = channelConsumptionData.toJS() };
+		let samplePlan = state.getIn(['data', 'quote', 'samplePlan']);
+		if (samplePlan) { samplePlan = samplePlan.toJS(); }
+		let relationshipStatusData = state.getIn(['data', 'quote', 'relationshipStatusData']);
+		if (relationshipStatusData) { relationshipStatusData = relationshipStatusData.toJS()}
 
 		return {
 			lead,
@@ -39,7 +45,10 @@ const ManageQuoteContainer = connect(
 			researchObjective,
 			researchCampaign,
 			surveyID,
-			sampleID
+			sampleID,
+			channelConsumptionData,
+			samplePlan,
+			relationshipStatusData
 		};
 	},
 	function mapDispatchToProps(dispatch) {
@@ -91,6 +100,9 @@ const ManageQuoteContainer = connect(
 			deleteCarouselDescription : (index) => dispatch(quoteActions.deleteCarouselDescription(index)),
 			setResearchCampaignData : (researchCampaignID, campaignName, campaignDescription, sampleID, surveyID) => dispatch(quoteActions.setResearchCampaignData(researchCampaignID, campaignName, campaignDescription, sampleID, surveyID)),
 			setSurveyID : (surveyID) => dispatch(quoteActions.setSurveyID(surveyID)),
+			getChannelConsumptionData : (sampleID) => dispatch(quoteActions.getChannelConsumptionData(sampleID)),
+			getSamplePlan : (sampleID, sampleAccounts) => dispatch(quoteActions.getSamplePlan(sampleID, sampleAccounts)),
+			getRelationshipData : (sampleID) => dispatch(quoteActions.getRelationshipData(sampleID)),
 
 			/* Advanced */
 			addQuestionVariant: (questionID, duplicateVariantID) => dispatch(quoteActions.addQuestionVariant(questionID, duplicateVariantID)),

@@ -376,6 +376,11 @@ class AskemAPI {
 		.then(results => results.leads);
 	}
 
+	getEnrichmentData(sampleID) {
+		return this.fetchEndpoint(`samplings/${sampleID}/enrichment`)
+				.then(data => data.enrichment[0].items);
+	}
+
 	createSurvey(questionsMetadata, questionsVariantsMetadata, leadID = '') {
 		//TODO: reverse, jumps
 		let questions = [...questionsMetadata];
@@ -467,6 +472,13 @@ class AskemAPI {
 		return this.fetchEndpoint(`samplings/${sampleID}/samplePlan?sampleAccounts=${sampleAccounts}`);
 	}
 
+	getChannelConsumptionData(sampleID) {
+		return this.fetchEndpoint(`samplings/${sampleID}/enrichment`)
+	}
+
+	getRelationshipData(sampleID) {
+		return this.fetchEndpoint(`samplings/${sampleID}/enrichment?enrichment=RelationshipStatus&createdAfter=2017-04-18T15:55:00z`);
+	}
 
 	/* API - Not yet implemented */
 	fetchMediaPlan(researchID) {

@@ -561,6 +561,34 @@ const setSurveyID = (surveyID) => {
 	}
 }
 
+const getChannelConsumptionData = (sampleID) =>  {
+	return {
+		type :'GET_CHANNEL_CONSUMPTION_DATA',
+		payload : {
+			sampleID
+		}
+	}
+}
+
+const getSamplePlan = (sampleID, sampleAccounts) => {
+	return {
+		type : 'GET_SAMPLE_PLAN',
+		payload : {
+			sampleID,
+			sampleAccounts
+		}
+	}
+}
+
+const getRelationshipData = (sampleID) => {
+	return {
+		type :'GET_RELATIONSHIP_STATUS',
+		payload : {
+			sampleID
+		}
+	}
+}
+
 export {
 	requestReach, requestCostEstimates,
 	toggleQuoteAudienceAttribute,
@@ -586,5 +614,6 @@ export {
 	setResearchObjective,
 	toggleCollapsablePanel,
 	replaceImageCarouselInSet, deleteCarousel, addNewSet, addNewDescriptionInCarousels, updateCarouselDescription, deleteCarouselDescription,
-	setResearchCampaignData, setSurveyID
+	setResearchCampaignData, setSurveyID,
+	getChannelConsumptionData, getSamplePlan, getRelationshipData
 };

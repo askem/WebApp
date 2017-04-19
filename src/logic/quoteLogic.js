@@ -108,6 +108,10 @@ const updateQuoteLogic = createLogic({
 		// do not save the cropped images to DB
 		delete quote.surveyMetadata.croppedImages;
 		delete quote.surveyMetadata.croppedCarouselImages;
+
+		// remove data prior to DB API call
+		delete quote.samplePlan;
+		delete quote.samplePlanError;
 		//------------------------------------------------
 
 		let contact = getState().getIn(['data', 'contact']);
@@ -531,6 +535,69 @@ const imageSuggestionsLogic = createLogic({
 	}
 });
 
+
+const getChannelConsumptionData = createLogic({
+	type: 'GET_CHANNEL_CONSUMPTION_DATA',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_CHANNEL_CONSUMPTION_DATA_STARTED', payload :{ sampleID : action.payload.sampleID }}, { allowMore: true });
+		return api.getChannelConsumptionData(action.payload.sampleID)
+				.then(data => {
+					const { items, name } = data.enrichment[0];
+					dispatch({ type:'GET_CHANNEL_CONSUMPTION_DATA_SUCCESS', payload :{ 
+						items,
+						name
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_CHANNEL_CONSUMPTION_DATA_FAIL', payload : {
+						error },
+						error : true});
+					console.error('GET_CHANNEL_CONSUMPTION_DATA fail!!!', error);
+				})
+	}
+});
+
+const getSamplePlan = createLogic({
+	type: 'GET_SAMPLE_PLAN',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_SAMPLE_PLAN_STARTED', payload :{ sampleID : action.payload.sampleID, sampleAccounts : action.payload.sampleAccounts }}, { allowMore: true });
+		return api.getSamplePlan(action.payload.sampleID, action.payload.sampleAccounts)
+				.then(data => {
+					dispatch({ type:'GET_SAMPLE_PLAN_SUCCESS', payload :{ 
+						samplePlan : data.samplePlan[0]
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_CHANNEL_CONSUMPTION_DATA_FAIL', payload : {
+						error },
+						error : true});
+					console.error('GET_CHANNEL_CONSUMPTION_DATA fail!!!', error);
+				})
+	}
+});
+
+const getRelationshipStatus = createLogic({
+	type: 'GET_RELATIONSHIP_STATUS',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_RELATIONSHIP_STATUS_STARTED', payload :{ sampleID : action.payload.sampleID}}, { allowMore: true });
+		return api.getRelationshipData(action.payload.sampleID)
+				.then(data => {
+					dispatch({ type:'GET_RELATIONSHIP_STATUS_SUCCESS', payload :{ 
+						relationshipStatusData : data.enrichment[0].items
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_RELATIONSHIP_STATUS_FAIL', payload : {
+						error },
+						error : true});
+					console.error('GET_RELATIONSHIP_STATUS fail!!!', error);
+				})
+	}
+});
+
 export default [
 	createQuoteLogic,
 	newSubmissionLogic,
@@ -543,5 +610,8 @@ export default [
 	fetchCostEstimateLogic,
 	imageSuggestionsLogic,
 	uploadCreativeImageLogic,
-	uploadCarouselCreativeImageLogic
+	uploadCarouselCreativeImageLogic,
+	getChannelConsumptionData,
+	getSamplePlan,
+	getRelationshipStatus
 ];
