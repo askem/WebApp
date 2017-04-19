@@ -119,7 +119,7 @@ class SamplePlanGraph extends Component {
 							backgroundColor: '#9ea8ba',
 							data : generalPopultionMale.map(item => ((item.reach/totalMalePopulation)*100).toFixed(2))
 						}
-					]	
+					]
 			},
 			totalFemalePopulation,
 			totalMalePopulation
@@ -141,6 +141,17 @@ class SamplePlanGraph extends Component {
 		const womenPercentageAllFacebook = (totalFemalePopulation/(totalFemalePopulation + totalMalePopulation))*100;
 		const menPercentageAllFacebook = (totalMalePopulation/(totalFemalePopulation + totalMalePopulation))*100;
 
+		const graphOptions = {
+			maintainAspectRatio:false,
+			scales: { 
+				yAxes: [{
+					ticks: {
+							beginAtZero:true
+					}
+				}]
+			}
+		}
+
 		return (
 			<div>
 				<div className="graph-container">
@@ -150,27 +161,30 @@ class SamplePlanGraph extends Component {
 							data={ convertedData.genderTotalDistributionGraph }
 							width={600}
 							height={500}
-							options={{maintainAspectRatio: false }} />
+							options={ graphOptions } />
 					</div>
 					
 					<div className="specific-title">Age And Gender</div>
-					<div>
-						<div>{ womenPercentageAllFacebook.toFixed(2) }% Women</div>
-						<Bar 
-							data={ femaleData }
-							width={600}
-							height={500}
-							options={{maintainAspectRatio: false }} />
+					<div className="graphs-wrapper">
+							<div className="gender-graph-container">
+								<div>{ womenPercentageAllFacebook.toFixed(2) }% Women</div>
+								<Bar 
+									data={ femaleData }
+									width={800}
+									height={500}
+									options={ graphOptions }  />
+							</div>
+							<div className="gender-graph-container">
+								{ /* <div className="graph-bottom"> */ }
+									<div>{ menPercentageAllFacebook.toFixed(2) }% Men </div>
+									<Bar 
+										data={ maleData }
+										width={800}
+										height={500}
+										options={ graphOptions } />
+								{ /*</div> */ }
+							</div>
 					</div>
-					<div className="graph-bottom">
-						<div>{ menPercentageAllFacebook.toFixed(2) }% Men </div>
-						<Bar 
-							data={ maleData }
-							width={600}
-							height={500}
-							options={{maintainAspectRatio: false }} />
-					</div>
-
 				</div>
 			</div>
 		);
