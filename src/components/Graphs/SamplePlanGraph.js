@@ -218,14 +218,12 @@ class SamplePlanGraph extends Component {
 									options={ graphOptions }  />
 							</div>
 							<div className="gender-graph-container">
-								{ /* <div className="graph-bottom"> */ }
 									<div>{ menPercentageAllFacebook.toFixed(2) }% Men </div>
 									<Bar 
 										data={ maleData }
 										width={800}
 										height={500}
 										options={ graphOptions } />
-								{ /*</div> */ }
 							</div>
 					</div>
 				</div>
