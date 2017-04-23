@@ -2043,3 +2043,37 @@ header {
 	}
 }
 
+
+.circular-progress-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	.circle-container {
+		width:400px;
+	}
+}
+
+.circular-text-style {
+	font-size:28px;
+}
+
+.create-campaign-container{
+	margin-left: 200px;
+
+	.buttons {
+		margin-left:15px;
+		display:inline;
+
+	}
+
+	div.text-field {
+		width:300px !important;
+	}
+}
+
+.error-message {
+	display: none;
+	color:#F00;
+	margin-left: 16px;
+}

@@ -15,6 +15,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import GraphContainer from 'components/Graphs/GraphsContainer';
+import CreateCampaign from 'components/Quote/Admin/CreateCampaign';
 
 const renderContactValue = (field, contact) => {
 	let value = contact[field.id];
@@ -54,7 +55,9 @@ class ManageQuote extends React.Component {
 			processCompleted : null,
 			sampleAccounts : 'Test',
 			showErrorDialog : false,
-			showGraphs : false
+			showGraphs : false,
+			createCampaignStarted : false
+			
 		};
 	}
 
@@ -464,6 +467,16 @@ class ManageQuote extends React.Component {
 		const reserachObjectiveTitle = this.getReseachObjectiveTitle(this.props.researchObjective.id);
 		const { researchCampaignID, campaignName, campaignDescription } = this.props.researchCampaign || {};
 
+		// create campaign
+		////////////////////////////////////////
+		if (this.state.createCampaignStarted) {
+			return (
+				<CreateCampaign />
+			)
+		}
+		////////////////////////////////////////
+
+
 		return (
 			<div className="quote-manage">
 
@@ -622,6 +635,12 @@ class ManageQuote extends React.Component {
 							<FlatButton
 							label="Graphs" 
 							onTouchTap={ () => { this.setState({ showGraphs : true}) }} /> 
+						</div>
+
+						<div>
+							<FlatButton
+								label="Create Campaign" 
+								onTouchTap={ () => { this.setState({ createCampaignStarted : true}) }} /> 
 						</div>
 					</div>
 				</div>
