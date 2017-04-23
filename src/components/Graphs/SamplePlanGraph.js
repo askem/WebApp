@@ -75,6 +75,31 @@ class SamplePlanGraph extends Component {
 		const femaleGeneral = ((totalFemalePopulation/(totalFemalePopulation + totalMalePopulation))*100).toFixed(2);
 		const maleGeneral = ((totalMalePopulation/(totalFemalePopulation + totalMalePopulation))*100).toFixed(2);
 
+		// calculate total height of bars
+		const distributionMaleArray = maleDataArray.map(item => ((item.reach/totalAudienceMale)* 100));
+		const distibutionFemaleArray = femaleDataArray.map(item => ((item.reach/totalAudienceFemale)* 100));
+
+		const generalPopulationMaleArray = generalPopultionMale.map(item => ((item.reach/totalMalePopulation)*100));
+		const generalPopulationFemaleArray = generalPopultionFemale.map(item => ((item.reach/totalFemalePopulation)*100));
+
+		const maxAudienceMale = Math.max(...distributionMaleArray);
+		const maxAudienceFemale = Math.max(...distibutionFemaleArray);
+		const maxGeneralPopulationMale = Math.max(...generalPopulationMaleArray);
+		const maxGeneralPopulationFemale = Math.max(...generalPopulationFemaleArray);
+		const tempArr = [maxAudienceMale, maxAudienceFemale, maxGeneralPopulationMale, maxGeneralPopulationFemale];
+		let maxBarHeight = Math.ceil(Math.max(...tempArr));
+
+		let decimalDigits = parseInt(maxBarHeight/10);
+		let floatingPoint = parseInt(maxBarHeight % 10);
+
+		if (floatingPoint <= 5) {
+			maxBarHeight = decimalDigits*10 + 5;
+		}
+		else {
+			maxBarHeight = (decimalDigits+1)*10;
+		}
+
+
 		return {
 			genderTotalDistributionGraph : {
 				labels : ['Women', 'Men'],
@@ -97,12 +122,12 @@ class SamplePlanGraph extends Component {
 						{ 
 							label : 'Audience',
 							backgroundColor: '#9665aa',
-							data : femaleDataArray.map(item => ((item.reach/totalAudienceFemale)* 100).toFixed(2))
+							data : distibutionFemaleArray.map(item => item.toFixed(2)),
 						},
 						{
 							label : 'General Population',
 							backgroundColor: '#9ea8ba',
-							data : generalPopultionFemale.map(item => ((item.reach/totalFemalePopulation)*100).toFixed(2))
+							data : generalPopulationFemaleArray.map(item => item.toFixed(2)),
 						}
 					]	
 			},
@@ -112,17 +137,18 @@ class SamplePlanGraph extends Component {
 						{ 
 							label : 'Audience',
 							backgroundColor: '#9665aa',
-							data : maleDataArray.map(item => ((item.reach/totalAudienceMale)* 100).toFixed(2))
+							data : distributionMaleArray.map(item => item.toFixed(2)),
 						},
 						{
 							label : 'General Population',
 							backgroundColor: '#9ea8ba',
-							data : generalPopultionMale.map(item => ((item.reach/totalMalePopulation)*100).toFixed(2))
+							data : generalPopulationMaleArray.map(item => item.toFixed(2)),
 						}
 					]
 			},
 			totalFemalePopulation,
-			totalMalePopulation
+			totalMalePopulation,
+			maxBarHeight
 		}
 	}
 
@@ -136,19 +162,36 @@ class SamplePlanGraph extends Component {
 		const convertedData = this.convertSamplePlanDataToGraph();
 		const femaleData = convertedData.femaleDataGraph;
 		const maleData = convertedData.maleGraphData;
-		const { totalFemalePopulation, totalMalePopulation } = convertedData;
+		const { totalFemalePopulation, totalMalePopulation, maxBarHeight } = convertedData;
 
 		const womenPercentageAllFacebook = (totalFemalePopulation/(totalFemalePopulation + totalMalePopulation))*100;
 		const menPercentageAllFacebook = (totalMalePopulation/(totalFemalePopulation + totalMalePopulation))*100;
 
-		const graphOptions = {
+		const generalGraphOptions = {
 			maintainAspectRatio:false,
 			scales: { 
 				yAxes: [{
 					ticks: {
-							beginAtZero:true
-					}
+							beginAtZero:true,
+					},
+				}],
+				xAxes : [{
+					barThickness : 80,
+					categoryPercentage : 0.35
 				}]
+			}
+		}
+	
+		const graphOptions =  {
+			maintainAspectRatio:false,
+			scales: { 
+				yAxes: [{
+					ticks: {
+							beginAtZero:true,
+							max : maxBarHeight,
+							steps : 5
+					},
+				}],
 			}
 		}
 
@@ -161,7 +204,7 @@ class SamplePlanGraph extends Component {
 							data={ convertedData.genderTotalDistributionGraph }
 							width={600}
 							height={500}
-							options={ graphOptions } />
+							options={ generalGraphOptions } />
 					</div>
 					
 					<div className="specific-title">Age And Gender</div>
