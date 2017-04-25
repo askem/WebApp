@@ -185,7 +185,12 @@ class QuestionMedia extends React.Component {
 				'background-size': `100%, ${this.imageLength}px ${this.imageLength}px`,
 				'background-repeat': 'no-repeat'
 			});
-			$possibleAnswer.css(possibleAnswersCSS);
+
+			//$possibleAnswer.css(possibleAnswersCSS);
+			//$possibleAnswer.css({left:positions.possibleAnswer.left + 1+'px', top:positions.possibleAnswer.top + 1 + 'px', backgroundImage:`url("${this.props.question.questionImageURL}")`});
+			$possibleAnswer.css({left:positions.possibleAnswer.left + 1+'px', top:positions.possibleAnswer.top + 1 + 'px'});
+
+
 			if ($possibleAnswer.children().length > 0) {
 				$possibleAnswer.css(positions.textSize);
 			}
