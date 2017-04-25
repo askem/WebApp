@@ -598,6 +598,57 @@ const getRelationshipStatus = createLogic({
 	}
 });
 
+const createCampaign = createLogic({
+	type: 'CREATE_CAMPAIGN',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'CREATE_CAMPAIGN_STARTED', payload :{ }}, { allowMore: true });
+		return api.createCampaign(
+					action.payload.caps,
+					action.payload.campaignDays,
+					action.payload.microCellMaxSize,
+					action.payload.microCellMaxImagesAds,
+					action.payload.microCellMaxCarouselAds,
+					action.payload.sampleID
+				)
+				.then(data => {
+					dispatch({ type:'CREATE_CAMPAIGN_REQUEST_SUCCESSFULL', payload :{ 
+						sampleID : action.payload.sampleID
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'CREATE_CAMPAIGN_REQUEST_FAIL', payload : {
+						error },
+						error : true});
+					console.error('CREATE_CAMPAIGN_REQUEST_FAIL', error);
+				})
+	}
+});
+
+const getCreateCampaignStatus = createLogic({
+	type: 'GET_CREATE_CAMPAIGN_STATUS',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_CREATE_CAMPAIGN_STATUS_STARTED', payload :{ sampleID : action.payload.sampleID }}, { allowMore: true });
+		return api.getCreateCampaignStatus(action.payload.sampleID)
+				.then(data => {
+					dispatch({
+							 	type:'GET_CREATE_CAMPAIGN_STATUS_SUCCESSFULL', payload :{ 
+								status:data.status,
+								progress : data.percentCompleted,
+								startTime: data.startTime,
+								ETA : data.ETA,
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_CREATE_CAMPAIGN_STATUS_FAILED', payload : {
+						error },
+						error : true});
+					console.log('GET_CREATE_CAMPAIGN_STATUS_FAILED', error)
+				})
+	}
+});
+
 export default [
 	createQuoteLogic,
 	newSubmissionLogic,
@@ -613,5 +664,7 @@ export default [
 	uploadCarouselCreativeImageLogic,
 	getChannelConsumptionData,
 	getSamplePlan,
-	getRelationshipStatus
+	getRelationshipStatus,
+	createCampaign,
+	getCreateCampaignStatus
 ];

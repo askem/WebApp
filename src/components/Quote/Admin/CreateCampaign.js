@@ -11,10 +11,10 @@ class CreateCampaign extends Component {
 		this.handleTextChange = this.handleTextChange.bind(this);
 		this.isValid = this.isValid.bind(this);
 		this.createCampaign	 = this.createCampaign.bind(this);
+		this.convertToLocalTime = this.convertToLocalTime.bind(this);
 
 		this.state = {
 			campaignRunning : false,
-			percentageCompleted : 0,
 			timer: null,
 			buttonsDisabled : true,
 			campaignDaysValid : true,
@@ -22,26 +22,21 @@ class CreateCampaign extends Component {
 			microCellMaxImageAdsValid: true,
 			microCellMaxCarouselAdsValid : true,
 			campaignExists : false,
-			inProcess : false
+			inProcess : false,
+			interval : 1000 * 5,
+			inputDisabled : false
 		}
 	}
 
 
 	createCampaign() {
-		const timer = setInterval(() => {
-			if (this.state.percentageCompleted >= 1) {
-				window.clearInterval(this.state.timer);
-				this.setState({ inProcess : false });
-				return;
-			}
-
-			let percentage = this.state.percentageCompleted + 0.1;
-			percentage = parseInt(percentage*100)/100;
-			this.setState({ percentageCompleted : percentage });
-
-		}, 5000);
-
-		this.setState({ inProcess : true, timer });
+		this.setState({ inProcess : true, inputDisabled : true});
+		this.props.createCampaign(this.refs.campaignSpentCaps.input.value,
+								  this.refs.campaignDays.input.value,
+								  this.refs.microCellMaxSize.input.value,
+								  this.refs.microCellMaxImageAds.input.value,
+								  this.refs.microCellMaxCarouselAds.input.value,
+								  this.props.sampleID);
 	}
 
 	startCampaign() {
@@ -90,8 +85,39 @@ class CreateCampaign extends Component {
 		return fieldsNotEmpty && campaignDaysValid && microCellMaxSizeValid && microCellMaxImageAdsValid && microCellMaxCarouselAdsValid;
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.campaignStatus && nextProps.campaignStatus.continueWithGetStatus) {
+			if (this.state.timer === null) {
+				this.setPollingInterval();	
+			}
+		}
+	}
+	
+	setPollingInterval() {
+		const timer = setInterval(() => {
+			if (this.props.campaignStatus && this.props.campaignStatus.progress === 1) {
+				window.clearInterval(this.state.timer);
+				this.setState({ inProcess : false, campaignExists:true, timer : null, buttonsDisabled:true });
+				this.props.setCreateCampaignStatusFinished();
+				return;
+			}
+
+			this.props.getCreateCampaignStatus(this.props.sampleID);
+		}, this.state.interval);
+
+		this.setState({ timer, buttonsDisabled : true });
+		this.props.getCreateCampaignStatus(this.props.sampleID);
+	}
+
+
+	convertToLocalTime(dateString) {
+		dateString = dateString.replace(/\//g, '').replace('Date(', '').replace(')', '');
+		return new Date(parseInt(dateString)).toString();
+	}
+
 	render() {
-		const text = `${parseInt(this.state.percentageCompleted*100)}%`;
+		const percent = this.props.campaignStatus && this.props.campaignStatus.progress ? this.props.campaignStatus.progress : '0';
+		const text = `${parseInt(percent*100)}%`;
 		const options = {
 				strokeWidth : 10,
 				 style: {
@@ -118,7 +144,8 @@ class CreateCampaign extends Component {
 						floatingLabelText="Campaign spent caps (in USD)"
 						onChange={ this.handleTextChange }
 						className="text-field"
-						ref="campaignSpentCaps" />
+						ref="campaignSpentCaps"
+						disabled={ this.state.inputDisabled } />
 
 					<div></div>		
 				</div>
@@ -127,7 +154,8 @@ class CreateCampaign extends Component {
 						floatingLabelText="Campign Days (2-7 days)"
 						onChange={ this.handleTextChange }
 						className="text-field"
-						ref="campaignDays" />
+						ref="campaignDays" 
+						disabled={ this.state.inputDisabled }/>
 
 					<div className="error-message" style={{ display:this.state.campaignDaysValid ? 'none' : 'inline' }}>Campaign days must be a number and between 2-7 days</div>
 				</div>
@@ -136,7 +164,8 @@ class CreateCampaign extends Component {
 						floatingLabelText="Micro cell max size (5-15)"
 						onChange={ this.handleTextChange }
 						className="text-field"
-						ref="microCellMaxSize" />
+						ref="microCellMaxSize"
+						disabled={ this.state.inputDisabled } />
 
 					<div className="error-message" style={{ display:this.state.microCellMaxSizeValid ? 'none' : 'inline' }}>Max size beween 5-15</div>
 				</div>
@@ -145,7 +174,8 @@ class CreateCampaign extends Component {
 						floatingLabelText="Micro cell max image ads (10-35)"
 						onChange={ this.handleTextChange }
 						className="text-field"
-						ref="microCellMaxImageAds" />
+						ref="microCellMaxImageAds"
+						disabled={ this.state.inputDisabled } />
 
 					<div className="error-message" style={{ display: this.state.microCellMaxImageAdsValid ? 'none' : 'inline' }}>Max image ads between 10 and 35</div>
 				</div>
@@ -154,7 +184,8 @@ class CreateCampaign extends Component {
 						floatingLabelText="Micro cell max carousel ads (5-15)"
 						onChange={ this.handleTextChange }
 						className="text-field"
-						ref="microCellMaxCarouselAds" />
+						ref="microCellMaxCarouselAds"
+						disabled={ this.state.inputDisabled } />
 
 					<div className="error-message" style={{ display: this.state.microCellMaxCarouselAdsValid ? 'none' : 'inline' }}>Max carousel ads between 5 and 15</div>
 				</div>
@@ -163,7 +194,7 @@ class CreateCampaign extends Component {
 					<FlatButton 
 						label="create campaign"
 						onTouchTap={ this.createCampaign }
-						disabled={ this.state.buttonsDisabled } />
+						disabled={ this.state.buttonsDisabled || this.state.inProcess } />
 				</div>
 				<div className="buttons">
 					<FlatButton 
@@ -177,15 +208,22 @@ class CreateCampaign extends Component {
 						onTouchTap={ this.stopCampaign } 
 						disabled={ !this.state.campaignExists } />
 				</div>
+				{ this.state.inProcess && 
+					<div>
+						<div className="campaign-end-time">						
+							{ (this.props.campaignStatus && this.props.campaignStatus.ETA) && 
+							<span className="">Campaign will finish at { this.convertToLocalTime(this.props.campaignStatus.ETA) }</span>
+							}
+						</div>
 
-				{ this.state.campaignRunning && 
-					<div className="circular-progress-container">
-						<div className="circle-container">
-							<Circle 
-									progress={ this.state.percentageCompleted }
-									initialAnimate={true}
-									text={ text }
-									options={  options } />
+						<div className="circular-progress-container">
+							<div className="circle-container">
+								<Circle 
+										progress={ percent }
+										initialAnimate={true}
+										text={ text }
+										options={ options } />
+							</div>
 						</div>
 					</div>
 				}	

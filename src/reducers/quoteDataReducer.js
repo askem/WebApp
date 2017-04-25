@@ -622,6 +622,23 @@ const quoteReducer = (state = initialState, action) => {
 		case 'GET_RELATIONSHIP_STATUS_SUCCESS':{
 			return state.setIn(['relationshipStatusData'], Immutable.fromJS(action.payload.relationshipStatusData));
 		}
+		case 'CREATE_CAMPAIGN_REQUEST_SUCCESSFULL':{
+			return state.setIn(['campaignStatus', 'continueWithGetStatus'], true);
+		}
+		case 'GET_CREATE_CAMPAIGN_STATUS_SUCCESSFULL' :{
+			return state.mergeIn(['campaignStatus'], Immutable.fromJS({
+				progress : action.payload.progress,
+				status : action.payload.status,
+				ETA : action.payload.ETA,
+				startTime : action.payload.startTime
+			}));
+			//return state.setIn(['campaignStatus', 'progress'], Immutable.fromJS(action.payload.progress));
+		}
+		case 'SET_CREATE_CAMPAIGN_STATUS_TO_FINISED': {
+			return state.updateIn(['campaignStatus'], (campaignStatus) => {
+				return campaignStatus.set('continueWithGetStatus', false);
+			});
+		}
 		default:
 			return state;
 	}

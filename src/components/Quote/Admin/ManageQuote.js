@@ -471,7 +471,7 @@ class ManageQuote extends React.Component {
 		////////////////////////////////////////
 		if (this.state.createCampaignStarted) {
 			return (
-				<CreateCampaign />
+				<CreateCampaign { ...this.props }/>
 			)
 		}
 		////////////////////////////////////////

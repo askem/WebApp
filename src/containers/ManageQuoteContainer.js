@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import ManageQuote from 'components/Quote/Admin/ManageQuote';
 import * as quoteActions from 'actions/quoteActions';
+import * as campaignActions from 'actions/campaignActions';
 
 const ManageQuoteContainer = connect(
 	function mapStateToProps(state, ownProps) {
@@ -32,6 +33,8 @@ const ManageQuoteContainer = connect(
 		if (samplePlan) { samplePlan = samplePlan.toJS(); }
 		let relationshipStatusData = state.getIn(['data', 'quote', 'relationshipStatusData']);
 		if (relationshipStatusData) { relationshipStatusData = relationshipStatusData.toJS()}
+		let campaignStatus = state.getIn(['data', 'quote', 'campaignStatus']);
+		if (campaignStatus) { campaignStatus = campaignStatus.toJS()}
 
 		return {
 			lead,
@@ -48,7 +51,8 @@ const ManageQuoteContainer = connect(
 			sampleID,
 			channelConsumptionData,
 			samplePlan,
-			relationshipStatusData
+			relationshipStatusData,
+			campaignStatus
 		};
 	},
 	function mapDispatchToProps(dispatch) {
@@ -103,6 +107,9 @@ const ManageQuoteContainer = connect(
 			getChannelConsumptionData : (sampleID) => dispatch(quoteActions.getChannelConsumptionData(sampleID)),
 			getSamplePlan : (sampleID, sampleAccounts) => dispatch(quoteActions.getSamplePlan(sampleID, sampleAccounts)),
 			getRelationshipData : (sampleID) => dispatch(quoteActions.getRelationshipData(sampleID)),
+			createCampaign: (caps, campaignDays, microCellMaxSize, microCellMaxImagesAds, microCellMaxCarouselAds, sampleID) => dispatch(campaignActions.createCampaign(caps, campaignDays, microCellMaxSize, microCellMaxImagesAds, microCellMaxCarouselAds, sampleID)),
+			getCreateCampaignStatus : (sampleID) => dispatch(campaignActions.getCreateCampaignStatus(sampleID)),
+			setCreateCampaignStatusFinished : () => dispatch(campaignActions.setCreateCampaignStatusFinished()),
 
 			/* Advanced */
 			addQuestionVariant: (questionID, duplicateVariantID) => dispatch(quoteActions.addQuestionVariant(questionID, duplicateVariantID)),

@@ -469,7 +469,7 @@ class AskemAPI {
 	}
 
 	getSamplePlan(sampleID, sampleAccounts) {
-		return this.fetchEndpoint(`samplings/${sampleID}/samplePlan?sampleAccounts=${sampleAccounts}`);
+		return this.fetchEndpoint(`samplings/${sampleID}/samplePlan?sampleAccounts=${sampleAccounts}&createdAfter=2017-04-24T13:47:00z`);
 	}
 
 	getChannelConsumptionData(sampleID) {
@@ -477,12 +477,30 @@ class AskemAPI {
 	}
 
 	getRelationshipData(sampleID) {
-		return this.fetchEndpoint(`samplings/${sampleID}/enrichment?enrichment=RelationshipStatus&createdAfter=2017-04-18T15:55:00z`);
+		return this.fetchEndpoint(`samplings/${sampleID}/enrichment?enrichment=RelationshipStatus&createdAfter=2017-04-24T13:47:00z`);
 	}
 
 	/* API - Not yet implemented */
 	fetchMediaPlan(researchID) {
 		return this.fetchURL(`/mockdata/${researchID}/mediaPlan.json`)
+	}
+
+	createCampaign(campaignSpendCap, campaignDays, microCellMaxSize, microCellMaxImageAds, microCellMaxCarouselAds, sampleID) {
+		const params = {
+			campaignSpendCap,
+			campaignDays,
+			microCellMaxSize,
+			microCellMaxImageAds, 
+			microCellMaxCarouselAds 
+		}
+
+		// remove the mock param for production or real api call
+		return this.fetchEndpoint(`samplings/${sampleID}/buildCollectionCampaigns?mock=1`, params);
+	}
+
+	getCreateCampaignStatus(sampleID) {
+		// remove the mock param for production or real api call
+		return this.fetchEndpoint(`samplings/${sampleID}/buildStatus?mock=1`);
 	}
 }
 
