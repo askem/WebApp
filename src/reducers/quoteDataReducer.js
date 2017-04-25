@@ -623,20 +623,26 @@ const quoteReducer = (state = initialState, action) => {
 			return state.setIn(['relationshipStatusData'], Immutable.fromJS(action.payload.relationshipStatusData));
 		}
 		case 'CREATE_CAMPAIGN_REQUEST_SUCCESSFULL':{
-			return state.setIn(['campaignStatus', 'continueWithGetStatus'], true);
+			return state.setIn(['campaignStatus'], Immutable.fromJS({
+				continueWithGetStatus : true,
+				currentStatus : 'in-creation'
+			}));
 		}
 		case 'GET_CREATE_CAMPAIGN_STATUS_SUCCESSFULL' :{
 			return state.mergeIn(['campaignStatus'], Immutable.fromJS({
 				progress : action.payload.progress,
 				status : action.payload.status,
 				ETA : action.payload.ETA,
-				startTime : action.payload.startTime
+				startTime : action.payload.startTime,
+				currentStatus : 'in-creation'
 			}));
 			//return state.setIn(['campaignStatus', 'progress'], Immutable.fromJS(action.payload.progress));
 		}
 		case 'SET_CREATE_CAMPAIGN_STATUS_TO_FINISED': {
 			return state.updateIn(['campaignStatus'], (campaignStatus) => {
-				return campaignStatus.set('continueWithGetStatus', false);
+				return campaignStatus
+							.set('continueWithGetStatus', false)
+							.set('currentStatus', 'pending');
 			});
 		}
 		default:

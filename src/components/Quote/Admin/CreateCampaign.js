@@ -208,7 +208,7 @@ class CreateCampaign extends Component {
 						onTouchTap={ this.stopCampaign } 
 						disabled={ !this.state.campaignExists } />
 				</div>
-				{ this.state.inProcess && 
+				{ (this.props.campaignStatus && this.props.campaignStatus.currentStatus === 'in-creation') && 
 					<div>
 						<div className="campaign-end-time">						
 							{ (this.props.campaignStatus && this.props.campaignStatus.ETA) && 

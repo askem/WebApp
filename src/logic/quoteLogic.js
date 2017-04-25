@@ -69,7 +69,7 @@ const autoSaveLogic = createLogic({
 		'ADD_CREATIVE_TEXT', 'UPDATE_CREATIVE_TEXT', 'DELETE_CREATIVE_TEXT',
 		'ADD_CREATIVE_HEADLINE', 'UPDATE_CREATIVE_HEADLINE' ,'DELETE_CREATIVE_HEADLINE',
 		'DELETE_CAROUSEL', 'UPLOAD_CAROUSEL_CREATIVE_IMAGE_REQUEST_SUCCESS', 'UPDATE_CAROUSEL_DESCRIPTION', 'DELETE_CAROUSEL_DESCRIPTION',
-		'SET_RESEARCH_CAMPAIGN_DATA', 'SET_SURVEYID'
+		'SET_RESEARCH_CAMPAIGN_DATA', 'SET_SURVEYID', 'CREATE_CAMPAIGN_REQUEST_SUCCESSFULL'
 
 	],
 	process({ getState, action, api }, dispatch) {
@@ -112,6 +112,13 @@ const updateQuoteLogic = createLogic({
 		// remove data prior to DB API call
 		delete quote.samplePlan;
 		delete quote.samplePlanError;
+
+		// remove create campign status data
+		delete quote.campaignStatus.continuteWithGetStatus;
+		delete quote.campaignStatus.progress;
+		delete quote.campaignStatus.status;
+		delete quote.campaignStatus.ETA;
+		delete quote.campaignStatus.startTime;
 		//------------------------------------------------
 
 		let contact = getState().getIn(['data', 'contact']);

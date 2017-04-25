@@ -61,6 +61,13 @@ class ManageQuote extends React.Component {
 		};
 	}
 
+	componentDidMount() {
+		if (this.props.campaignStatus && this.props.campaignStatus.currentStatus === 'in-creation') {
+			this.setState({ createCampaignStarted : true })
+		}
+	}
+	
+
 	componentWillReceiveProps(nextProps) {
 		if (typeof nextProps.samplePlan !== 'undefined' && !this.state.processCompleted) {
 			if (!nextProps.samplePlanError) {
@@ -71,6 +78,10 @@ class ManageQuote extends React.Component {
 			}
 
 			this.setState({ processCompleted:true })
+		}
+
+		if (nextProps.campaignStatus && nextProps.campaignStatus.currentStatus === 'in-creation') {
+			this.setState({ createCampaignStarted : true });
 		}
 	}
 	
@@ -201,7 +212,7 @@ class ManageQuote extends React.Component {
 		setTimeout(function() {
 			if (!this.state.researchCampaignHasSurveyID) {
 				this.refs.modalInnerDescription.innerHTML = 'Updating research campaign with surveryID... please wait...';
-				api.updateResearchData(this.props.researchCampaignID, null, null, this.props.surveyID)
+				api.updateResearchData(this.props.researchCampaign.researchCampaignID, null, null, this.props.surveyID)
 					.then(result => {
 						this.setState({ researchCampaignHasSurveyID : true });
 						this.refs.modalInnerDescription.innerHTML = 'Uploading creatives... please wait...';
