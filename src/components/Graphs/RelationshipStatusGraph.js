@@ -13,7 +13,7 @@ class RelationshipStatusGraph extends Component {
 			)
 		}
 
-		const items = this.props.data;
+		const { items }  = this.props.data;
 		const data = {
 			labels : items.map(item => item.name),
 			datasets : [

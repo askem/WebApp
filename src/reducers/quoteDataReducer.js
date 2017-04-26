@@ -609,8 +609,8 @@ const quoteReducer = (state = initialState, action) => {
 		case 'SET_SURVEYID':{
 			return state.set('surveyID', action.payload.surveyID);
 		}
-		case 'GET_CHANNEL_CONSUMPTION_DATA_SUCCESS' : {
-			return state.setIn(['channelConsumptionData', 'items'], Immutable.fromJS(action.payload.items))
+		case 'GET_ENRICHMENT_DATA_SUCCESS' : {
+			return state.setIn(['enrichmentData', action.payload.type, 'items'], Immutable.fromJS(action.payload.items))
 		}
 		case 'GET_SAMPLE_PLAN_SUCCESS':{
 			return state.setIn(['samplePlan'], Immutable.fromJS(action.payload.samplePlan))
@@ -618,9 +618,6 @@ const quoteReducer = (state = initialState, action) => {
 		}
 		case 'GET_SAMPLE_PLAN_ERROR':{
 			return state.set('samplePlanError',  true);
-		}
-		case 'GET_RELATIONSHIP_STATUS_SUCCESS':{
-			return state.setIn(['relationshipStatusData'], Immutable.fromJS(action.payload.relationshipStatusData));
 		}
 		case 'CREATE_CAMPAIGN_REQUEST_SUCCESSFULL':{
 			return state.setIn(['campaignStatus'], Immutable.fromJS({

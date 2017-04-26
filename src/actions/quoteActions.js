@@ -561,11 +561,12 @@ const setSurveyID = (surveyID) => {
 	}
 }
 
-const getChannelConsumptionData = (sampleID) =>  {
+const getEnrichmentData = (sampleID, type) =>  {
 	return {
-		type :'GET_CHANNEL_CONSUMPTION_DATA',
+		type :'GET_ENRICHMENT_DATA',
 		payload : {
-			sampleID
+			sampleID,
+			type
 		}
 	}
 }
@@ -576,15 +577,6 @@ const getSamplePlan = (sampleID, sampleAccounts) => {
 		payload : {
 			sampleID,
 			sampleAccounts
-		}
-	}
-}
-
-const getRelationshipData = (sampleID) => {
-	return {
-		type :'GET_RELATIONSHIP_STATUS',
-		payload : {
-			sampleID
 		}
 	}
 }
@@ -615,5 +607,5 @@ export {
 	toggleCollapsablePanel,
 	replaceImageCarouselInSet, deleteCarousel, addNewSet, addNewDescriptionInCarousels, updateCarouselDescription, deleteCarouselDescription,
 	setResearchCampaignData, setSurveyID,
-	getChannelConsumptionData, getSamplePlan, getRelationshipData
+	getEnrichmentData, getSamplePlan
 };

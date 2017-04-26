@@ -114,11 +114,13 @@ const updateQuoteLogic = createLogic({
 		delete quote.samplePlanError;
 
 		// remove create campign status data
-		delete quote.campaignStatus.continuteWithGetStatus;
-		delete quote.campaignStatus.progress;
-		delete quote.campaignStatus.status;
-		delete quote.campaignStatus.ETA;
-		delete quote.campaignStatus.startTime;
+		if ( quote.campaignStatus) {
+			delete quote.campaignStatus.continuteWithGetStatus;
+			delete quote.campaignStatus.progress;
+			delete quote.campaignStatus.status;
+			delete quote.campaignStatus.ETA;
+			delete quote.campaignStatus.startTime;
+		}
 		//------------------------------------------------
 
 		let contact = getState().getIn(['data', 'contact']);
@@ -543,24 +545,25 @@ const imageSuggestionsLogic = createLogic({
 });
 
 
-const getChannelConsumptionData = createLogic({
-	type: 'GET_CHANNEL_CONSUMPTION_DATA',
+const getEnrichment = createLogic({
+	type: 'GET_ENRICHMENT_DATA',
 	latest: true,
 	process({ getState, action, api }, dispatch) {
-		dispatch({type:'GET_CHANNEL_CONSUMPTION_DATA_STARTED', payload :{ sampleID : action.payload.sampleID }}, { allowMore: true });
-		return api.getChannelConsumptionData(action.payload.sampleID)
+		dispatch({type:'GET_ENRICHMENT_DATA_STARTED', payload :{ sampleID : action.payload.sampleID }}, { allowMore: true });
+		return api.getEnrichmentData(action.payload.sampleID, action.payload.type)
 				.then(data => {
 					const { items, name } = data.enrichment[0];
-					dispatch({ type:'GET_CHANNEL_CONSUMPTION_DATA_SUCCESS', payload :{ 
+					dispatch({ type:'GET_ENRICHMENT_DATA_SUCCESS', payload :{ 
 						items,
-						name
-					}}, { allowMore: true });
+						name,
+						type : action.payload.type
+					}}, { allowMore: true });	
 				})
 				.catch(error => {
-					dispatch({ type : 'GET_CHANNEL_CONSUMPTION_DATA_FAIL', payload : {
+					dispatch({ type : 'GET_ENRICHMENT_DATA_FAIL', payload : {
 						error },
 						error : true});
-					console.error('GET_CHANNEL_CONSUMPTION_DATA fail!!!', error);
+					console.error('GET_ENRICHMENT_DATA fail!!!', error);
 				})
 	}
 });
@@ -669,9 +672,9 @@ export default [
 	imageSuggestionsLogic,
 	uploadCreativeImageLogic,
 	uploadCarouselCreativeImageLogic,
-	getChannelConsumptionData,
 	getSamplePlan,
 	getRelationshipStatus,
 	createCampaign,
-	getCreateCampaignStatus
+	getCreateCampaignStatus,
+	getEnrichment
 ];

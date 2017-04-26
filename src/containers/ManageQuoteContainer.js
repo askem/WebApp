@@ -27,12 +27,10 @@ const ManageQuoteContainer = connect(
 		if (researchCampaign) { researchCampaign = researchCampaign.toJS(); }
 		let surveyID = state.getIn(['data', 'quote', 'surveyID']);
 		let sampleID = state.getIn(['data', 'quote', 'sampleID']);
-		let channelConsumptionData = state.getIn(['data', 'quote', 'channelConsumptionData']);
-		if (channelConsumptionData)  { channelConsumptionData = channelConsumptionData.toJS() };
+		let enrichmentData = state.getIn(['data', 'quote', 'enrichmentData']);
+		if (enrichmentData)  { enrichmentData = enrichmentData.toJS() };
 		let samplePlan = state.getIn(['data', 'quote', 'samplePlan']);
 		if (samplePlan) { samplePlan = samplePlan.toJS(); }
-		let relationshipStatusData = state.getIn(['data', 'quote', 'relationshipStatusData']);
-		if (relationshipStatusData) { relationshipStatusData = relationshipStatusData.toJS()}
 		let campaignStatus = state.getIn(['data', 'quote', 'campaignStatus']);
 		if (campaignStatus) { campaignStatus = campaignStatus.toJS()}
 
@@ -49,9 +47,8 @@ const ManageQuoteContainer = connect(
 			researchCampaign,
 			surveyID,
 			sampleID,
-			channelConsumptionData,
+			enrichmentData,
 			samplePlan,
-			relationshipStatusData,
 			campaignStatus
 		};
 	},
@@ -104,9 +101,8 @@ const ManageQuoteContainer = connect(
 			deleteCarouselDescription : (index) => dispatch(quoteActions.deleteCarouselDescription(index)),
 			setResearchCampaignData : (researchCampaignID, campaignName, campaignDescription, sampleID, surveyID) => dispatch(quoteActions.setResearchCampaignData(researchCampaignID, campaignName, campaignDescription, sampleID, surveyID)),
 			setSurveyID : (surveyID) => dispatch(quoteActions.setSurveyID(surveyID)),
-			getChannelConsumptionData : (sampleID) => dispatch(quoteActions.getChannelConsumptionData(sampleID)),
+			getEnrichmentData : (sampleID, type) => dispatch(quoteActions.getEnrichmentData(sampleID, type)),
 			getSamplePlan : (sampleID, sampleAccounts) => dispatch(quoteActions.getSamplePlan(sampleID, sampleAccounts)),
-			getRelationshipData : (sampleID) => dispatch(quoteActions.getRelationshipData(sampleID)),
 			createCampaign: (caps, campaignDays, microCellMaxSize, microCellMaxImagesAds, microCellMaxCarouselAds, sampleID) => dispatch(campaignActions.createCampaign(caps, campaignDays, microCellMaxSize, microCellMaxImagesAds, microCellMaxCarouselAds, sampleID)),
 			getCreateCampaignStatus : (sampleID) => dispatch(campaignActions.getCreateCampaignStatus(sampleID)),
 			setCreateCampaignStatusFinished : () => dispatch(campaignActions.setCreateCampaignStatusFinished()),

@@ -12,54 +12,60 @@ class GraphContainer extends Component {
 		this.handleChange = this.handleChange.bind(this);
 
 		this.state = {
-			selectedGraph : 'channelConsumption',
+			selectedGraph : 'MediaChannels',
 			renderedGraph : null
 		}
 	}
-
-	///TODO : remove later
+	
 	componentDidMount() {
 		switch (this.state.selectedGraph) {
-			case 'channelConsumption': 
-				const sampleID = this.props.sampleID;
-				this.props.getChannelConsumptionData(sampleID);
+			case 'MediaChannels': 
+				this.props.getEnrichmentData(this.props.sampleID, this.state.selectedGraph);
 				break;
 		}
 	}
 
 	handleChange(event, index, value) {
 		switch(value) {
-			case 'relationshipStatus':
-				this.props.getRelationshipData(this.props.sampleID);
+			case 'MediaChannels':
+			case 'Supermarkets':
+			case 'eCommerce':
+			case 'RelationshipStatus':
+				this.props.getEnrichmentData(this.props.sampleID, value);
 				break;
+			case 'samplePlan':
+				this.props.getSamplePlan(this.props.sampleID)
+				break;
+
 		}
-
-
 		this.setState({ selectedGraph : value });
 	}
 
 	render() {
 		let output;
 		let style = { display : 'block' };
-		const loading = <div className="loading-graphs">Loading Media Channel Consumption Data...</div>
+		const loading = <div className="loading-graphs">Loading...</div>
 
 		switch (this.state.selectedGraph) {
-			case 'channelConsumption':
-				if (!this.props.channelConsumptionData) {
+			case 'MediaChannels':
+			case 'Supermarkets':
+			case 'eCommerce':
+				if (!this.props.enrichmentData || !this.props.enrichmentData[this.state.selectedGraph]) {
 					output = loading;
 					style = { display : 'none' }
 				}
 				else {
-					output = <ChannelConsumption graphData={this.props.channelConsumptionData} />;
+					output = <ChannelConsumption graphData={this.props.enrichmentData[this.state.selectedGraph]} />;
 				}
 				break;
 			case 'samplePlan': 
 				output = <SamplePlanGraph data={this.props.samplePlan } />;
 				break;
-			case 'relationshipStatus':{
-				output = <RelationshipStatusGraph data={this.props.relationshipStatusData}/>
+			case 'RelationshipStatus':{
+				output = <RelationshipStatusGraph data={this.props.enrichmentData.RelationshipStatus}/>
 				break;
 			}
+			
 			default:
 				output = loading;
 				style = { display : 'none' }
@@ -72,9 +78,11 @@ class GraphContainer extends Component {
 					<SelectField
 							value={this.state.selectedGraph}
 							onChange= { this.handleChange }> 
-						<MenuItem value={'channelConsumption'} primaryText="Media Channel consumption" />
+						<MenuItem value={'MediaChannels'} primaryText="Media Channel consumption" />
+						<MenuItem value={'Supermarkets'} primaryText="Supermarkets" />
+						<MenuItem value={'eCommerce'} primaryText="eCommerce" />
 						<MenuItem value={'samplePlan'} primaryText="Sample Plan" />
-						<MenuItem value={'relationshipStatus'} primaryText="Relationship Status" />
+						<MenuItem value={'RelationshipStatus'} primaryText="Relationship Status" />
 					</SelectField>
 				</div>
 				{ output }

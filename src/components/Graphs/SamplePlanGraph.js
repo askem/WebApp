@@ -76,9 +76,8 @@ class SamplePlanGraph extends Component {
 		const maleGeneral = ((totalMalePopulation/(totalFemalePopulation + totalMalePopulation))*100).toFixed(2);
 
 		// calculate total height of bars
-		const distributionMaleArray = maleDataArray.map(item => ((item.reach/totalAudienceMale)* 100));
-		const distibutionFemaleArray = femaleDataArray.map(item => ((item.reach/totalAudienceFemale)* 100));
-
+		const distributionMaleArray = maleDataArray.map(item => totalAudienceMale === 0 ? 0 : (item.reach/totalAudienceMale) * 100);
+		const distibutionFemaleArray = femaleDataArray.map(item => totalAudienceFemale === 0 ? 0 : (item.reach/totalAudienceFemale)* 100);
 		const generalPopulationMaleArray = generalPopultionMale.map(item => ((item.reach/totalMalePopulation)*100));
 		const generalPopulationFemaleArray = generalPopultionFemale.map(item => ((item.reach/totalFemalePopulation)*100));
 

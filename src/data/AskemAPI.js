@@ -472,12 +472,8 @@ class AskemAPI {
 		return this.fetchEndpoint(`samplings/${sampleID}/samplePlan?sampleAccounts=${sampleAccounts}&createdAfter=2017-04-24T13:47:00z`);
 	}
 
-	getChannelConsumptionData(sampleID) {
-		return this.fetchEndpoint(`samplings/${sampleID}/enrichment`)
-	}
-
-	getRelationshipData(sampleID) {
-		return this.fetchEndpoint(`samplings/${sampleID}/enrichment?enrichment=RelationshipStatus&createdAfter=2017-04-24T13:47:00z`);
+	getEnrichmentData(sampleID, type = 'MediaChannels') {
+		return this.fetchEndpoint(`samplings/${sampleID}/enrichment?enrichment=${type}`)
 	}
 
 	/* API - Not yet implemented */

@@ -432,7 +432,7 @@ class ManageQuote extends React.Component {
 					<div className="back-button-container">
 						<FlatButton label="Back" onTouchTap={ this.hideGraphs }/>
 					</div>
-					<GraphContainer { ...this.props }/>
+					<GraphContainer { ...this.props } sampleAccounts={this.state.sampleAccounts}/>
 				</div>
 			)
 		}
