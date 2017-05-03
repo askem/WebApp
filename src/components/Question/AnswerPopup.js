@@ -52,13 +52,13 @@ class AnswerPopup extends React.Component {
 			alt={this.props.textValue}
 			data-id={this.props.possibleAnswerID}
 			onClick={this.onPopupClick}>
-				<div className="popup-answer-background">
-				{ /* this will be the background */ } 
-				</div>
-
+				<AskemUserText>{this.props.textValue}</AskemUserText>
+			
+				{ /* 
 				<div className="popup-text-value">
 					<AskemUserText>{this.props.textValue}</AskemUserText>
 				</div>
+				*/ }
 				{checkmark}
 			</div>;
 	}

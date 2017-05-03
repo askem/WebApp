@@ -5,7 +5,7 @@ const AskemUserText = (props) => {
 	if (props.children) {
 		textValue = props.children.toString();
 	}
-	return <div dir="auto">{textValue}</div>
+	return <div dir="auto" style={{ color:'#FFF' }}>{textValue}</div>
 };
 
 // const AskemUserText = React.createClass({
