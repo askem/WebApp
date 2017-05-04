@@ -9,7 +9,10 @@ class UploadHiddenControl extends React.Component {
 		this.uploadElementID = randomID;
 	}
 	openUploadDialog() {
-		document.getElementById(this.uploadElementID).click();
+		let uploaderElement = document.getElementById(this.uploadElementID);
+		uploaderElement.value = '';
+		uploaderElement.click();
+		// document.getElementById(this.uploadElementID).click();
 	}
 	handleChange(e) {
 		e.preventDefault();

@@ -192,13 +192,14 @@ const finishedEditingQText = (questionID, textValue, variantID) => {
 	}
 }
 
-const setQuoteQuestionImage = (questionID, mediaID, variantID) => {
+const setQuoteQuestionImage = (questionID, mediaID, variantID, croppedMetadata) => {
 	return {
 		type: 'SET_QUOTE_QUESTION_IMAGE',
 		payload: {
 			questionID,
 			mediaID,
-			variantID
+			variantID,
+			croppedMetadata
 		}
 	}
 }
@@ -365,12 +366,217 @@ const quoteUIAction = (actionType, metadata = '') => {
 	}
 }
 
+const updateCreativeHeadline = (index, text) => {
+	return {
+		type : 'UPDATE_CREATIVE_HEADLINE',
+		payload :{
+			index,
+			text
+		}
+	}
+}
+
+
+const addCreativeHeadline = () => {
+	return {
+		type : 'ADD_CREATIVE_HEADLINE'
+	}
+}
+
+const deleteCreativeHeadline = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_HEADLINE',
+		payload : {
+			index
+		}
+	}
+}
+
+const addCreativeText = () => {
+	return {
+		type : 'ADD_CREATIVE_TEXT'
+	}
+}
+
+const updateCreativeText = (index, text) => {
+	return {
+		type : 'UPDATE_CREATIVE_TEXT',
+		payload : {
+			index, 
+			text
+		}
+	}
+}
+
+const deleteCreativeText = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_TEXT',
+		payload : {
+			index
+		}
+	}
+}
+
+const addCreativeDescription = () => {
+	return {
+		type : 'ADD_CREATIVE_DESCRIPTION'
+	}
+}
+
+const updateCreativeDescription = (index, text) => {
+	return {
+		type : 'UPDATE_CREATIVE_DESCRIPTION',
+		payload : {
+			index, 
+			text
+		}
+	}
+}
+
+const deleteCreativeDescription = (index) => {
+	return {
+		type : 'DELETE_CREATIVE_DESCRIPTION',
+		payload : {
+			index
+		}
+	}
+}
+
+const deleteCreativeImage = (index, key) => {
+	return {
+		type : 'DELETE_CREATIVE_IMAGE',
+		payload: {
+			index,
+			key
+		}
+	}
+}
+
+const addCreativeImage = (index, metadata, croppedImage) => {
+	return {
+		type : 'ADD_CREATIVE_IMAGE',
+		payload : {
+			index,
+			metadata,
+			croppedImage
+		}
+	}
+}
+
+const setResearchObjective = (researchId, description, title) => {
+	return {
+		type : 'SET_RESEARCH_OBJECTIVE',
+		payload : {
+			researchId,
+			description
+    }
+  }
+}
+
 const toggleCollapsablePanel = (actionType, eventData) => {
 	return {
 		type : 'TOGGLE_COLLAPSABLE_PANEL',
 		payload : {
 				actionType,
 				eventData
+		}
+	}
+}
+
+const replaceImageCarouselInSet = (setIndex, imageIndex, metadata) => {
+	return {
+		type : 'REPLACE_IMAGE_IN_CAROUSEL_FOR_SET',
+		payload : {
+			setIndex,
+			imageIndex,
+			metadata
+		}
+	}
+}
+
+
+const addNewSet = (totalPossibleAnswers) => {
+	return {
+		type : 'ADD_NEW_CAROUSEL_SET',
+		payload : {
+			totalPossibleAnswers
+		}
+	}
+}
+
+const deleteCarousel = (setIndex) => {
+	return {
+		type : 'DELETE_CAROUSEL',
+		payload : {
+			setIndex
+		}
+	}
+}
+
+const addNewDescriptionInCarousels = () => {
+	return {
+		type: 'ADD_NEW_DESCRIPTION_IN_CAROUSEL',
+		payload : {}
+	}
+}
+
+const updateCarouselDescription = (index, text) => {
+	return {
+		type : 'UPDATE_CAROUSEL_DESCRIPTION',
+		payload :{
+			index, 
+			text
+		}
+	}
+}
+
+const deleteCarouselDescription = (index) => {
+	return {
+		type : 'DELETE_CAROUSEL_DESCRIPTION',
+		payload : {
+			index
+		}
+	}
+}
+
+const setResearchCampaignData = (researchCampaignID, campaignName, campaignDescription, sampleID, surveyID) => {
+	return {
+		type:'SET_RESEARCH_CAMPAIGN_DATA',
+		payload : {
+			researchCampaignID, 
+			campaignName,
+			campaignDescription,
+			sampleID,
+			surveyID
+		}
+	}
+}
+
+const setSurveyID = (surveyID) => {
+	return {
+		type :'SET_SURVEYID',
+		payload : {
+			surveyID
+		}
+	}
+}
+
+const getEnrichmentData = (sampleID, type) =>  {
+	return {
+		type :'GET_ENRICHMENT_DATA',
+		payload : {
+			sampleID,
+			type
+		}
+	}
+}
+
+const getSamplePlan = (sampleID, sampleAccounts) => {
+	return {
+		type : 'GET_SAMPLE_PLAN',
+		payload : {
+			sampleID,
+			sampleAccounts
 		}
 	}
 }
@@ -393,5 +599,13 @@ export {
 	setQuoteContactValue, finishedEditingContactValue,
 	submitLead, closeSuccessSubmitLead, newSubmission, cancelFailedSubmitLead,
 	quoteUIAction,
-	toggleCollapsablePanel
+	updateCreativeHeadline, addCreativeHeadline, deleteCreativeHeadline,
+	addCreativeText, updateCreativeText, deleteCreativeText,
+	addCreativeDescription, updateCreativeDescription, deleteCreativeDescription,
+	addCreativeImage, deleteCreativeImage,
+	setResearchObjective,
+	toggleCollapsablePanel,
+	replaceImageCarouselInSet, deleteCarousel, addNewSet, addNewDescriptionInCarousels, updateCarouselDescription, deleteCarouselDescription,
+	setResearchCampaignData, setSurveyID,
+	getEnrichmentData, getSamplePlan
 };
