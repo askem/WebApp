@@ -53,12 +53,6 @@ class AnswerPopup extends React.Component {
 			data-id={this.props.possibleAnswerID}
 			onClick={this.onPopupClick}>
 				<AskemUserText>{this.props.textValue}</AskemUserText>
-			
-				{ /* 
-				<div className="popup-text-value">
-					<AskemUserText>{this.props.textValue}</AskemUserText>
-				</div>
-				*/ }
 				{checkmark}
 			</div>;
 	}
