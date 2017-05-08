@@ -12,7 +12,10 @@ class QuestionMedia extends React.Component {
     	super(props);
 		this.onClick = this.onClick.bind(this);
 		this.state = {
-			popupLocations: props.question.popupLocations
+			popupLocations: props.question.popupLocations,
+			globalAlpha : 0.6,
+			fillStyle : '#969696',
+			reduceByPercent : 0.6
 		};
 	}
 	onClick(group) {
@@ -54,6 +57,7 @@ class QuestionMedia extends React.Component {
 		let children = [];
 		children.push(<canvas className="photo-canvas" style={canvasStyle} ref="imageCanvas" key="imageCanvas" />);
 		children.push(<img ref="loaderTemp"  style={{ display:'none'}} key="canvasLoaderHelper" />);
+		children.push(<canvas ref="bluredCanvas" key="blurredCanvasHelper"></canvas>);
 
 		q.possibleAnswers.forEach((pa, paIndex) => {
 			children.push(<DraggableCore key={`answer-${paIndex}`}
@@ -171,16 +175,10 @@ class QuestionMedia extends React.Component {
 	}
 
 	handleCanvasBlurEffect($questionImage, ctx) {
-		let blurredCanvas = document.querySelector('#bluredCanvas');
+		let blurredCanvas = this.refs.bluredCanvas;
 		const { width, height } = this.refs.imageCanvas;
-
-		if (!blurredCanvas) {
-			blurredCanvas = document.createElement('canvas');
-			blurredCanvas.setAttribute('width', width);
-			blurredCanvas.setAttribute('height',height);
-			blurredCanvas.id = 'bluredCanvas';
-			document.querySelector('body').appendChild(blurredCanvas);
-		}
+		blurredCanvas.setAttribute('width', width);
+		blurredCanvas.setAttribute('height',height);
 
 		let tempImg = 	this.refs.loaderTemp;
 
@@ -200,8 +198,8 @@ class QuestionMedia extends React.Component {
 	applyCanvasEffectsAndContinue(blurredCanvas, width, height, tempImg, $questionImage, ctx) {
 		const blurredContext = blurredCanvas.getContext('2d');
 		blurredContext.clearRect(0,0, width, height);
-		blurredContext.globalAlpha = 0.6;
-		blurredContext.fillStyle = '#969696';
+		blurredContext.globalAlpha = this.state.globalAlpha;
+		blurredContext.fillStyle = this.state.fillStyle;
 		blurredContext.fillRect(0,0, width, height);
 		blurredContext.filter = 'blur(20px)';
 
@@ -237,20 +235,19 @@ class QuestionMedia extends React.Component {
 			let manipulatedBG = '';
 
 			if (avg >= 120) {
-				const reduceByPercent = 0.6;
 				hadPixelManipulation = true;
 				for (let i = 0; i<pixelsData.length; i+= 4) {
-					pixelsData[i] *= reduceByPercent;
-					pixelsData[i + 1] *= reduceByPercent;
-					pixelsData[i + 2] *= reduceByPercent;
+					pixelsData[i] *= this.state.reduceByPercent;
+					pixelsData[i + 1] *= this.state.reduceByPercent;
+					pixelsData[i + 2] *= this.state.reduceByPercent;
 				}
 
 				blurredContext.putImageData(imageData, 0 ,0);
 				manipulatedBG = blurredCanvas.toDataURL();
 				blurredContext.clearRect(0, 0 , width, height);
 				blurredContext.drawImage(img, 0, 0, width, height);
-				blurredContext.globalAlpha = 0.6;
-				blurredContext.fillStyle = '#969696';
+				blurredContext.globalAlpha =this.state.globalAlpha;
+				blurredContext.fillStyle =  this.state.fillStyle;
 				blurredContext.fillRect(0,0, width, height);
 				blurredContext.filter = 'blur(20px)';
 			}
