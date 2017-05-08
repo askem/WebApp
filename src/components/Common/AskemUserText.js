@@ -5,7 +5,9 @@ const AskemUserText = (props) => {
 	if (props.children) {
 		textValue = props.children.toString();
 	}
-	return <div dir="auto" style={{ color:'#FFF' }}>{textValue}</div>
+
+	let style = (typeof props.isQuestionTitle === 'undefined' || !props.isQuestionTitle) ? 'regular-question-text' : 'question-title';
+	return <div dir="auto" className={ style }>{textValue}</div>
 };
 
 // const AskemUserText = React.createClass({

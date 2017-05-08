@@ -51,7 +51,6 @@ class QuestionMedia extends React.Component {
 		}
 
 		const canvasStyle = { backgroundImage: `url(${imageURL})` };
-		//style={{width: 20, height: 20, backgroundColor:'#333'}}
 		let children = [];
 		children.push(<canvas className="photo-canvas" style={canvasStyle} ref="imageCanvas" key="imageCanvas" />);
 
@@ -167,74 +166,110 @@ class QuestionMedia extends React.Component {
 		var canvas = ReactDOM.findDOMNode(this.refs.imageCanvas);
 		var ctx = canvas.getContext('2d');
 		ctx.clearRect(0, 0, this.imageLength, this.imageLength);
+		this.handleCanvasBlurEffect($questionImage, ctx);
+        return this;
+	}
 
-		const blurredCanvas = document.createElement('canvas');
-		blurredCanvas.setAttribute('width', 395);
-		blurredCanvas.setAttribute('height', 395);
+	handleCanvasBlurEffect($questionImage, ctx) {
+		let blurredCanvas = document.querySelector('#bluredCanvas');
+		const { width, height } = this.refs.imageCanvas;
+
+		if (!blurredCanvas) {
+			blurredCanvas = document.createElement('canvas');
+			blurredCanvas.setAttribute('width', width);
+			blurredCanvas.setAttribute('height',height);
+			blurredCanvas.id = 'bluredCanvas';
+			document.querySelector('body').appendChild(blurredCanvas);
+		}
+
 		const tempImg = new Image();
 		tempImg.addEventListener('load', () => {
-			const tempContext = blurredCanvas.getContext('2d');
-			tempContext.globalAlpha = 0.7;
-			tempContext.fillStyle =  '#969696';
-			tempContext.fillRect(0,0,395, 395);
-			tempContext.filter = 'blur(20px)';
-			tempContext.drawImage(tempImg, 0, 0, 395, 395);
-			const tempBackground = blurredCanvas.toDataURL();
+			const blurredContext = blurredCanvas.getContext('2d');
+			blurredContext.clearRect(0,0, width, height);
+			blurredContext.globalAlpha = 0.6;
+			blurredContext.fillStyle = '#969696';
+			blurredContext.fillRect(0,0, width, height);
+			blurredContext.filter = 'blur(20px)';
 
+			blurredContext.drawImage(tempImg, 0, 0, width, height);
 
-			/////////////////////////////////////////////////
-			let tempDiv = document.querySelector('#lior');
-			if (!tempDiv) {
-				tempDiv = document.createElement('div');
-				tempDiv.id = 'lior';
-				tempDiv.style.height = '395px';
-				tempDiv.style.width = '395px';
-				document.querySelector('body').appendChild(tempDiv);
-			}
-			
-			tempDiv.style.backgroundImage= `url(${tempBackground})`;
-			/////////////////////////////////////////////////
-			
-
-			this.currentPopupIndexes().forEach((paIndex, idx) => {
-					const possibleAnswer = this.props.question.possibleAnswers[paIndex];
-					const popupLocation = this.state.popupLocations[idx]; //this.props.question.popupLocations[idx];
-					var $possibleAnswer = $(ReactDOM.findDOMNode(this.refs[`answer-${paIndex}`]));
-					//fixAutoDir($possibleAnswer[0]);*/
-					var $dot = $(ReactDOM.findDOMNode(this.refs[`dot-${paIndex}`]));
-					var positions = this.getPossibleAnswerPosition(possibleAnswer, popupLocation, $possibleAnswer, $dot, $questionImage);
-					this.drawLine(ctx, positions);
-					// var bgImage = $possibleAnswer.hasClass('checked') ? '' :
-					// 	['linear-gradient(to bottom, rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%)',
-					// 	`url("${this.props.question.questionImageURL}")`
-					// 	].join(',');
-
-					var bgImage = $possibleAnswer.hasClass('checked') ? '' : `url("${tempBackground}")`;
-					let possibleAnswersCSS = Object.assign({}, positions.possibleAnswer, {
-						'background-image': bgImage,
-						//		v----border compensation--v
-						'background-position': `0 0, -${positions.possibleAnswer.left + 1}px -${positions.possibleAnswer.top + 1}px`,
-						// 'background-position': `0 0, ${positions.possibleAnswer.left + 1}px ${positions.possibleAnswer.top + 1}px`,
-						// 'background-position': `0 0, ${positions.possibleAnswer.left + 1}px ${positions.possibleAnswer.top + 1}px`,
-						'background-size': `100%, ${this.imageLength}px ${this.imageLength}px`,
-						'background-repeat': 'no-repeat',
-					});
-
-					$possibleAnswer.css(possibleAnswersCSS);
-					if ($possibleAnswer.children().length > 0) {
-						$possibleAnswer.css(positions.textSize);
-					}
-					$dot.css(positions.dot);
-					$possibleAnswer.children('textarea').css(positions.textSize);
-				});
-			});
+			const blurredBackground = blurredCanvas.toDataURL();
+			//blurredCanvas.setAttribute('style', 'display:none');
+			this.positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, tempImg);
+		});
 
 		tempImg.crossorigin = '';
 		tempImg.src = (this.props.question.croppedMetadata && this.props.question.croppedMetadata.dataURI) ? this.props.question.croppedMetadata.dataURI : '/images/emptyMediaID.png';
-	
-		// }
-		
-        return this;
+	}
+
+	positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, img) {
+		const { width, height }  = document.querySelector('.photo-canvas')
+		this.currentPopupIndexes().forEach((paIndex, idx) => {
+			const possibleAnswer = this.props.question.possibleAnswers[paIndex];
+			const popupLocation = this.state.popupLocations[idx]; //this.props.question.popupLocations[idx];
+			let $possibleAnswer = $(ReactDOM.findDOMNode(this.refs[`answer-${paIndex}`]));
+			//fixAutoDir($possibleAnswer[0]);*/
+			let $dot = $(ReactDOM.findDOMNode(this.refs[`dot-${paIndex}`]));
+			let positions = this.getPossibleAnswerPosition(possibleAnswer, popupLocation, $possibleAnswer, $dot, $questionImage);
+
+			const imageData = blurredContext.getImageData(positions.possibleAnswer.left ,positions.possibleAnswer.top, positions.textSize.width, positions.textSize.height);
+			const pixelsData = imageData.data;
+
+			let total = 0;
+			let pixelLength = 0;
+			for (let i = 0; i<pixelsData.length; i+= 4) {
+				total += parseInt((pixelsData[i] + pixelsData[i + 1] + pixelsData[i + 2])/3);
+				pixelLength++;
+			}
+
+			let avg = parseInt(total / pixelLength);
+			let hadPixelManipulation = false;
+			let manipulatedBG = '';
+
+			if (avg >= 120) {
+				const reduceByPercent = 0.6;
+				hadPixelManipulation = true;
+				for (let i = 0; i<pixelsData.length; i+= 4) {
+					pixelsData[i] *= reduceByPercent;
+					pixelsData[i + 1] *= reduceByPercent;
+					pixelsData[i + 2] *= reduceByPercent;
+				}
+
+				blurredContext.putImageData(imageData, 0 ,0);
+				manipulatedBG = blurredCanvas.toDataURL();
+				blurredContext.clearRect(0, 0 , width, height);
+				blurredContext.drawImage(img, 0, 0, width, height);
+				blurredContext.globalAlpha = 0.6;
+				blurredContext.fillStyle = '#969696';
+				blurredContext.fillRect(0,0, width, height);
+				blurredContext.filter = 'blur(20px)';
+			}
+
+			this.drawLine(ctx, positions);
+			let bgImage; 
+			if (!hadPixelManipulation) {
+				bgImage = $possibleAnswer.hasClass('checked') ? '' : `url("${blurredBackground}")`;
+			}
+			else {
+				bgImage = $possibleAnswer.hasClass('checked') ? '' : `url("${manipulatedBG}")`;
+			}
+
+			let possibleAnswersCSS = Object.assign({}, positions.possibleAnswer, {
+				'background-image': bgImage,
+				//		v----border compensation--v
+				'background-position': `0 0, -${positions.possibleAnswer.left + 1}px -${positions.possibleAnswer.top + 1}px`,
+				//  'background-size': `100%, ${this.imageLength}px ${this.imageLength}px`,
+				 'background-size': `100%, ${positions.textSize.width}  ${positions.textSize.height}`,
+				'background-repeat': 'no-repeat',
+			});
+
+			$possibleAnswer.css(possibleAnswersCSS);
+			if ($possibleAnswer.children().length > 0) {
+				$possibleAnswer.css(positions.textSize);
+			}
+			$dot.css(positions.dot);
+			$possibleAnswer.children('textarea').css(positions.textSize);
+		});
 	}
 }
 

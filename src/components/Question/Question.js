@@ -152,7 +152,7 @@ class Question extends React.Component {
 			<div className="row">
 				<div >
 					<div className="question-text">
-						<AskemUserText>{q.textValue}</AskemUserText>
+						<AskemUserText isQuestionTitle={true}>{q.textValue}</AskemUserText>
 						{continueButton}
 					</div>
 				</div>

@@ -55,6 +55,10 @@
             color: #333;
             font-size: 14px;
 
+			.regular-question-text {
+				color: #fff;
+			}
+
 			textarea {
 			/* http://css-tricks.com/textarea-tricks/ */
 				background-color: transparent;
@@ -246,6 +250,10 @@
         word-wrap:break-word;
         margin: 5px;
         font-size: 18px;
+
+		.question-title {
+			color : #706e6e;
+		}
 
         textarea {
             width: 100%;
