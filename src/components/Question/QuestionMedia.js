@@ -53,6 +53,7 @@ class QuestionMedia extends React.Component {
 		const canvasStyle = { backgroundImage: `url(${imageURL})` };
 		let children = [];
 		children.push(<canvas className="photo-canvas" style={canvasStyle} ref="imageCanvas" key="imageCanvas" />);
+		children.push(<img ref="loaderTemp"  style={{ display:'none'}} key="canvasLoaderHelper" />);
 
 		q.possibleAnswers.forEach((pa, paIndex) => {
 			children.push(<DraggableCore key={`answer-${paIndex}`}
@@ -95,8 +96,11 @@ class QuestionMedia extends React.Component {
 		this.placePossibleAnswers();
 	}
 	componentWillReceiveProps(nextProps) {
+		const sameQuestion = nextProps.question.questionID === this.props.question.questionID;
+
 		this.setState({
-			popupLocations: nextProps.question.popupLocations
+			popupLocations: nextProps.question.popupLocations,
+			sameQuestion
 		});
 	}
 
@@ -159,10 +163,6 @@ class QuestionMedia extends React.Component {
     placePossibleAnswers() {
 		const $questionImage = $(ReactDOM.findDOMNode(this));
         // this.fixImageSize($questionImage);
-		if (this.shouldDrawPopups && !this.shouldDrawPopups()) {
-			return;
-		}
-
 		var canvas = ReactDOM.findDOMNode(this.refs.imageCanvas);
 		var ctx = canvas.getContext('2d');
 		ctx.clearRect(0, 0, this.imageLength, this.imageLength);
@@ -182,25 +182,38 @@ class QuestionMedia extends React.Component {
 			document.querySelector('body').appendChild(blurredCanvas);
 		}
 
-		const tempImg = new Image();
-		tempImg.addEventListener('load', () => {
-			const blurredContext = blurredCanvas.getContext('2d');
-			blurredContext.clearRect(0,0, width, height);
-			blurredContext.globalAlpha = 0.6;
-			blurredContext.fillStyle = '#969696';
-			blurredContext.fillRect(0,0, width, height);
-			blurredContext.filter = 'blur(20px)';
+		let tempImg = 	this.refs.loaderTemp;
 
-			blurredContext.drawImage(tempImg, 0, 0, width, height);
+		if (this.state.sameQuestion) {
+			this.applyCanvasEffectsAndContinue(blurredCanvas, width, height, tempImg, $questionImage, ctx);
+		}
+		else {
+			tempImg.addEventListener('load', () => {
+				this.applyCanvasEffectsAndContinue(blurredCanvas, width, height, tempImg, $questionImage, ctx);
+			});
 
-			const blurredBackground = blurredCanvas.toDataURL();
-			//blurredCanvas.setAttribute('style', 'display:none');
-			this.positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, tempImg);
-		});
-
-		tempImg.crossorigin = '';
-		tempImg.src = (this.props.question.croppedMetadata && this.props.question.croppedMetadata.dataURI) ? this.props.question.croppedMetadata.dataURI : '/images/emptyMediaID.png';
+			tempImg.crossorigin = '';
+			tempImg.src = (this.props.question.croppedMetadata && this.props.question.croppedMetadata.dataURI) ? this.props.question.croppedMetadata.dataURI : '/images/emptyMediaID.png';
+		}
 	}
+
+	applyCanvasEffectsAndContinue(blurredCanvas, width, height, tempImg, $questionImage, ctx) {
+		const blurredContext = blurredCanvas.getContext('2d');
+		blurredContext.clearRect(0,0, width, height);
+		blurredContext.globalAlpha = 0.6;
+		blurredContext.fillStyle = '#969696';
+		blurredContext.fillRect(0,0, width, height);
+		blurredContext.filter = 'blur(20px)';
+
+		blurredContext.drawImage(tempImg, 0, 0, width, height);
+
+		const blurredBackground = blurredCanvas.toDataURL();
+		blurredCanvas.setAttribute('style', 'display:none');
+		this.positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, tempImg);
+	}
+
+
+
 
 	positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, img) {
 		const { width, height }  = document.querySelector('.photo-canvas')
