@@ -212,9 +212,6 @@ class QuestionMedia extends React.Component {
 		this.positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, tempImg);
 	}
 
-
-
-
 	positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, img) {
 		const { width, height }  = document.querySelector('.photo-canvas')
 		this.currentPopupIndexes().forEach((paIndex, idx) => {
