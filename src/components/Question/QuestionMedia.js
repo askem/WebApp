@@ -157,13 +157,94 @@ class QuestionMedia extends React.Component {
 		};
 	}
 	drawLine(ctx, positions) {
+		const { newLeftPosition, newTopPosition }  =  this.calculateNewPositions(positions);
+
 		ctx.beginPath();
 		ctx.moveTo(positions.line[0].left, positions.line[0].top);
-		ctx.lineTo(positions.line[1].left, positions.line[1].top);
+		// ctx.lineTo(positions.line[1].left, positions.line[1].top);
+		ctx.lineTo(newLeftPosition, newTopPosition);
 		ctx.strokeStyle = 'black';
 		ctx.lineWidth = 1;
 		ctx.stroke();
 	}
+
+	calculateNewPositions(positions) {
+		const { width, height } = positions.textSize;
+		let newLeftPosition = positions.line[1].left;
+		let newTopPosition = positions.line[1].top;
+		let padding = 15;
+
+		let popupLeft = positions.possibleAnswer.left; // - padding;
+		let popupRight = positions.possibleAnswer.left + width - padding;
+		let popupTop = positions.possibleAnswer.top;
+		let popupBottom = positions.possibleAnswer.top + height;
+
+
+		const maxOffSet = 10;
+
+		debugger;
+		if (positions.line[1].left > positions.line[0].left && positions.line[1].top === positions.line[0].top) {
+			// left to right
+			newLeftPosition = popupLeft;
+		}
+		else if (positions.line[1].left > positions.line[0].left && positions.line[1].top > positions.line[0].top) {
+			// left to right and top to bottom
+
+			// if the diffrence is less than 3 pixels, treat it as a 
+			// normal left to right line drawing
+			if (Math.abs(positions.line[1].top - positions.line[0].top) <= maxOffSet) {
+				newLeftPosition = popupLeft;
+			}
+			else {
+				newTopPosition = popupTop;
+			}
+		}
+		else if (positions.line[1].left > positions.line[0].left && positions.line[1].top < positions.line[0].top) {
+			// left to right and bottom to top
+			if (Math.abs(positions.line[1].top - positions.line[0].top) <= maxOffSet) {
+				newLeftPosition = popupLeft;
+			}
+			else {
+				newTopPosition = popupBottom;
+			}
+		}
+		else if (positions.line[1].left === positions.line[0].left && positions.line[1].top < positions.line[0].top) {
+			// bottom to top
+			newTopPosition = popupBottom;
+		}
+		else if (positions.line[1].left < positions.line[0].left && positions.line[1].top < positions.line[0].top) {
+			// right to left and bottom to top
+			if (Math.abs(positions.line[1].top - positions.line[0].top) <= maxOffSet) {
+				newLeftPosition = popupRight;
+			}
+			else {
+				newTopPosition = popupBottom;
+			}
+		}
+		else if (positions.line[1].left < positions.line[0].left && positions.line[1].top === positions.line[0].top) {
+			// right to left
+			newLeftPosition = popupRight;
+		}
+		else if (positions.line[1].left < positions.line[0].left && positions.line[1].top > positions.line[0].top) {
+			// right to left and top to bottom
+			if (Math.abs(positions.line[1].top - positions.line[0].top) <= maxOffSet) {
+				newLeftPosition = popupRight;
+			}
+			else {
+				newTopPosition = popupTop;
+			}
+		}
+		else if (positions.line[1].left === positions.line[0].left && positions.line[1].top > positions.line[0].top) {
+			// top to bottom
+			newTopPosition = popupTop;
+		}
+
+		return {
+			newLeftPosition,
+			newTopPosition
+		}
+	}
+
     placePossibleAnswers() {
 		const $questionImage = $(ReactDOM.findDOMNode(this));
         // this.fixImageSize($questionImage);
@@ -207,10 +288,16 @@ class QuestionMedia extends React.Component {
 
 		const blurredBackground = blurredCanvas.toDataURL();
 		blurredCanvas.setAttribute('style', 'display:none');
-		this.positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, tempImg);
+
+		const img = new Image();
+		img.addEventListener('load', () => {
+			this.positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, tempImg, img);
+		});
+
+		img.src = blurredBackground;
 	}
 
-	positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, img) {
+	positionPopUps(blurredBackground, $questionImage, ctx, blurredContext, blurredCanvas, img, blurredImage) {
 		const { width, height }  = document.querySelector('.photo-canvas')
 		this.currentPopupIndexes().forEach((paIndex, idx) => {
 			const possibleAnswer = this.props.question.possibleAnswers[paIndex];
@@ -234,7 +321,7 @@ class QuestionMedia extends React.Component {
 			let hadPixelManipulation = false;
 			let manipulatedBG = '';
 
-			if (avg >= 120) {
+			if (avg >= 105) {
 				hadPixelManipulation = true;
 				for (let i = 0; i<pixelsData.length; i+= 4) {
 					pixelsData[i] *= this.state.reduceByPercent;
@@ -252,7 +339,7 @@ class QuestionMedia extends React.Component {
 				blurredContext.filter = 'blur(20px)';
 			}
 
-			this.drawLine(ctx, positions);
+			
 			let bgImage; 
 			if (!hadPixelManipulation) {
 				bgImage = $possibleAnswer.hasClass('checked') ? '' : `url("${blurredBackground}")`;
@@ -270,12 +357,14 @@ class QuestionMedia extends React.Component {
 				'background-repeat': 'no-repeat',
 			});
 
+
 			$possibleAnswer.css(possibleAnswersCSS);
 			if ($possibleAnswer.children().length > 0) {
 				$possibleAnswer.css(positions.textSize);
 			}
 			$dot.css(positions.dot);
 			$possibleAnswer.children('textarea').css(positions.textSize);
+			this.drawLine(ctx, positions);
 		});
 	}
 }
