@@ -9,6 +9,7 @@ import QuoteAdminHomeContainer from 'containers/QuoteAdminHomeContainer';
 import QuoteExternalPreviewContainer from 'containers/QuoteExternalPreviewContainer';
 import CustomResearchResultsContainer from 'containers/CustomResearchResultsContainer';
 import Login from 'components/Base/Login';
+import LeadGenContainer from 'containers/LeadGenContainer';
 
 const quoteRouter = (store, api) =>  {
 	// Create an enhanced history that syncs navigation events with the store
@@ -48,6 +49,7 @@ const quoteRouter = (store, api) =>  {
 		const quoteID = nextState.params.quoteID;
 		// const existingQuoteID = store.getState().getIn(['data', 'lead', 'quoteID']);
 		// if (existingQuoteID === quoteID) { return; }
+
 		setTimeout(()=>
 			store.dispatch({
 				type: 'ROUTING_ENTER_WITH_ID',
@@ -122,12 +124,37 @@ const quoteRouter = (store, api) =>  {
 		});
 	}
 
+	const enterLeadGenWithoutID = (nextState, replace) => {
+		setTimeout(() => {
+			store.dispatch({
+				type: 'ROUTING_LEADGEN',
+				payload:  {}
+			});
+
+		},0);
+	}
+
+	const enterLeadGenWithID = (nextState, replace) => {	
+		const { leadgenID }  = nextState.params;
+
+		setTimeout(() => {
+			store.dispatch({
+						type: 'ROUTING_LEADGEN_WITH_ID',
+						payload: {
+							leadgenID
+						}
+			});
+		}, 0);
+	}
+
 	return <Router history={history}>
 		<Route component={QuoteFrame} storeref={store}>
 			<Route path="/" onEnter={enterWithoutID} />
 			<Route path="/login" name="Login" component={Login} />
 			<Route path="/signout" onEnter={signOut} />
 			<Route path="/admin" name="Quote Management" onEnter={enterRestricted} component={QuoteAdminHomeContainer} />
+			<Route path="/leadgen" onEnter={enterLeadGenWithoutID} />
+			<Route path="/leadgen/:leadgenID" component={LeadGenContainer} onEnter={enterLeadGenWithID} />
 			<Route path="/:quoteID" fullSizeHeader={true} component={QuoteWizardContainer} onEnter={enterWithID} />
 			<Route path="/:quoteID/manage" name="Manage Quote" component={ManageQuoteContainer} onEnter={enterRestrictedWithID} />
 			<Route path="/:quoteID/preview" name="Survey Preview" component={QuoteExternalPreviewContainer} onEnter={enterWithID} />

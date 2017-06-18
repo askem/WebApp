@@ -57,8 +57,48 @@ const manageCreateNewLogic = createLogic({
 	}
 });
 
+const enterLeadGenLogic = createLogic({
+	type : 'ROUTING_LEADGEN',
+	process({ getState, action, api}, dispatch) {
+		const existingLeadID = getState().getIn(['data', 'metadata', 'leadgenID']);
+		if (!existingLeadID) {
+			let leadgenID = localStorage.leadgenID;
+			if (leadgenID) {
+				browserHistory.replace(`/leadgen/${leadgenID}`);
+			} else {
+				leadgenID = genGUID();
+				//console.info(`Redirecting to new quote ${quoteID}`);
+				browserHistory.replace(`/leadgen/${leadgenID}`);
+				dispatch({
+					type : 'CREATE_NEW_LEADGEN',
+					payload : {
+						leadgenID
+					}
+				})
+			}
+		}
+	}
+})
+
+
+const enterLeadGenWithIDLogic = createLogic({
+	type : 'ROUTING_LEADGEN_WITH_ID',
+	process({ getState, action, api }, dispatch) {
+		const leadgenID = action.payload.leadgenID;
+		dispatch({
+			type: 'LOAD_LEADGEN',
+			payload: {
+				leadgenID
+			}
+		});
+	}
+
+})
+
 export default [
 	enterWithoutIDLogic,
 	enterWithIDLogic,
-	manageCreateNewLogic
+	manageCreateNewLogic,
+	enterLeadGenLogic,
+	enterLeadGenWithIDLogic	
 ];

@@ -7,6 +7,7 @@ import dateStringToDate from 'utils/dateStringToDate';
 import leadMetadataToQuestion from 'utils/Askem/leadMetadataToQuestion';
 import leadMetadataToSurvey from 'utils/Askem/leadMetadataToSurvey';
 import genGUID from 'utils/Askem/genGUID';
+import INDUSTRY_LIST from 'constants/INDUSTRY_LIST';
 
 const defaultModelData = {
 	"modelID": "dce",
@@ -501,6 +502,62 @@ class AskemAPI {
 	getCreateCampaignStatus(sampleID) {
 		// remove the mock param for production or real api call
 		return this.fetchEndpoint(`samplings/${sampleID}/buildStatus?mock=1`);
+	}
+
+	createLeadGen({leadgenID, ageGroups, campaignStartDate, campaignEndDate, gender, industry, intentToPurchase}) {
+		const metadata = {
+				ageGroups,
+				campaignStartDate,
+				campaignEndDate,
+				gender,
+				industry,
+				intentToPurchase
+		}
+
+		return this.fetchEndpoint('external/leads', {
+			ID: leadgenID,
+			metadata: JSON.stringify(metadata)
+		});
+	}
+
+	getLeadGen(leadgenID) {
+		return this.fetchEndpoint(`external/leads/${leadgenID}`);
+	}
+
+	updateLeadGen(params) {
+		const { leadgenID, 
+				ageGroups,
+				campaignStartDate,
+				campaignEndDate,
+				gender,
+				industry,
+				intentToPurchase,
+				type,
+				industryTextValue,
+				intentToPurchaseText 
+			} = params;
+
+		const metadata = {
+				ageGroups, 
+				campaignStartDate,
+				campaignEndDate,
+				gender,
+				industry,
+				intentToPurchase,
+				industryTextValue,
+				intentToPurchaseText, 
+				type
+		}
+
+		return this.fetchEndpoint(`external/leads/${leadgenID}`,{
+			 metadata : JSON.stringify(metadata)
+			 })
+			.then(response => {
+				console.log('response from updateLeadGen', response);
+			})
+			.catch(err => {
+				console.error(err);
+			});
 	}
 }
 

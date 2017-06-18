@@ -17,6 +17,7 @@ import logger from 'middleware/logger';
 import { createLogicMiddleware } from 'redux-logic';
 import quoteLogics from 'logic/quoteLogic';
 import quoteRoutingLogics from 'logic/quoteRoutingLogic';
+import leadGenLogic from 'logic/leadGenLogic';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -45,6 +46,7 @@ const logicDeps = {
 let logics = [];
 logics = logics.concat(quoteLogics);
 logics = logics.concat(quoteRoutingLogics);
+logics = logics.concat(leadGenLogic);
 const logicMiddleware = createLogicMiddleware(logics, logicDeps);
 
 const initialState = Immutable.fromJS({

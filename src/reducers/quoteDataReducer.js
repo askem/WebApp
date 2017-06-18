@@ -5,6 +5,7 @@ import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, calcLocations, Autom
 import { isAspectRatioValid, getImageData  } from 'utils/imageUtils';
 
 const initialState = Immutable.fromJS({});
+const initialLeadGenState = Immutable.fromJS({});
 
 const stateWithSettingValueInVQariant = (state, questionID, variantID, key, value) => {
 	const idx = state.getIn(['surveyMetadata', 'questionsVariants']).findIndex(v => v.get('questionID') === questionID);
@@ -639,7 +640,9 @@ const quoteReducer = (state = initialState, action) => {
 				return campaignStatus.set('continueWithGetStatus', false);
 			});
 		}
-		default:
+
+		
+		default : 
 			return state;
 	}
 }
@@ -670,6 +673,73 @@ const leadReducer = (state = initialState, action) => {
 		return state.delete('submitSuccess');
 	case 'SUBMIT_LEAD_CANCEL_FAILED':
 		return state.delete('submitFail');
+
+	case 'CREATE_NEW_LEADGEN' : 
+		if (!state.get('metadata')) {
+			state = state.set('metadata', Immutable.fromJS({}));
+		}
+
+		return state
+					.set('leadgenID', action.payload.leadgenID)
+					.setIn(['metadata', 'type'], 'leadgen');
+			  
+	case 'LOAD_LEADGEN' : 
+		return state.set('leadgenLoading', true).set('leadgenID', action.payload.leadgenID);
+	case 'LOAD_LEADGEN_REQUEST_SUCCESS':
+		const metadata = JSON.parse(action.payload.lead.metadata);
+		const { ageGroups,  campaignEndDate, campaignStartDate, gender, industry, intentToPurchase, industryTextValue = '', intentToPurchaseText =''} = metadata;
+
+		return state
+					.set('leadgenLoading', false)
+		 			.mergeIn(['metadata'], Immutable.fromJS({
+						ageGroups,
+						campaignEndDate,
+						campaignStartDate,
+						gender,
+						industry,
+						intentToPurchase,
+						industryTextValue,
+						intentToPurchaseText,
+						type : 'leadgen'
+					}))
+
+	case 'LEADGEN_AGE_GROUP_CHANGE': {
+		return state.updateIn(['metadata', 'ageGroups'], ageGroups => action.payload.ageGroups.map(ageGroup => ageGroup)); 
+	}
+	case 'LEADGEN_GENDER_CHANGE': {
+		return state.setIn(['metadata', 'gender'], Immutable.fromJS(action.payload.genders));
+	}
+	case 'LEADGEN_INDUSTRY_CHANGE' : {
+		const { industry, intentToPurchase, estimatedAudienceSize, price, industryTextValue = '' } = action.payload;
+
+		return state.mergeIn(['metadata'], Immutable.fromJS({
+			industry,
+			intentToPurchase,
+			estimatedAudienceSize,
+			price,
+			industryTextValue,
+		}));
+	}
+	case 'LEADGEN_CAMPAIGN_DATE_CHANGE' : {
+		if (action.payload.campaignEndDate) {
+			 return state
+				.setIn(['metadata', 'campaignStartDate'], action.payload.campaignStartDate)
+			 	.setIn(['metadata', 'campaignEndDate'], action.payload.campaignEndDate);
+		}
+		else {
+			return state.setIn(['metadata', 'campaignStartDate'], action.payload.campaignStartDate);
+		}
+	}
+	case 'LEADGEN_INTENT_TO_PURCHASE_CHANGE' : {
+		const { intentToPurchase, estimatedAudienceSize, price, textValue = '' } = action.payload;
+		return state.mergeIn(['metadata'], Immutable.fromJS({
+			intentToPurchase,
+			estimatedAudienceSize,
+			price,
+			intentToPurchaseText : textValue
+		}));
+		 
+	}
 	default:
 		return state;
 	}
@@ -706,11 +776,16 @@ const imageSuggestionsReducer = (state = initialState, action) => {
 	}
 }
 
+const leadGenReducer = (state = initialLeadGenState, action) => {
+	
+}
+
 const dataReducer = combineReducers({
 	quote: quoteReducer,
 	imageSuggestions: imageSuggestionsReducer,
 	lead: leadReducer,
-	contact: contactReducer
+	contact: contactReducer,
+	//leadGen : leadGenReducer 
 });
 
 export default dataReducer;
