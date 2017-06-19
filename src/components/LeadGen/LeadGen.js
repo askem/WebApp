@@ -35,6 +35,7 @@ class LeadGen extends Component {
 
 		this.state = {
 			loading : true,
+			fixedFormat : 'DD/MM/YYYY'
 		}
 	}
 
@@ -56,7 +57,7 @@ class LeadGen extends Component {
 			const industryTextValue = nextProps.industryTextValue;
 
 			let { intentToPurchaseTitle, intentToPurchaseItems, estimatedAudienceSize, price } = this.filterIndustryList(industryID);	
-			
+
 			let today = new Date();
 			let todayDate = today.getDate();
 			let tenDaysFromToday = new Date(today.setDate(today.getDate() + 10));
@@ -65,13 +66,16 @@ class LeadGen extends Component {
 			//let minCampaignEndDate;
 			let campaignEndDate;
 
+			const dateFormat = this.state.fixedFormat;
+
+
 			if (!nextProps.campaignStartDate) {
-				campaignStartDate =  moment(tenDaysFromToday).format('DD/MM/YYYY');
+				campaignStartDate =  moment(tenDaysFromToday).format(dateFormat);
 				//minCampaignEndDate = campaignStartDate;
 				campaignEndDate = '';
 			}
 			else {
-				campaignStartDate = moment(nextProps.campaignStartDate).format('DD/MM/YYYY');
+				campaignStartDate = moment(nextProps.campaignStartDate).format(dateFormat);
 				//minCampaignEndDate = new Date(campaignStartDate);
 				//moment(campaignStartDate).format('DD/MM/YYYY');
 			}
@@ -80,7 +84,7 @@ class LeadGen extends Component {
 				campaignEndDate = '';
 			}
 			else {
-				campaignEndDate = moment(nextProps.campaignEndDate).format('DD/MM/YYYY');
+				campaignEndDate = moment(nextProps.campaignEndDate).format(dateFormat);
 			}
 
 			let currentDate = new Date();
@@ -207,19 +211,19 @@ class LeadGen extends Component {
 
 
 	onCampaignStartDateChange(selectedDate, modifiers) {
-		let { campaignStartDate, campaignEndDate } = this.state;
+		let { campaignStartDate, campaignEndDate, fixedFormat } = this.state;
 
 		/**
 		 * clicking on the already selected date will pass
 		 * undefined and true as parameters to this function
 		 */		
-		campaignStartDate =  typeof selectedDate === 'undefined' ? moment(this.state.campaignStartDate, 'DD/MM/YYYY').toDate() : selectedDate.toDate();
+		campaignStartDate =  typeof selectedDate === 'undefined' ? moment(this.state.campaignStartDate, fixedFormat).toDate() : selectedDate.toDate();
 		if (typeof campaignEndDate === 'undefined' || !campaignEndDate) {
 			campaignEndDate = '';  
 		}
 		else {
 			
-			campaignEndDate = moment(campaignEndDate, 'DD/MM/YYYY').toDate();
+			campaignEndDate = moment(campaignEndDate, fixedFormat).toDate();
 		}
 
 		// this is to allow the input to mouse click
@@ -227,7 +231,7 @@ class LeadGen extends Component {
 		// selecting the same selected date clears the input
 		if (typeof selectedDate === 'undefined') {
 			setTimeout(() => {
-				this.setState({ campaignStartDate : moment(campaignStartDate).format('DD/MM/YYYY'), });
+				this.setState({ campaignStartDate : moment(campaignStartDate).format(fixedFormat), });
 			}, 10);
 			return;
 		}
@@ -241,7 +245,7 @@ class LeadGen extends Component {
 		const campaignEndDateAsString = campaignEndDate === '' ? '' : this.formatDateToString(campaignEndDate);
 
 		this.setState({ 
-				campaignStartDate : moment(campaignStartDate).format('DD/MM/YYYY'),
+				campaignStartDate : moment(campaignStartDate).format(fixedFormat),
 				minCampaignEndDate,
 				campaignEndDate : campaignEndDateAsString
 		});
@@ -250,15 +254,16 @@ class LeadGen extends Component {
 	}
 
 	onCampaigEndDateChange(selectedDate, modifier) {
-		const campaignStartDate = moment(this.state.campaignStartDate, 'DD/MM/YYYY').toDate();
-		const campaignEndDate = typeof selectedDate !== 'undefined' ? selectedDate.toDate() : moment(this.state.campaignEndDate, 'DD/MM/YYYY').toDate();
+		const { fixedFormat } = this.state;
+		const campaignStartDate = moment(this.state.campaignStartDate, fixedFormat).toDate();
+		const campaignEndDate = typeof selectedDate !== 'undefined' ? selectedDate.toDate() : moment(this.state.campaignEndDate, fixedFormat).toDate();
 
 		// this is to allow the input to mouse click
 		// on the selected date --> due to DayPickerInput 'bug',
 		// selecting the same selected date clears the input
 		if (typeof selectedDate === 'undefined') {
 			setTimeout(() => {
-				this.setState({ campaignEndDate : moment(campaignEndDate).format('DD/MM/YYYY') });	
+				this.setState({ campaignEndDate : moment(campaignEndDate).format(fixedFormat) });	
 			}, 10);
 			
 			return;
@@ -270,7 +275,7 @@ class LeadGen extends Component {
 			return;
 		}
 
-		this.setState({ campaignEndDate : moment(campaignEndDate).format('DD/MM/YYYY') });
+		this.setState({ campaignEndDate : moment(campaignEndDate).format(fixedFormat) });
 		this.props.onCampaignDateChange(campaignStartDate, campaignEndDate);
 	}
 
@@ -545,12 +550,12 @@ class LeadGen extends Component {
 								</div>
 								<div>
 									<div className="quote-estimated-reach">
-										{ this.props.estimatedAudienceSize }
+										{ typeof this.props.estimatedAudienceSize === 'undefined' ? this.state.estimatedAudienceSize : this.props.estimatedAudienceSize }
 									</div>
 								</div>
 								<div className="quote-estimated-reach-description">
 									Price : 
-									{ this.props.price }
+									{ typeof this.props.price === 'undefined' ? this.state.price : this.props.price }
 								</div>
 							</div>
 						</div>
