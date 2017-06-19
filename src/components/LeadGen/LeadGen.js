@@ -3,7 +3,6 @@ import ReactSelectize from 'react-selectize';
 import AGE_GROUPS from 'constants/AGE_GROUPS';
 import Checkbox from 'components/Common/Checkbox/Checkbox';
 import INDUSTRY_LIST from 'constants/INDUSTRY_LIST';
-//import INTENT_TO_PURCHASE from 'constants/INTENT_TO_PURCHASE';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
