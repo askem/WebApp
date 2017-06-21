@@ -6,25 +6,15 @@ const createLeadGenLogic = createLogic({
 	type: 'CREATE_NEW_LEADGEN',
 	process({ getState, action, api }, dispatch) {
 		const leadgenID = action.payload.leadgenID;
-		// let quote = getState().getIn(['data', 'quote']);
-		// if (quote) {
-		// 	quote = quote.toJS();
-		// } else {
-		// 	quote = {};
-		// }
-		// const source = action.payload.source || 'quote.askem.com';
-		 dispatch({ type: 'CREATE_NEW_LEADGEN__REQUEST_START' }, { allowMore: true });
-		// dispatch({ type: 'REACH_ESTIMATE_EXPLICIT_FETCH' }, { allowMore: true });
-		//return api.createQuote(quoteID, quote, source)
-
+		 dispatch({ type: 'CREATE_NEW_LEADGEN_REQUEST_START' }, { allowMore: true });
 
 		const today = new Date();
 		const startDate = new Date(today.setDate(today.getDate() + 10));
 
 		const params = {
 			leadgenID,
-			ageGroups : null,
-			gender : null,
+			ageGroups : ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+			gender : ['female', 'male'],
 			industry : INDUSTRY_LIST[0].id,
 			intentToPurchase : INDUSTRY_LIST[0].items[0].id,
 			campaignStartDate : startDate,
@@ -34,11 +24,11 @@ const createLeadGenLogic = createLogic({
 		return api.createLeadGen(params)
 			.then(() => {
 				localStorage.leadgenID = leadgenID;
-				dispatch({ type: 'CREATE_NEW_LEADGEN__REQUEST_SUCCESS' }, { allowMore: true });
+				dispatch({ type: 'CREATE_NEW_LEADGEN_REQUEST_SUCCESS' }, { allowMore: true });
 			})
-			.catch(error => dispatch({ type: 'CREATE_NEW_LEADGEN_REQUEST_FAIL', payload: {
-				error
-			}, error: true }));
+			.catch(error => { 
+				dispatch({ type: 'CREATE_NEW_LEADGEN_REQUEST_FAIL', payload: { error }, error: true })
+			});
 	}
 });
 
@@ -85,7 +75,7 @@ const updateLeadgenLogic = createLogic({
 
 const autoSaveLeadGenLogic = createLogic({
 	type : [
-			//'CREATE_NEW_LEADGEN',
+			'CREATE_NEW_LEADGEN',
 			'LEADGEN_AGE_GROUP_CHANGE',
 			'LEADGEN_GENDER_CHANGE',
 			'LEADGEN_INDUSTRY_CHANGE',

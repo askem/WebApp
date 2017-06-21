@@ -85,6 +85,10 @@ const enterLeadGenWithIDLogic = createLogic({
 	type : 'ROUTING_LEADGEN_WITH_ID',
 	process({ getState, action, api }, dispatch) {
 		const leadgenID = action.payload.leadgenID;
+		const existingLeadgenID = getState().getIn(['data', 'lead', 'leadgenID']);
+
+		if (existingLeadgenID === leadgenID) return;
+
 		dispatch({
 			type: 'LOAD_LEADGEN',
 			payload: {

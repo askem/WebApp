@@ -3,6 +3,7 @@ import { combineReducers } from 'redux-immutable';
 import emptyQuote from 'data/emptyQuote';
 import { POPUP_ARRANGEMENT_TYPE, POPUP_ARRANGEMENT_DEFAULT, calcLocations, AutomaticPopupArrangementTypes } from 'utils/Askem/AutoArrangement';
 import { isAspectRatioValid, getImageData  } from 'utils/imageUtils';
+import INDUSTRY_LIST from 'constants/INDUSTRY_LIST';
 
 const initialState = Immutable.fromJS({});
 const initialLeadGenState = Immutable.fromJS({});
@@ -676,13 +677,21 @@ const leadReducer = (state = initialState, action) => {
 
 	case 'CREATE_NEW_LEADGEN' : 
 		if (!state.get('metadata')) {
-			state = state.set('metadata', Immutable.fromJS({}));
+			state = state.set('metadata', Immutable.fromJS({
+				ageGroups:['18-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+				gender: ['female', 'male'],
+				industry : INDUSTRY_LIST[0].id,
+				intentToPurchase : INDUSTRY_LIST[0].items[0].id,
+			}));
 		}
 
 		return state
 					.set('leadgenID', action.payload.leadgenID)
-					.setIn(['metadata', 'type'], 'leadgen');
+					.setIn(['metadata', 'type'], 'leadgen')
+					.set('leadgenLoading', true);
 			  
+	case 'CREATE_NEW_LEADGEN_REQUEST_SUCCESS' :
+		return state.set('leadgenLoading', false);
 	case 'LOAD_LEADGEN' : 
 		return state.set('leadgenLoading', true).set('leadgenID', action.payload.leadgenID);
 	case 'LOAD_LEADGEN_REQUEST_SUCCESS':

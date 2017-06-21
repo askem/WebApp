@@ -6,10 +6,10 @@ const LeadGenContainer = connect(
 	function mapStateToProps(state, ownProps) {
 		let leadgenID = state.getIn(['data', 'lead', 'leadgenID']);
 		let ageGroups = state.getIn(['data', 'lead', 'metadata', 'ageGroups'])
-		ageGroups = ageGroups || [];
+		ageGroups = ageGroups ? ageGroups.toJS() : [];
 
 		let gender = state.getIn(['data', 'lead', 'metadata', 'gender']);
-		gender = gender || [];
+		gender = gender ? gender.toJS() : [];
 
 		let campaignStartDate = state.getIn(['data', 'lead', 'metadata', 'campaignStartDate']);
 		let campaignEndDate = state.getIn(['data', 'lead', 'metadata', 'campaignEndDate']);
