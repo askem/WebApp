@@ -18,6 +18,7 @@ import { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css"
 
 import AdAccounts from 'components/LeadGen/AdAccounts';
+import LeadgenForm from 'components/LeadGen/LeadgenForm';
 
 class LeadGen extends Component {
 	constructor(props) {
@@ -29,8 +30,8 @@ class LeadGen extends Component {
 		this.onCampaigEndDateChange = this.onCampaigEndDateChange.bind(this);
 		this.onLoginToFacebookClick = this.onLoginToFacebookClick.bind(this);
 		this.onIntentToPurchaseChange = this.onIntentToPurchaseChange.bind(this);
-		this.onCampaignStartDateSelect = this.onCampaignStartDateSelect.bind(this);
 		this.onTextChange = this.onTextChange.bind(this);
+		this.onContinueButton = this.onContinueButton.bind(this);
 
 		this.state = {
 			loading : true,
@@ -314,9 +315,6 @@ class LeadGen extends Component {
 		this.props.onIntentToPurchaseChange(intentToPurchase, estimatedAudienceSize, price);
 	}
 
-	onCampaignStartDateSelect() {
-		
-	}
 
 	onTextChange(event, type) {
 		const newValue = event.target.value;
@@ -330,6 +328,11 @@ class LeadGen extends Component {
 			this.props.onIntentToPurchaseChange('other', estimatedAudienceSize, price, newValue);
 			this.setState({ intentToPurchaseText : newValue});
 		}
+	}
+
+	onContinueButton() {
+		const leadgenID = localStorage.getItem('leadgenID');
+		this.props.proceedToLeadgenContactForm(leadgenID);
 	}
 
 	render() {
@@ -576,6 +579,11 @@ class LeadGen extends Component {
 							<AdAccounts accounts={this.state.adAccounts} />
 						 </div>
 					 }
+					 <div style={{  marginTop:'30px' }}>
+						<button className="askem-button" onClick={this.onContinueButton}>
+							continue
+						</button>
+					 </div>
 				</div>
 			</div>
 		);

@@ -740,6 +740,9 @@ const leadReducer = (state = initialState, action) => {
 		}));
 		 
 	}
+	case 'LEADGEN_CONTACT_FORM_ENTER' : {
+		return state;
+	}
 	default:
 		return state;
 	}

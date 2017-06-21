@@ -95,10 +95,25 @@ const enterLeadGenWithIDLogic = createLogic({
 
 })
 
+const enterLeadgenContactForm = createLogic({
+	type : 'GOTO_LEADGEN_CONTACT_FORM',
+	process({ getState, action, api }, dispatch) {
+		const { leadgenID }  = action.payload;
+		browserHistory.replace(`/leadgen/${leadgenID}/form`);
+		dispatch({
+			type : 'LEADGEN_CONTACT_FORM_ENTER',
+			payload:{
+				leadgenID
+			}
+		})
+	}
+});
+
 export default [
 	enterWithoutIDLogic,
 	enterWithIDLogic,
 	manageCreateNewLogic,
 	enterLeadGenLogic,
-	enterLeadGenWithIDLogic	
+	enterLeadGenWithIDLogic,
+	enterLeadgenContactForm
 ];

@@ -46,6 +46,7 @@ const LeadGenContainer = connect(
 			onIndustryChange : (industry, intentToPurchase, estimatedAudienceSize, price, industryTextValue) => dispatch(leadGenActions.onIndustryChange(industry, intentToPurchase, estimatedAudienceSize, price, industryTextValue)),
 			onCampaignDateChange : (campaignStartDate, campaignEndDate) => dispatch(leadGenActions.onCampaignDateChange(campaignStartDate, campaignEndDate)),
 			onIntentToPurchaseChange : (intentToPurchase, estimatedAudienceSize, price, intentToPurchaseTextValue) => dispatch(leadGenActions.onIntentToPurchaseChange(intentToPurchase, estimatedAudienceSize, price, intentToPurchaseTextValue)),
+			proceedToLeadgenContactForm: (leadgenID) => dispatch(leadGenActions.proceedToLeadgenContactForm(leadgenID)),
 		}
 	}
 )(LeadGen);

@@ -10,6 +10,7 @@ import QuoteExternalPreviewContainer from 'containers/QuoteExternalPreviewContai
 import CustomResearchResultsContainer from 'containers/CustomResearchResultsContainer';
 import Login from 'components/Base/Login';
 import LeadGenContainer from 'containers/LeadGenContainer';
+import LeadgenForm from 'components/LeadGen/LeadgenForm';
 
 const quoteRouter = (store, api) =>  {
 	// Create an enhanced history that syncs navigation events with the store
@@ -147,6 +148,18 @@ const quoteRouter = (store, api) =>  {
 		}, 0);
 	}
 
+	const enterLeadgenContactForm = (nextState, replace) => {
+		const { leadgenID } = nextState.params; 
+		setTimeout(function() {
+			store.dispatch({
+				type : 'LEADGEN_CONTACT_FORM_ENTER',
+				payload : {
+					leadgenID
+				}
+			})
+		}, 0);
+	}
+
 	return <Router history={history}>
 		<Route component={QuoteFrame} storeref={store}>
 			<Route path="/" onEnter={enterWithoutID} />
@@ -155,10 +168,12 @@ const quoteRouter = (store, api) =>  {
 			<Route path="/admin" name="Quote Management" onEnter={enterRestricted} component={QuoteAdminHomeContainer} />
 			<Route path="/leadgen" onEnter={enterLeadGenWithoutID} />
 			<Route path="/leadgen/:leadgenID" component={LeadGenContainer} onEnter={enterLeadGenWithID} />
+			<Route path="/leadgen/:leadgenID/form" component={LeadgenForm} onEnter={enterLeadgenContactForm} />
 			<Route path="/:quoteID" fullSizeHeader={true} component={QuoteWizardContainer} onEnter={enterWithID} />
 			<Route path="/:quoteID/manage" name="Manage Quote" component={ManageQuoteContainer} onEnter={enterRestrictedWithID} />
 			<Route path="/:quoteID/preview" name="Survey Preview" component={QuoteExternalPreviewContainer} onEnter={enterWithID} />
 			<Route path="/results/survey/:surveyID" name="Results" component={CustomResearchResultsContainer} onEnter={enterSurveyResults} />
+
 		</Route>
 	</Router>;
 }

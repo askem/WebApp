@@ -51,10 +51,20 @@ const onIntentToPurchaseChange = (intentToPurchase, estimatedAudienceSize, price
 	}
 }
 
+const proceedToLeadgenContactForm = (leadgenID) => {
+	return {
+		type : 'GOTO_LEADGEN_CONTACT_FORM',
+		payload : {
+			leadgenID 
+		}
+	}
+}
+
 export {
 	onAgeGroupChange,
 	onGenderChange,
 	onIndustryChange,
 	onCampaignDateChange,
-	onIntentToPurchaseChange
+	onIntentToPurchaseChange,
+	proceedToLeadgenContactForm
 }
