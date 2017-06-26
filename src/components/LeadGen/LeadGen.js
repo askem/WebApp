@@ -32,6 +32,7 @@ class LeadGen extends Component {
 		this.onIntentToPurchaseChange = this.onIntentToPurchaseChange.bind(this);
 		this.onTextChange = this.onTextChange.bind(this);
 		this.onContinueButton = this.onContinueButton.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 
 		this.state = {
 			loading : true,
@@ -39,7 +40,35 @@ class LeadGen extends Component {
 		}
 	}
 
+	onKeyDown(event) {
+		const key = event.keyCode;
+		const value = event.target.value === '' ? undefined : event.target.value;
+		const type = event.target.dataset.inputType;
+		const selectedDate = typeof value === 'undefined' ? value : this.convertStringToMomentObject(value);
+
+		let { campaignStartDate, campaignEndDate } = this.state;
+
+		if (key === 13) {
+			if (type === 'campaignEndDate') {	
+				if (typeof selectedDate === 'undefined') {
+					campaignEndDate = '';
+				}
+
+				this.setState({ campaignEndDate });	
+				this.onCampaigEndDateChange();
+				document.querySelector('.DayPickerInput-OverlayWrapper').style.display = 'none';
+			}
+			else if (type === 'campaignStartDate') {
+				this.onCampaignStartDateChange(selectedDate);
+			}
+		}
+	}
 	
+	convertStringToMomentObject(dateString) {
+		return moment(dateString, this.state.fixedFormat);
+	}
+
+
 	componentWillMount() {
 		this.initFacebookScript();
 	}
@@ -510,6 +539,8 @@ class LeadGen extends Component {
 																	before : this.state.minCampaignStartDate
 																}
 														}}
+														data-input-type="campaignStartDate"
+														ref="dayPickerStartDate"
 													/>
 											</div>
 										</div>
@@ -532,12 +563,15 @@ class LeadGen extends Component {
 													format="DD/MM/YYYY"
 													value={this.state.campaignEndDate}
 													onDayChange={this.onCampaigEndDateChange}
+													onKeyDown={this.onKeyDown}
 													dayPickerProps={{
 															enableOutsideDays: true,
 															disabledDays:{
 																before : this.state.minCampaignEndDate
 															}
 													}}
+													data-input-type="campaignEndDate"
+													ref="dayPickerEndDate"
 												/>
 											</div>
 										</div>
