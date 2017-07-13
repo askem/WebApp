@@ -96,7 +96,7 @@ class AskemAPI {
 				headers
 			});
 		} else {
-				fetchAccessToken = Promise.resolve({"error":"","errorCode":200,"status":"ok","accessToken":"5ebd10eb797a44c5bda17f6f6193ad94","accessTokenTTL":"Sat May 27 2017 22:52:46 GMT+0800 (CST)","refreshToken":"4b1b421d47e54184b6dc5889b1ec30c1","refreshTokenTTL":"Sat May 27 2017 22:52:46 GMT+0800 (CST)"});
+				fetchAccessToken = Promise.resolve({"error":"","errorCode":200,"status":"ok","accessToken":"5d44d6b49de14eb091146286d9cd8912","accessTokenTTL":"Sat Nov 2 2018 22:52:46 GMT+0800 (CST)","refreshToken":"5d44d6b49de14eb091146286d9cd8912","refreshTokenTTL":"Sat Nov 2 2018 22:52:46 GMT+0800 (CST)"});
 		}
 		return fetchAccessToken
 		.then(results => {
