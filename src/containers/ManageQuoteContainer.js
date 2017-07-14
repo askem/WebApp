@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import ManageQuote from 'components/Quote/Admin/ManageQuote';
 import * as quoteActions from 'actions/quoteActions';
+import * as campaignActions from 'actions/campaignActions';
 
 const ManageQuoteContainer = connect(
 	function mapStateToProps(state, ownProps) {
@@ -26,6 +27,12 @@ const ManageQuoteContainer = connect(
 		if (researchCampaign) { researchCampaign = researchCampaign.toJS(); }
 		let surveyID = state.getIn(['data', 'quote', 'surveyID']);
 		let sampleID = state.getIn(['data', 'quote', 'sampleID']);
+		let enrichmentData = state.getIn(['data', 'quote', 'enrichmentData']);
+		if (enrichmentData)  { enrichmentData = enrichmentData.toJS() };
+		let samplePlan = state.getIn(['data', 'quote', 'samplePlan']);
+		if (samplePlan) { samplePlan = samplePlan.toJS(); }
+		let campaignStatus = state.getIn(['data', 'quote', 'campaignStatus']);
+		if (campaignStatus) { campaignStatus = campaignStatus.toJS()}
 
 		return {
 			lead,
@@ -39,7 +46,10 @@ const ManageQuoteContainer = connect(
 			researchObjective,
 			researchCampaign,
 			surveyID,
-			sampleID
+			sampleID,
+			enrichmentData,
+			samplePlan,
+			campaignStatus
 		};
 	},
 	function mapDispatchToProps(dispatch) {
@@ -91,6 +101,11 @@ const ManageQuoteContainer = connect(
 			deleteCarouselDescription : (index) => dispatch(quoteActions.deleteCarouselDescription(index)),
 			setResearchCampaignData : (researchCampaignID, campaignName, campaignDescription, sampleID, surveyID) => dispatch(quoteActions.setResearchCampaignData(researchCampaignID, campaignName, campaignDescription, sampleID, surveyID)),
 			setSurveyID : (surveyID) => dispatch(quoteActions.setSurveyID(surveyID)),
+			getEnrichmentData : (sampleID, type) => dispatch(quoteActions.getEnrichmentData(sampleID, type)),
+			getSamplePlan : (sampleID, sampleAccounts) => dispatch(quoteActions.getSamplePlan(sampleID, sampleAccounts)),
+			createCampaign: (caps, campaignDays, microCellMaxSize, microCellMaxImagesAds, microCellMaxCarouselAds, sampleID) => dispatch(campaignActions.createCampaign(caps, campaignDays, microCellMaxSize, microCellMaxImagesAds, microCellMaxCarouselAds, sampleID)),
+			getCreateCampaignStatus : (sampleID) => dispatch(campaignActions.getCreateCampaignStatus(sampleID)),
+			setCreateCampaignStatusFinished : () => dispatch(campaignActions.setCreateCampaignStatusFinished()),
 
 			/* Advanced */
 			addQuestionVariant: (questionID, duplicateVariantID) => dispatch(quoteActions.addQuestionVariant(questionID, duplicateVariantID)),

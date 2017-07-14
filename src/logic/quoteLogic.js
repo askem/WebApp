@@ -69,7 +69,7 @@ const autoSaveLogic = createLogic({
 		'ADD_CREATIVE_TEXT', 'UPDATE_CREATIVE_TEXT', 'DELETE_CREATIVE_TEXT',
 		'ADD_CREATIVE_HEADLINE', 'UPDATE_CREATIVE_HEADLINE' ,'DELETE_CREATIVE_HEADLINE',
 		'DELETE_CAROUSEL', 'UPLOAD_CAROUSEL_CREATIVE_IMAGE_REQUEST_SUCCESS', 'UPDATE_CAROUSEL_DESCRIPTION', 'DELETE_CAROUSEL_DESCRIPTION',
-		'SET_RESEARCH_CAMPAIGN_DATA', 'SET_SURVEYID'
+		'SET_RESEARCH_CAMPAIGN_DATA', 'SET_SURVEYID', 'CREATE_CAMPAIGN_REQUEST_SUCCESSFULL'
 
 	],
 	process({ getState, action, api }, dispatch) {
@@ -108,6 +108,19 @@ const updateQuoteLogic = createLogic({
 		// do not save the cropped images to DB
 		delete quote.surveyMetadata.croppedImages;
 		delete quote.surveyMetadata.croppedCarouselImages;
+
+		// remove data prior to DB API call
+		delete quote.samplePlan;
+		delete quote.samplePlanError;
+
+		// remove create campign status data
+		if ( quote.campaignStatus) {
+			delete quote.campaignStatus.continuteWithGetStatus;
+			delete quote.campaignStatus.progress;
+			delete quote.campaignStatus.status;
+			delete quote.campaignStatus.ETA;
+			delete quote.campaignStatus.startTime;
+		}
 		//------------------------------------------------
 
 		let contact = getState().getIn(['data', 'contact']);
@@ -531,6 +544,121 @@ const imageSuggestionsLogic = createLogic({
 	}
 });
 
+
+const getEnrichment = createLogic({
+	type: 'GET_ENRICHMENT_DATA',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_ENRICHMENT_DATA_STARTED', payload :{ sampleID : action.payload.sampleID }}, { allowMore: true });
+		return api.getEnrichmentData(action.payload.sampleID, action.payload.type)
+				.then(data => {
+					const { items, name } = data.enrichment[0];
+					dispatch({ type:'GET_ENRICHMENT_DATA_SUCCESS', payload :{ 
+						items,
+						name,
+						type : action.payload.type
+					}}, { allowMore: true });	
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_ENRICHMENT_DATA_FAIL', payload : {
+						error },
+						error : true});
+					console.error('GET_ENRICHMENT_DATA fail!!!', error);
+				})
+	}
+});
+
+const getSamplePlan = createLogic({
+	type: 'GET_SAMPLE_PLAN',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_SAMPLE_PLAN_STARTED', payload :{ sampleID : action.payload.sampleID, sampleAccounts : action.payload.sampleAccounts }}, { allowMore: true });
+		return api.getSamplePlan(action.payload.sampleID, action.payload.sampleAccounts)
+				.then(data => {
+					dispatch({ type:'GET_SAMPLE_PLAN_SUCCESS', payload :{ 
+						samplePlan : data.samplePlan[0]
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_CHANNEL_CONSUMPTION_DATA_FAIL', payload : {
+						error },
+						error : true});
+					console.error('GET_CHANNEL_CONSUMPTION_DATA fail!!!', error);
+				})
+	}
+});
+
+const getRelationshipStatus = createLogic({
+	type: 'GET_RELATIONSHIP_STATUS',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_RELATIONSHIP_STATUS_STARTED', payload :{ sampleID : action.payload.sampleID}}, { allowMore: true });
+		return api.getRelationshipData(action.payload.sampleID)
+				.then(data => {
+					dispatch({ type:'GET_RELATIONSHIP_STATUS_SUCCESS', payload :{ 
+						relationshipStatusData : data.enrichment[0].items
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_RELATIONSHIP_STATUS_FAIL', payload : {
+						error },
+						error : true});
+					console.error('GET_RELATIONSHIP_STATUS fail!!!', error);
+				})
+	}
+});
+
+const createCampaign = createLogic({
+	type: 'CREATE_CAMPAIGN',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'CREATE_CAMPAIGN_STARTED', payload :{ }}, { allowMore: true });
+		return api.createCampaign(
+					action.payload.caps,
+					action.payload.campaignDays,
+					action.payload.microCellMaxSize,
+					action.payload.microCellMaxImagesAds,
+					action.payload.microCellMaxCarouselAds,
+					action.payload.sampleID
+				)
+				.then(data => {
+					dispatch({ type:'CREATE_CAMPAIGN_REQUEST_SUCCESSFULL', payload :{ 
+						sampleID : action.payload.sampleID
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'CREATE_CAMPAIGN_REQUEST_FAIL', payload : {
+						error },
+						error : true});
+					console.error('CREATE_CAMPAIGN_REQUEST_FAIL', error);
+				})
+	}
+});
+
+const getCreateCampaignStatus = createLogic({
+	type: 'GET_CREATE_CAMPAIGN_STATUS',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_CREATE_CAMPAIGN_STATUS_STARTED', payload :{ sampleID : action.payload.sampleID }}, { allowMore: true });
+		return api.getCreateCampaignStatus(action.payload.sampleID)
+				.then(data => {
+					dispatch({
+							 	type:'GET_CREATE_CAMPAIGN_STATUS_SUCCESSFULL', payload :{ 
+								status:data.status,
+								progress : data.percentCompleted,
+								startTime: data.startTime,
+								ETA : data.ETA,
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_CREATE_CAMPAIGN_STATUS_FAILED', payload : {
+						error },
+						error : true});
+					console.log('GET_CREATE_CAMPAIGN_STATUS_FAILED', error)
+				})
+	}
+});
+
 export default [
 	createQuoteLogic,
 	newSubmissionLogic,
@@ -543,5 +671,10 @@ export default [
 	fetchCostEstimateLogic,
 	imageSuggestionsLogic,
 	uploadCreativeImageLogic,
-	uploadCarouselCreativeImageLogic
+	uploadCarouselCreativeImageLogic,
+	getSamplePlan,
+	getRelationshipStatus,
+	createCampaign,
+	getCreateCampaignStatus,
+	getEnrichment
 ];

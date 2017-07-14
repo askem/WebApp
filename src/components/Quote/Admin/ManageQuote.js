@@ -14,6 +14,8 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import GraphContainer from 'components/Graphs/GraphsContainer';
+import CreateCampaign from 'components/Quote/Admin/CreateCampaign';
 
 const renderContactValue = (field, contact) => {
 	let value = contact[field.id];
@@ -38,6 +40,7 @@ class ManageQuote extends React.Component {
 		this.getSamplePlan = this.getSamplePlan.bind(this);
 		this.onSampleAccountsChange = this.onSampleAccountsChange.bind(this);
 		this.validateCreatives = this.validateCreatives.bind(this);
+		this.hideGraphs = this.hideGraphs.bind(this);
 
 		this.state = {
 			selectedQuestion: null,
@@ -51,10 +54,37 @@ class ManageQuote extends React.Component {
 			researchCampaignHasSurveyID : null,
 			processCompleted : null,
 			sampleAccounts : 'Test',
-			showErrorDialog : false
+			showErrorDialog : false,
+			showGraphs : false,
+			createCampaignStarted : false
+			
 		};
 	}
 
+	componentDidMount() {
+		if (this.props.campaignStatus && this.props.campaignStatus.currentStatus === 'in-creation') {
+			this.setState({ createCampaignStarted : true })
+		}
+	}
+	
+
+	componentWillReceiveProps(nextProps) {
+		if (typeof nextProps.samplePlan !== 'undefined' && !this.state.processCompleted) {
+			if (!nextProps.samplePlanError) {
+				this.refs.modalInnerDescription.innerHTML = 'Sample plan successfull!';
+			}
+			else {
+				this.refs.modalInnerDescription.innerHTML = 'Error getting sample plan!';
+			}
+
+			this.setState({ processCompleted:true })
+		}
+
+		if (nextProps.campaignStatus && nextProps.campaignStatus.currentStatus === 'in-creation') {
+			this.setState({ createCampaignStarted : true });
+		}
+	}
+	
 
 	getReseachObjectiveTitle(id) {
 		let title = 'Custom';
@@ -102,7 +132,6 @@ class ManageQuote extends React.Component {
 			else {
 				this.setState({editing: null, emptyAdCreativeValues:false});
 			}
-
 		}
 	}
 
@@ -183,7 +212,7 @@ class ManageQuote extends React.Component {
 		setTimeout(function() {
 			if (!this.state.researchCampaignHasSurveyID) {
 				this.refs.modalInnerDescription.innerHTML = 'Updating research campaign with surveryID... please wait...';
-				api.updateResearchData(this.props.researchCampaignID, null, null, this.props.surveyID)
+				api.updateResearchData(this.props.researchCampaign.researchCampaignID, null, null, this.props.surveyID)
 					.then(result => {
 						this.setState({ researchCampaignHasSurveyID : true });
 						this.refs.modalInnerDescription.innerHTML = 'Uploading creatives... please wait...';
@@ -231,9 +260,6 @@ class ManageQuote extends React.Component {
 	}
 
 	createSurvey() {
-		
-
-
 		this.setState({ showModal : true, creatingSurvey : true, processCompleted: false});
 
 		// delay by 500 ms to allow modal to open
@@ -283,23 +309,10 @@ class ManageQuote extends React.Component {
 	getSamplePlan() {
 		this.setState({ showModal : true, processCompleted: false});
 		
-		setTimeout(function() {
+		setTimeout(() => {
 			this.refs.modalInnerDescription.innerHTML = 'Getting sample plan... please wait....';
-			api.getSamplePlan(this.props.sampleID, this.state.sampleAccounts)
-				.then(data => {
-					this.refs.modalInnerDescription.innerHTML = 'Sample plan successfull!';
-					console.group('Sample Plan')
-					console.log('data', data);
-					console.groupEnd();
-					this.setState({ processCompleted: true });
-				})
-				.catch(err => {
-					this.refs.modalInnerDescription.innerHTML = 'Error getting sample plan!';
-					
-					console.error(err);
-					this.setState({ processCompleted: true });
-				})
-		}.bind(this), 200);
+			this.props.getSamplePlan(this.props.sampleID, this.state.sampleAccounts);
+		}, 200);
 	}
 
 	onSampleAccountsChange(event, value) {
@@ -344,6 +357,10 @@ class ManageQuote extends React.Component {
 		}
 
 		return true;
+	}
+
+	hideGraphs() {
+		this.setState({ showGraphs : false })
 	}
 
 	render() {
@@ -408,6 +425,18 @@ class ManageQuote extends React.Component {
 				
 			</div>;
 		}
+
+		if (this.state.showGraphs) {
+			return (
+				<div className="graph-container-main">
+					<div className="back-button-container">
+						<FlatButton label="Back" onTouchTap={ this.hideGraphs }/>
+					</div>
+					<GraphContainer { ...this.props } sampleAccounts={this.state.sampleAccounts}/>
+				</div>
+			)
+		}
+
 		let genderDescription;
 		if (this.props.audience.demographics.gender.female && this.props.audience.demographics.gender.male) {
 			genderDescription = 'Female and Male';
@@ -448,6 +477,16 @@ class ManageQuote extends React.Component {
 
 		const reserachObjectiveTitle = this.getReseachObjectiveTitle(this.props.researchObjective.id);
 		const { researchCampaignID, campaignName, campaignDescription } = this.props.researchCampaign || {};
+
+		// create campaign
+		////////////////////////////////////////
+		if (this.state.createCampaignStarted) {
+			return (
+				<CreateCampaign { ...this.props }/>
+			)
+		}
+		////////////////////////////////////////
+
 
 		return (
 			<div className="quote-manage">
@@ -601,6 +640,18 @@ class ManageQuote extends React.Component {
 										label="Production (US)"
 										className="sample-account-value-radio-button" />
 						  	</RadioButtonGroup>
+						</div>
+
+						<div>
+							<FlatButton
+							label="Graphs" 
+							onTouchTap={ () => { this.setState({ showGraphs : true}) }} /> 
+						</div>
+
+						<div>
+							<FlatButton
+								label="Create Campaign" 
+								onTouchTap={ () => { this.setState({ createCampaignStarted : true}) }} /> 
 						</div>
 					</div>
 				</div>

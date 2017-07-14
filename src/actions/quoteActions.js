@@ -561,6 +561,26 @@ const setSurveyID = (surveyID) => {
 	}
 }
 
+const getEnrichmentData = (sampleID, type) =>  {
+	return {
+		type :'GET_ENRICHMENT_DATA',
+		payload : {
+			sampleID,
+			type
+		}
+	}
+}
+
+const getSamplePlan = (sampleID, sampleAccounts) => {
+	return {
+		type : 'GET_SAMPLE_PLAN',
+		payload : {
+			sampleID,
+			sampleAccounts
+		}
+	}
+}
+
 export {
 	requestReach, requestCostEstimates,
 	toggleQuoteAudienceAttribute,
@@ -586,5 +606,6 @@ export {
 	setResearchObjective,
 	toggleCollapsablePanel,
 	replaceImageCarouselInSet, deleteCarousel, addNewSet, addNewDescriptionInCarousels, updateCarouselDescription, deleteCarouselDescription,
-	setResearchCampaignData, setSurveyID
+	setResearchCampaignData, setSurveyID,
+	getEnrichmentData, getSamplePlan
 };

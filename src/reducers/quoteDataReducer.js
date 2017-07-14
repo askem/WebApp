@@ -609,6 +609,39 @@ const quoteReducer = (state = initialState, action) => {
 		case 'SET_SURVEYID':{
 			return state.set('surveyID', action.payload.surveyID);
 		}
+		case 'GET_ENRICHMENT_DATA_SUCCESS' : {
+			return state.setIn(['enrichmentData', action.payload.type, 'items'], Immutable.fromJS(action.payload.items))
+		}
+		case 'GET_SAMPLE_PLAN_SUCCESS':{
+			return state.setIn(['samplePlan'], Immutable.fromJS(action.payload.samplePlan))
+					.set('samplePlanError', false)
+		}
+		case 'GET_SAMPLE_PLAN_ERROR':{
+			return state.set('samplePlanError',  true);
+		}
+		case 'CREATE_CAMPAIGN_REQUEST_SUCCESSFULL':{
+			return state.setIn(['campaignStatus'], Immutable.fromJS({
+				continueWithGetStatus : true,
+				currentStatus : 'in-creation'
+			}));
+		}
+		case 'GET_CREATE_CAMPAIGN_STATUS_SUCCESSFULL' :{
+			return state.mergeIn(['campaignStatus'], Immutable.fromJS({
+				progress : action.payload.progress,
+				status : action.payload.status,
+				ETA : action.payload.ETA,
+				startTime : action.payload.startTime,
+				currentStatus : 'in-creation'
+			}));
+			//return state.setIn(['campaignStatus', 'progress'], Immutable.fromJS(action.payload.progress));
+		}
+		case 'SET_CREATE_CAMPAIGN_STATUS_TO_FINISED': {
+			return state.updateIn(['campaignStatus'], (campaignStatus) => {
+				return campaignStatus
+							.set('continueWithGetStatus', false)
+							.set('currentStatus', 'pending');
+			});
+		}
 		default:
 			return state;
 	}
