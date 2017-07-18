@@ -167,12 +167,18 @@ class CarouselCreatives extends React.Component {
 			let newRandomValue = '';
 			let originalValue = '';
 
-			while (newRandomValue === originalValue || newRandomValue === '') {
-				let randomNumber = Math.floor(Math.random()*(max-min+1)+min);
-				newRandomValue= this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions[randomNumber];
-			}
+			// check if all values are empty inside the list
+			const allEmpty = this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions.every(item => item === '');
+			if (allEmpty)
+				return '';
+			else {
+				while (newRandomValue === originalValue || newRandomValue === '') {
+					let randomNumber = Math.floor(Math.random()*(max-min+1)+min);
+					newRandomValue= this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions[randomNumber];
+				}
 
-			return newRandomValue;
+				return newRandomValue;
+			}
 		}
 	}
 

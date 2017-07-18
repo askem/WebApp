@@ -181,8 +181,6 @@ class QuestionMedia extends React.Component {
 
 
 		const maxOffSet = 10;
-
-		debugger;
 		if (positions.line[1].left > positions.line[0].left && positions.line[1].top === positions.line[0].top) {
 			// left to right
 			newLeftPosition = popupLeft;
