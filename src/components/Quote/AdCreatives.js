@@ -25,6 +25,7 @@ class AdCreatives extends React.Component {
 		this.handleFocus = this.handleFocus.bind(this);
 		this.handleClickOnImage = this.handleClickOnImage.bind(this);
 		this.onAdTypeChange = this.onAdTypeChange.bind(this);
+		this.resize = this.resize.bind(this);
 
 		this.state = {		
 			previewImage : null,
@@ -32,7 +33,8 @@ class AdCreatives extends React.Component {
 			previewText : null,
 			previewDescription : null,
 			localImagesStorage : null,
-			selectedAdType : 'desktop_news_feed'
+			selectedAdType : 'desktop_news_feed',
+			zoomLevel : 1
 		}
 	}
 
@@ -245,6 +247,19 @@ class AdCreatives extends React.Component {
 		}
 	}
 
+	componentDidMount() {
+		window.addEventListener('resize', this.resize);
+		this.resize();
+	}
+
+	componentWillUnMount() {
+		window.removeEventListener('resize', this.resize);
+	}
+
+	resize() {
+		this.setState({zoomLevel:window.devicePixelRatio});
+	}
+
 	handleBigImagePreview(imageObject) {
 		if (!imageObject) return;
 		this.setState({ bigImagePreview: imageObject.cropData.croppedSrc });
@@ -314,7 +329,7 @@ class AdCreatives extends React.Component {
 		let { images }  = (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.imageAdCreatives) || {};
 		const index = images ? images.length : 0;
 
-		const localImagesStorage = this.state.localImagesStorage === null ? [] : [...this.state.localImagesStorage];
+		const localImagesStorage = !this.state.localImagesStorage ? [] : [...this.state.localImagesStorage];
 		localImagesStorage.push(key);
 
 		this.setState({
@@ -401,11 +416,24 @@ class AdCreatives extends React.Component {
 			}
 		}
 
+		let creativeEditableSection = ['creative-editable-section'];
+		let creativePreviewSection = ['creative-preview-section'];
+
+		switch(this.state.zoomLevel) {
+			case 1.25 : 
+				creativeEditableSection.push('zoom-level-125 no-margin-left');
+				creativePreviewSection.push('relative-preview-section');
+				break;
+		}
+
+		creativeEditableSection = creativeEditableSection.join(' ');
+		creativePreviewSection = creativePreviewSection.join(' ');
+
 		return (
 			<div className="ad-creative-main-content-container">
 				<div className="quote-wizard-side-title" style={{ padding:'10px 0 20px 20px' }}>Ad Creatives</div>
 				<div className="creative-container">
-					<div className="creative-editable-section">
+					<div className={creativeEditableSection}>
 						<div>
 							Images
 							<FlatButton
@@ -452,7 +480,7 @@ class AdCreatives extends React.Component {
 							<FlatButton onClick={this.addDescriptionField} label="Add" />					
 						</div>
 					</div>
-					<div className="creative-preview-section">
+					<div className={creativePreviewSection}>
 						<div className="ad-creative-facebook-title quote-wizard-side-title">
 							Facebook Ad Preview
 							<span className="refresh-preview">

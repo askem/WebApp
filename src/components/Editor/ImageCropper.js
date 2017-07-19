@@ -172,30 +172,46 @@ class ImageCropper extends React.Component {
 				onTouchTap={this.cancelCrop} />
 		];
 
+		let contentStyle = {
+			width: '800px',
+			maxWidth: 'none',
+			height:'calc(100% - 220px)',
+			overflow:'auto'
+		}
+
+		let cropperContainerStyle = {};
+		 if (window.devicePixelRatio === 1.25) {
+		//  	contentStyle.height = '600px';
+			cropperContainerStyle.height = '400px';
+			cropperContainerStyle.maxHeight = '400px';
+		 }
+
 		return (
 			<Dialog
 				title="Crop Image"
 				modal={true}
 				open={this.state.show}
 				actions={actions}
-				autoDetectWindowHeight={true}
-				contentStyle={{width: '800px', maxWidth: 'none', height:'calc(100% - 220px)', overflow:'auto'}}>
-				<div className="image-cropper-container">
+				autoDetectWindowHeight={false}
+				contentStyle={contentStyle}>
+				<div className="image-cropper-container" style={cropperContainerStyle}>
 					<Cropper
-					guides={true}
-					src={this.props.imageUrl}
-					aspectRatio={this.props.requiredAspectRatio}
-					ref={cropper => { this.cropper = cropper }}
-					zoomOnWheel={false}
-					cropBoxResizable={false}
-					viewMode={1}
-					dragMode={'move'}
-					movable={true}
-					cropBoxMovable={false}
-					ready={this.onReady}
-					checkCrossOrigin={false}
-					background={false}
-					width={600}
+						guides={true}
+						src={this.props.imageUrl}
+						aspectRatio={this.props.requiredAspectRatio}
+						ref={cropper => { this.cropper = cropper }}
+						zoomOnWheel={false}
+						cropBoxResizable={false}
+						viewMode={1}
+						dragMode={'move'}
+						movable={true}
+						cropBoxMovable={false}
+						ready={this.onReady}
+						checkCrossOrigin={false}
+						background={false}
+						width={600}
+						restore={true}
+						responsive={true}
 					/>
 				</div>
 				<div className="cropper-slider">

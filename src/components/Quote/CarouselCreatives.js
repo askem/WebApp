@@ -18,24 +18,33 @@ class CarouselCreatives extends React.Component {
 		this.addDescription = this.addDescription.bind(this);
 		this.getRandomDescription = this.getRandomDescription.bind(this);
 		this.replaceImage = this.replaceImage.bind(this);
+		this.resizeContainers = this.resizeContainers.bind(this);
 		this.state = {
-			selectedSet : 0
+			selectedSet : 0,
 		}
 	}	
 
 	componentDidMount() {
 		window.addEventListener('scroll',this.stickCarouselPreview);
+		window.addEventListener('resize', this.resizeContainers);
 
 		if (!this.props.surveyMetadata.adCreatives || (!this.props.surveyMetadata.adCreatives.carouselAdCreatives.carousels || this.props.surveyMetadata.adCreatives.carouselAdCreatives.carousels.length === 0)) {
 			this.props.addNewSet(this.props.selectedQuestion.possibleAnswers.length);
 		}
 
+		this.resizeContainers();
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.stickCarouselPreview);
+		window.removeEventListener('resize', this.resizeContainers);
+		
 	}
 
+	resizeContainers() {
+		const zoomLevel = window.devicePixelRatio;
+		this.setState({zoomLevel})
+	}
 
 	stickCarouselPreview() {
 		const container = document.querySelector('.carousel-main-container');
@@ -183,6 +192,27 @@ class CarouselCreatives extends React.Component {
 	}
 
 	render() {
+		console.group('rendering');
+		console.log('zoomLevel', this.state.zoomLevel);
+		console.groupEnd();
+
+		const zoomLevel = this.state.zoomLevel;
+		let carouselImageWrapperClassName = ['carousel-images-wrapper'];
+		let setWrapper = ['set-wrapper'];
+
+		if (zoomLevel > 1) {
+			if (zoomLevel === 1.25) {
+				carouselImageWrapperClassName.push('zoom-level-125');
+				setWrapper.push('wrapper-zoom-level-125');
+			}
+		}
+
+		carouselImageWrapperClassName = carouselImageWrapperClassName.join(' ');
+		setWrapper = setWrapper.join(' ');
+
+		console.log('carouselImageWrapperClassName -->', carouselImageWrapperClassName);
+		console.log('setWrapper-->', setWrapper);
+
 		const questionsVariants = this.props.surveyMetadata.questionsVariants || [];
 		const hasQuestions = this.props.surveyMetadata.questions && this.props.surveyMetadata.questions.length > 0;
 
@@ -201,7 +231,7 @@ class CarouselCreatives extends React.Component {
 								 label="Delete Set"
 								 onTouchTap={this.deleteSet.bind(this, index)} />
 						</div>
-						<div className="set-wrapper">
+						<div className={setWrapper}>
 							{ this.renderCarouselSet(item, index) }
 						</div>
 					</div>
@@ -215,7 +245,7 @@ class CarouselCreatives extends React.Component {
 			carousels = (
 						<div onClick={ this.setSelectedSet.bind(this, 0) }>
 							<div className="set-title">Set 1</div>
-							<div className="set-wrapper">
+							<div className={setWrapper}>
 								{ this.renderCarouselSet() }
 							</div>
 						</div>
@@ -223,9 +253,13 @@ class CarouselCreatives extends React.Component {
 		}
 
 		if (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions) {
+			let descriptionInCarouselStyle = {};
+			if (window.devicePixelRatio === 1.25){
+				descriptionInCarouselStyle.width = '900px';
+			}
 			descriptions = this.props.surveyMetadata.adCreatives.carouselAdCreatives.descriptions.map((item, index) => {
 				return (
-					<div key={`desc_${index}`} className="description-in-carousel">
+					<div key={`desc_${index}`} className="description-in-carousel" style={descriptionInCarouselStyle}>
 						<TextField
 							value={item}
 							id={`desc_id_${index}`}
@@ -243,9 +277,15 @@ class CarouselCreatives extends React.Component {
 
 		selectedDescription = !this.state.selectedDescription ? this.getRandomDescription() : this.state.selectedDescription;
 
+		let carouselPreviewContainerStyle = {};
+		if (window.devicePixelRatio === 1.25) {
+			carouselPreviewContainerStyle.marginLeft = '34px';
+		}
+	
 		return (
 			<div className="carousel-main-container">
-					<div className="carousel-images-wrapper">
+					{ /* <div className="carousel-images-wrapper"> */ }
+					<div className={carouselImageWrapperClassName}>
 						<div className="quote-wizard-side-title" style={{ padding:'10px 0 10px 20px' }}>Carousel Creatives</div>
 						{ !hasQuestions &&  
 							<div className="empty-container-when-no-questions">Add question to the survey</div>
@@ -287,7 +327,7 @@ class CarouselCreatives extends React.Component {
 					{ hasQuestions && 
 						<div>
 							<div className="quote-wizard-side-title" style={{ padding:'10px 0 10px 20px' }}>Carousel Preview</div>
-							<div className="carousel-preview-container">
+							<div className="carousel-preview-container" style={carouselPreviewContainerStyle}>
 								<CarouselPreview 
 									images={previewImages}
 									question={ this.props.selectedQuestion }

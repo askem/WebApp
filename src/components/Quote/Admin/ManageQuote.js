@@ -392,7 +392,12 @@ class ManageQuote extends React.Component {
 			</div>;
 		}
 		else if (this.state.editing === 'creatives') {
-			return <div className="quote-manage">
+			let style = {}
+			if (window.devicePixelRatio === 1.25) {
+				style.width = '1500px';
+				style.overflowX = 'hidden';
+			}
+			return <div className="quote-manage" style={style}>
 				<div className="done-botton-container">
 					<button className="askem-button-white" onClick={this.checkAdCreatives}>Done Editing</button>
 				</div>

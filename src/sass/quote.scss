@@ -616,6 +616,14 @@ header {
 
 }
 
+@media screen and (device-pixel-ratio:1.25) {
+	.quote-manage {
+		width:1500px;
+		overflow-x: hidden;
+		background-color:lime;
+	}
+}
+
 .external-preview {
 	width: 400px;
 	height: 650px;
@@ -1730,7 +1738,7 @@ header {
 		}
 	}
 
-
+	
 	.carousel-preview-container {
 		border : solid 1px $askem-light-gray;
 		width:502px;
@@ -2076,4 +2084,24 @@ header {
 	display: none;
 	color:#F00;
 	margin-left: 16px;
+}
+
+
+.zoom-level-125 {
+		width: 930px !important;
+		margin-left: 10px !important;
+}
+
+.no-margin-left {
+	margin-left: 0 !important;
+}
+
+.wrapper-zoom-level-125 {
+	width:900px !important;
+}
+
+
+.relative-preview-section {
+	position: relative;
+	left: -111px;
 }
