@@ -192,10 +192,6 @@ class CarouselCreatives extends React.Component {
 	}
 
 	render() {
-		console.group('rendering');
-		console.log('zoomLevel', this.state.zoomLevel);
-		console.groupEnd();
-
 		const zoomLevel = this.state.zoomLevel;
 		let carouselImageWrapperClassName = ['carousel-images-wrapper'];
 		let setWrapper = ['set-wrapper'];
@@ -209,9 +205,6 @@ class CarouselCreatives extends React.Component {
 
 		carouselImageWrapperClassName = carouselImageWrapperClassName.join(' ');
 		setWrapper = setWrapper.join(' ');
-
-		console.log('carouselImageWrapperClassName -->', carouselImageWrapperClassName);
-		console.log('setWrapper-->', setWrapper);
 
 		const questionsVariants = this.props.surveyMetadata.questionsVariants || [];
 		const hasQuestions = this.props.surveyMetadata.questions && this.props.surveyMetadata.questions.length > 0;
