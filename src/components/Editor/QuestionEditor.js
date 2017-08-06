@@ -11,6 +11,8 @@ import VariantsEditor from 'components/Editor/VariantsEditor';
 import ImageUpload from 'components/Common/ImageUpload';
 import ImageContainer from 'components/Common/ImageContainer';
 import { getImageData } from 'utils/imageUtils';
+import Dialog from 'material-ui/Dialog';
+
 
 const defaultLimits = {
 	maxPossibleAnswers: 8,
@@ -39,9 +41,16 @@ class QuestionEditor extends React.Component {
 		this.addVariant = this.addVariant.bind(this);
 		this.deleteVariant = this.deleteVariant.bind(this);
 		this.onChangeVariant = this.onChangeVariant.bind(this);
+		this.continueWithAction = this.continueWithAction.bind(this);
+		this.cancelAction = this.cancelAction.bind(this);
+		this.closeMultipleAnswersWarning = this.closeMultipleAnswersWarning.bind(this);
+		this.toggleMultipleAnswers = this.toggleMultipleAnswers.bind(this);
 		this.state = {
 			errorMessage: '',
-			emptyDiv : true
+			emptyDiv : true,
+			showCarouselWarning : false,
+			shouldDisplayWarning : false,
+			showMultipleAnswersWarning : false
 		}
 	}
 	limits() {
@@ -56,7 +65,15 @@ class QuestionEditor extends React.Component {
 		// 	console.warn(`⚠️Survey must contain at least 1 question`);
 		// 	return;
 		// }
-		this.props.deleteQuoteQuestion(this.props.question.questionID);
+		if (this.props.question.questionID === 0 && (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselCreatives)) {
+			this.setState({
+				shouldDisplayWarning : true,
+				actionType : 'delete_question'
+			});	
+		}
+		else {
+			this.props.deleteQuoteQuestion(this.props.question.questionID);
+		}		
 	}
 	duplicateQuestion() {
 		this.props.duplicateQuoteQuestion(this.props.question.questionID);
@@ -65,6 +82,9 @@ class QuestionEditor extends React.Component {
 		const textValue = this.refs.questionText.input.value || this.refs.questionText.input.refs.input.value;
 		if (textValue.length > this.limits().maxQuestionTextLength) { return; }
 		this.props.setQuoteQuestionText(this.props.question.questionID, textValue, this.props.selectedVariant);
+		if (this.props.question.questionID === 0) {
+			this.setState({showCarouselWarning : true});
+		}
 	}
 	handleBlurQText() {
 		const textValue = this.refs.questionText.input.value;
@@ -79,7 +99,17 @@ class QuestionEditor extends React.Component {
 			console.warn(`⚠️Please add up to a maximum of ${maxPossibleAnswers} answers`);
 			return;
 		}
-		this.props.addQuotePossibleAnswer(this.props.question.questionID);
+
+		if (this.props.question.questionID === 0 && (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselCreatives)) {
+			this.setState({
+				shouldDisplayWarning : true,
+				actionType : 'add'
+			});	
+		}
+		else {
+			this.props.addQuotePossibleAnswer(this.props.question.questionID);
+		}
+
 	}
 	deletePA(possibleAnswerID) {
 		if (this.props.question.possibleAnswers.length === 1) {
@@ -89,13 +119,31 @@ class QuestionEditor extends React.Component {
 			console.warn(`⚠️The question must have at least 1 answer`);
 			return;
 		}
-		this.props.deleteQuotePossibleAnswer(this.props.question.questionID, possibleAnswerID);
+
+		if (this.props.question.questionID === 0 && (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselCreatives)) {
+			this.setState({
+				shouldDisplayWarning : true,
+				possibleAnswerID,
+				actionType : 'delete'
+			})
+		}
+		else {
+			this.props.deleteQuotePossibleAnswer(this.props.question.questionID, possibleAnswerID);
+		}
+
+		// this.props.deleteQuotePossibleAnswer(this.props.question.questionID, possibleAnswerID);
 	}
 	changePATextValue(possibleAnswerID) {
 		const maxPossibleAnswerTextLength = this.limits().maxPossibleAnswerTextLength;
 		const textValue = this.refs[`pavalue-${possibleAnswerID}`].input.value;
 		if (textValue.length > maxPossibleAnswerTextLength) { return; }
 		this.props.setQuotePossibleAnswerText(this.props.question.questionID, possibleAnswerID, textValue, this.props.selectedVariant);
+		if (this.props.question.questionID === 0 && (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselCreatives)) {
+			this.setState({
+				showCarouselWarning : true
+			})
+		}
+		
 	}
 	handleSuggestionClick(suggestion) {
 		this.props.setQuoteQuestionImage(this.props.question.questionID, suggestion.imageURL, this.props.selectedVariant);
@@ -146,6 +194,61 @@ class QuestionEditor extends React.Component {
 		}
 		this.props.onSelectQuestion(this.props.selectedQuestion, Number(value));
 	}
+
+	continueWithAction() {
+		switch(this.state.actionType) {
+			case 'delete':
+				this.props.deleteQuotePossibleAnswer(this.props.question.questionID, this.state.possibleAnswerID);
+				break;
+			case 'add':
+				this.props.addQuotePossibleAnswer(this.props.question.questionID);
+				break;
+			case 'delete_question':
+				this.props.deleteQuoteQuestion(this.props.question.questionID);
+				break;
+		}
+
+		this.setState({
+			shouldDisplayWarning : false,
+			possibleAnswerID : null,
+			actionType : null
+		});
+
+	}
+
+
+	cancelAction() {
+		this.setState({
+
+			shouldDisplayWarning : false,
+			possibleAnswerID : null,
+			actionType : null
+		})
+	}
+
+	onMultipleAnswerToggle(e) {
+		if (this.props.question.questionID === 0 && (this.props.surveyMetadata.adCreatives && this.props.surveyMetadata.adCreatives.carouselCreatives) && e.target.checked) {
+			this.setState({
+				showMultipleAnswersWarning:true
+			})
+		}
+		else {
+			this.props.setQuoteQuestionIsMultiAnswer(this.props.question.questionID, e.target.checked);
+			
+		}
+	}
+
+	closeMultipleAnswersWarning() {
+		this.setState({
+				showMultipleAnswersWarning : false
+		})
+	}
+
+	toggleMultipleAnswers(state) {
+		this.props.setQuoteQuestionIsMultiAnswer(this.props.question.questionID, state);
+		this.closeMultipleAnswersWarning();
+	}
+
 	render() {
 		if (this.state.errorMessage) {
 
@@ -238,7 +341,7 @@ class QuestionEditor extends React.Component {
 				<hr />
 				<Checkbox label="Multiple Answers"
 					checked={!!q.isMultiAnswerQuestion}
-					onChange={(e) => this.props.setQuoteQuestionIsMultiAnswer(q.questionID, e.target.checked)} />
+					onChange={(e) => this.onMultipleAnswerToggle(e)} />
 				{multiAnswersProperties}
 
 			</div>;
@@ -403,6 +506,52 @@ class QuestionEditor extends React.Component {
 					</div>
 				</div>
 				{imageSuggestionsPicker}
+				{ this.props.question.questionID === 0 && this.state.showCarouselWarning && 
+					<div className="carousel-warning" style={{ color:'red', fontSize:'18px' }}>⚠️ Each change in question will change the relevant carousel!!!</div>
+				}
+
+				<Dialog
+							title="Warning!"
+							modal={true}
+							open={ this.state.shouldDisplayWarning }
+							actions={[
+									<FlatButton
+										label="Yes"
+										primary={false}
+										onTouchTap={this.continueWithAction} />
+									,
+									<FlatButton
+										label="No"
+										primary={false}
+										onTouchTap={this.cancelAction} />
+							]}
+							autoDetectWindowHeight={true}>
+							<div className="on-image-upload-error">
+								Changing the question will result in changes to the carousel creative!
+								<br />Are you sure?
+							</div>
+					</Dialog>
+				<Dialog
+							title="Warning!"
+							modal={true}
+							open={ this.state.showMultipleAnswersWarning }
+							actions={[
+									<FlatButton
+										label="Yes"
+										primary={false}
+										onTouchTap={this.toggleMultipleAnswers.bind(this, true)} />
+									,<FlatButton
+										label="No"
+										primary={false}
+										onTouchTap={this.closeMultipleAnswersWarning} />
+
+							]}
+							autoDetectWindowHeight={true}>
+							<div className="on-image-upload-error">
+								Multiple answers cannot be used in carousel!!!
+								Do you want to continute?
+							</div>
+					</Dialog>
 			</div>
 		)
 	}

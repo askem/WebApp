@@ -63,7 +63,14 @@ const autoSaveLogic = createLogic({
 		'ADD_QUOTE_POSSIBLE_ANSWER', 'DELETE_QUOTE_POSSIBLE_ANSWER', 'SET_QUOTE_POSSIBLE_ANSWER_TEXT',
 		'SET_QUOTE_POSSIBLE_ANSWER_LOCATION', 'SET_QUOTE_POSSIBLE_ANSWER_RANDOM_LOCATION', 'SET_QUOTE_POSSIBLE_ANSWER_CONNECTION', 'SET_QUOTE_POSSIBLE_ANSWER_MULTI_BEHAVIOR',
 		'SET_QUOTE_SAMPLE_SIZE',
-		'FINISHED_EDITING_QUOTE_CONTACT_VALUE'
+		'FINISHED_EDITING_QUOTE_CONTACT_VALUE',
+		'ADD_CREATIVE_IMAGE', 'DELETE_CREATIVE_IMAGE',
+		'ADD_CREATIVE_DESCRIPTION','UPDATE_CREATIVE_DESCRIPTION', 'DELETE_CREATIVE_DESCRIPTION',
+		'ADD_CREATIVE_TEXT', 'UPDATE_CREATIVE_TEXT', 'DELETE_CREATIVE_TEXT',
+		'ADD_CREATIVE_HEADLINE', 'UPDATE_CREATIVE_HEADLINE' ,'DELETE_CREATIVE_HEADLINE',
+		'DELETE_CAROUSEL', 'UPLOAD_CAROUSEL_CREATIVE_IMAGE_REQUEST_SUCCESS', 'UPDATE_CAROUSEL_DESCRIPTION', 'DELETE_CAROUSEL_DESCRIPTION',
+		'SET_RESEARCH_CAMPAIGN_DATA', 'SET_SURVEYID'
+
 	],
 	process({ getState, action, api }, dispatch) {
 		dispatch({type: 'AUTO_SAVE_QUOTE'});
@@ -97,6 +104,14 @@ const updateQuoteLogic = createLogic({
 
 			return q; 
 		});
+
+		// do not save the cropped images to DB
+		delete quote.surveyMetadata.croppedImages;
+		delete quote.surveyMetadata.croppedCarouselImages;
+
+		// remove data prior to DB API call
+		delete quote.samplePlan;
+		delete quote.samplePlanError;
 		//------------------------------------------------
 
 		let contact = getState().getIn(['data', 'contact']);
@@ -151,6 +166,83 @@ const uploadImageLogic = createLogic({
 	}
 });
 
+const uploadCreativeImageLogic = createLogic({
+	type: 'ADD_CREATIVE_IMAGE',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = getState().getIn(['data', 'lead', 'quoteID']);
+		if (!quoteID) { return; }	
+		const mediaID = action.payload.metadata.mediaID;
+		const imageIndex = action.payload.index;
+		const key = action.payload.metadata.key;
+
+		if (!mediaID.startsWith('data:')) { return; }
+		const blob = dataURIToBlob(mediaID);
+		dispatch({ type: 'UPLOAD_CREATIVE_IMAGE_REQUEST_START' }, { allowMore: true });
+		return api.uploadFileForLead(blob, quoteID)
+		.then(newMediaID => {
+			// Preload image to make visual transition seamless
+			const img = new Image();
+			img.onload = (img) => {
+				dispatch({
+					type: 'UPLOAD_CREATIVE_IMAGE_REQUEST_SUCCESS',
+					payload: {
+						mediaID:newMediaID,
+						index:imageIndex,
+						key
+					}
+				});
+			};
+			img.src = blobURL(newMediaID);
+		})
+		.catch(error => {
+			console.error(error);
+			dispatch({ type: 'UPLOAD_CREATIVE_IMAGE_REQUEST_FAIL', payload: {
+				error
+			}, error: true });
+		});
+	}
+});
+
+const uploadCarouselCreativeImageLogic = createLogic({
+	type: 'REPLACE_IMAGE_IN_CAROUSEL_FOR_SET',
+	process({ getState, action, api }, dispatch) {
+		const quoteID = getState().getIn(['data', 'lead', 'quoteID']);
+		if (!quoteID) { return; }	
+		const { mediaID,  key} = action.payload.metadata
+		const { setIndex, imageIndex} = action.payload;
+
+		if (!mediaID.startsWith('data:')) { return; }
+		const blob = dataURIToBlob(mediaID);
+		dispatch({ type: 'UPLOAD_CAROUSEL_CREATIVE_IMAGE_REQUEST_START' }, { allowMore: true });
+		return api.uploadFileForLead(blob, quoteID)
+		.then(newMediaID => {
+			// Preload image to make visual transition seamless
+			const img = new Image();
+			img.onload = (img) => {
+				dispatch({
+					type: 'UPLOAD_CAROUSEL_CREATIVE_IMAGE_REQUEST_SUCCESS',
+					payload: {
+						mediaID:newMediaID,
+						setIndex,
+						imageIndex,
+						key,
+					}
+				});
+			};
+			img.src = blobURL(newMediaID);
+		})
+		.catch(error => {
+			console.error(error);
+			dispatch({ type: 'UPLOAD_CAROUSEL_CREATIVE_IMAGE_REQUEST_FAIL', payload: {
+				error
+			}, error: true });
+		});
+	}
+});
+
+
+
+
 const submitQuoteLogic = createLogic({
 	type: 'SUBMIT_LEAD',
 	process({ getState, action, api }, dispatch) {
@@ -204,17 +296,119 @@ const loadQuoteLogic = createLogic({
 							}							
 						});
 
-						dispatch({
-							type: 'LOAD_QUOTE_REQUEST_SUCCESS',
-							payload: {
-								quote
-							}
-						}, { allowMore: true });
+						//if (!delayDispatch) {
+							dispatch({
+								type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+								payload: {
+									quote
+								}
+							}, { allowMore: true });
+						//}
 
 					})
 					.catch(err => {
 						console.error('quote.Logic.js -> loadQuoteLogic -> err', err);
 						throw err;
+					})
+			}
+			
+			if (quote.metadata.surveyMetadata.adCreatives && quote.metadata.surveyMetadata.adCreatives.imageAdCreatives && quote.metadata.surveyMetadata.adCreatives.imageAdCreatives.images) {
+				const promises = quote.metadata.surveyMetadata.adCreatives.imageAdCreatives.images.map((item, index) => {
+					const uri = blobURL(item.mediaID);
+					const x = item.crop191x100[0][0];
+					const y = item.crop191x100[0][1];
+					const width = item.crop191x100[1][0] - x;
+					const height = item.crop191x100[1][1] - y;
+					const newMetadata = { x, y, height, width, dataURI : uri, extraData: { mediaID:item.mediaID, index }};
+					return getImageData(newMetadata);
+				})
+
+				Promise
+					.all(promises)
+					.then(values => {
+						values = values.sort((a,b) => a.index - b.index);
+						const arr = values.map(item => {
+							const { width, height, dataURI:croppedSrc } = item;
+							const { mediaID } = item.extraData;
+							return {
+								key : mediaID, 
+								cropData : { croppedSrc },
+							}
+						})
+
+						quote.metadata.surveyMetadata.croppedImages = arr;
+
+						dispatch({
+							type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+							payload: {  quote }
+						}, { allowMore: true });
+					})
+					.catch(err => {
+						console.error(err);
+					})
+			}
+			// else {
+			// 	dispatch({
+			// 		type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+			// 		payload: {
+			// 			quote
+			// 		}
+			// 	}, { allowMore: true });
+			// }
+
+			if (quote.metadata.surveyMetadata.adCreatives && quote.metadata.surveyMetadata.adCreatives.carouselAdCreatives) {
+				const promises = quote.metadata.surveyMetadata.adCreatives.carouselAdCreatives.carousels.map((item, index) => {
+					return new Promise((resolve, reject) => {
+						const innerPromises = item.map(img => {
+							const uri = blobURL(img.mediaID);
+							const x = img.crop100x100 ? img.crop100x100[0][0] : 0;
+							const y = img.crop100x100 ? img.crop100x100[0][1] : 0;
+							const width = img.crop100x100 ? img.crop100x100[1][0] - x : 100;
+							const height = img.crop100x100 ? img.crop100x100[1][1] - y : 100;
+							const newMetadata = { x, y, height, width, dataURI : uri, extraData: { mediaID:img.mediaID, setIndex: item.setIndex, imageIndex : img.imageIndex }};
+							return getImageData(newMetadata);
+						});
+
+						Promise
+							.all(innerPromises)
+							.then(vals => {
+								resolve(vals);
+							})
+							.catch(err => {
+								console.log('err', err);
+								reject(err);
+							})
+					});
+
+				})
+
+				Promise
+					.all(promises)
+					.then(values => {
+						const arr = [];
+						values.forEach((item, setIndex) => {
+							item.forEach((elm, imageIndex) => {
+								const { width, height, dataURI:croppedSrc } = elm;
+								const { mediaID } = elm.extraData;
+								arr.push({
+									key : mediaID, 
+									cropData : { croppedSrc },
+									imageIndex,
+									setIndex,
+
+								});
+							});							
+						})
+
+						quote.metadata.surveyMetadata.croppedCarouselImages = arr;
+
+						dispatch({
+							type: 'LOAD_QUOTE_REQUEST_SUCCESS',
+							payload: {  quote }
+						}, { allowMore: true });
+					})
+					.catch(err => {
+						console.error(err);
 					})
 			}
 			else {
@@ -341,6 +535,120 @@ const imageSuggestionsLogic = createLogic({
 	}
 });
 
+
+const getChannelConsumptionData = createLogic({
+	type: 'GET_CHANNEL_CONSUMPTION_DATA',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_CHANNEL_CONSUMPTION_DATA_STARTED', payload :{ sampleID : action.payload.sampleID }}, { allowMore: true });
+		return api.getChannelConsumptionData(action.payload.sampleID)
+				.then(data => {
+					const { items, name } = data.enrichment[0];
+					dispatch({ type:'GET_CHANNEL_CONSUMPTION_DATA_SUCCESS', payload :{ 
+						items,
+						name
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_CHANNEL_CONSUMPTION_DATA_FAIL', payload : {
+						error },
+						error : true});
+					console.error('GET_CHANNEL_CONSUMPTION_DATA fail!!!', error);
+				})
+	}
+});
+
+const getSamplePlan = createLogic({
+	type: 'GET_SAMPLE_PLAN',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_SAMPLE_PLAN_STARTED', payload :{ sampleID : action.payload.sampleID, sampleAccounts : action.payload.sampleAccounts }}, { allowMore: true });
+		return api.getSamplePlan(action.payload.sampleID, action.payload.sampleAccounts)
+				.then(data => {
+					dispatch({ type:'GET_SAMPLE_PLAN_SUCCESS', payload :{ 
+						samplePlan : data.samplePlan[0]
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_CHANNEL_CONSUMPTION_DATA_FAIL', payload : {
+						error },
+						error : true});
+					console.error('GET_CHANNEL_CONSUMPTION_DATA fail!!!', error);
+				})
+	}
+});
+
+const getRelationshipStatus = createLogic({
+	type: 'GET_RELATIONSHIP_STATUS',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_RELATIONSHIP_STATUS_STARTED', payload :{ sampleID : action.payload.sampleID}}, { allowMore: true });
+		return api.getRelationshipData(action.payload.sampleID)
+				.then(data => {
+					dispatch({ type:'GET_RELATIONSHIP_STATUS_SUCCESS', payload :{ 
+						relationshipStatusData : data.enrichment[0].items
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_RELATIONSHIP_STATUS_FAIL', payload : {
+						error },
+						error : true});
+					console.error('GET_RELATIONSHIP_STATUS fail!!!', error);
+				})
+	}
+});
+
+const createCampaign = createLogic({
+	type: 'CREATE_CAMPAIGN',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'CREATE_CAMPAIGN_STARTED', payload :{ }}, { allowMore: true });
+		return api.createCampaign(
+					action.payload.caps,
+					action.payload.campaignDays,
+					action.payload.microCellMaxSize,
+					action.payload.microCellMaxImagesAds,
+					action.payload.microCellMaxCarouselAds,
+					action.payload.sampleID
+				)
+				.then(data => {
+					dispatch({ type:'CREATE_CAMPAIGN_REQUEST_SUCCESSFULL', payload :{ 
+						sampleID : action.payload.sampleID
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'CREATE_CAMPAIGN_REQUEST_FAIL', payload : {
+						error },
+						error : true});
+					console.error('CREATE_CAMPAIGN_REQUEST_FAIL', error);
+				})
+	}
+});
+
+const getCreateCampaignStatus = createLogic({
+	type: 'GET_CREATE_CAMPAIGN_STATUS',
+	latest: true,
+	process({ getState, action, api }, dispatch) {
+		dispatch({type:'GET_CREATE_CAMPAIGN_STATUS_STARTED', payload :{ sampleID : action.payload.sampleID }}, { allowMore: true });
+		return api.getCreateCampaignStatus(action.payload.sampleID)
+				.then(data => {
+					dispatch({
+							 	type:'GET_CREATE_CAMPAIGN_STATUS_SUCCESSFULL', payload :{ 
+								status:data.status,
+								progress : data.percentCompleted,
+								startTime: data.startTime,
+								ETA : data.ETA,
+					}}, { allowMore: true });
+				})
+				.catch(error => {
+					dispatch({ type : 'GET_CREATE_CAMPAIGN_STATUS_FAILED', payload : {
+						error },
+						error : true});
+					console.log('GET_CREATE_CAMPAIGN_STATUS_FAILED', error)
+				})
+	}
+});
+
 export default [
 	createQuoteLogic,
 	newSubmissionLogic,
@@ -351,5 +659,12 @@ export default [
 	uploadImageLogic,
 	reachInvalidationLogic,
 	fetchCostEstimateLogic,
-	imageSuggestionsLogic
+	imageSuggestionsLogic,
+	uploadCreativeImageLogic,
+	uploadCarouselCreativeImageLogic,
+	getChannelConsumptionData,
+	getSamplePlan,
+	getRelationshipStatus,
+	createCampaign,
+	getCreateCampaignStatus
 ];
