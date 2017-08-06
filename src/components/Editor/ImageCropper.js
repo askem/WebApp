@@ -145,7 +145,8 @@ class ImageCropper extends React.Component {
 
 
 		this.cropper.setCropBoxData(cropBoxData);
-		this.cropper.zoomTo(scalePercentage);
+		// this.cropper.zoomTo(scalePercentage);
+		this.cropper.zoomTo(0);
 
 		this.setState({
 			scalePercentage
@@ -176,7 +177,8 @@ class ImageCropper extends React.Component {
 			width: '800px',
 			maxWidth: 'none',
 			height:'calc(100% - 220px)',
-			overflow:'auto'
+			overflow:'auto',
+			transform:'translate(0px)'
 		}
 
 		let cropperContainerStyle = {};
