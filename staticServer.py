@@ -37,7 +37,7 @@ class Handler( BaseHTTPServer.BaseHTTPRequestHandler ):
 		self.send_response(200)
 		self.send_header( 'Content-type', mimetype )
 		self.end_headers()
-		f = open('dist\\' + filePath)
+		f = open('dist/' + filePath)
 		self.wfile.write(f.read())
 		f.close()
 try:
