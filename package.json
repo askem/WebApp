@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/askem/WebApp#readme",
   "dependencies": {
+    "babel-plugin-transform-object-assign": "^6.22.0",
     "chart.js": "^2.4.0",
     "icheck": "^1.0.2",
     "immutable": "^3.8.1",
