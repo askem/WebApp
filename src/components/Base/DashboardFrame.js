@@ -25,7 +25,7 @@ class DashboardFrame extends React.Component {
 				<div className="dashboard-main">
 					<NavBar onLogout={noop} onLogin={noop}
 						title={activeRouteName} name="Alcon 2016-07"
-						profileImageMediaID="6d4f9866-ef41-4db5-8c35-b32f20791ec4" username="superadmin" loggedIn={true} />
+						profileImageMediaID="6d4f9866-ef41-4db5-8c35-b32f20791ec4" username="yoni" loggedIn={true} />
 					<div className="dashboard-content">
 						{this.props.children}
 					</div>
