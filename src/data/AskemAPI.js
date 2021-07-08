@@ -96,9 +96,7 @@ class AskemAPI {
 				headers
 			});
 		} else {
-			//fetchAccessToken = Promise.resolve({"error":"","errorCode":200,"status":"ok","accessToken":"45158d44fcfa43208777d0f73f2cd8bc","accessTokenTTL":"Sat Feb 18 2017 15:29:12","refreshToken":"b9e14fbd3e244a7d88a52fd03125e4fa","refreshTokenTTL":"Sat Feb 18 2017 15:29:12"});
-				fetchAccessToken = Promise.resolve({"error":"","errorCode":200,"status":"ok","accessToken":"5ebd10eb797a44c5bda17f6f6193ad94","accessTokenTTL":"Sat May 27 2017 22:52:46 GMT+0800 (CST)","refreshToken":"4b1b421d47e54184b6dc5889b1ec30c1","refreshTokenTTL":"Sat May 27 2017 22:52:46 GMT+0800 (CST)"});
-
+				fetchAccessToken = Promise.resolve({"error":"","errorCode":200,"status":"ok","accessToken":"5d44d6b49de14eb091146286d9cd8912","accessTokenTTL":"Sat Nov 2 2018 22:52:46 GMT+0800 (CST)","refreshToken":"5d44d6b49de14eb091146286d9cd8912","refreshTokenTTL":"Sat Nov 2 2018 22:52:46 GMT+0800 (CST)"});
 		}
 		return fetchAccessToken
 		.then(results => {
@@ -182,6 +180,7 @@ class AskemAPI {
 	fetchSamplingKPIs(samplingID) {
 		return this.fetchEndpoint(`samplings/${samplingID}/kpis`);
 	}
+
 	updateResearchData(researchID, modelData, kpiBindings, surveyID) {
 		return this.fetchEndpoint(`researchCampaigns/${researchID}`, {
 			modelData: JSON.stringify(modelData),
@@ -195,6 +194,17 @@ class AskemAPI {
 			description,
 			modelData: JSON.stringify(modelData)
 		});
+	}
+
+	createSamplings(researchID) {
+		return this.fetchEndpoint(`researchCampaigns/${researchID}/samplings`, {
+			surveyID : null
+		});
+	}
+
+
+	setCreatives(sampleID, creatives) {
+		return this.fetchEndpoint(`samplings/${sampleID}/creatives`, creatives);
 	}
 
 	_audienceToAttributePhraseUSA(audience) {
@@ -366,45 +376,74 @@ class AskemAPI {
 		.then(results => results.leads);
 	}
 
+	_addQuestion(q) {
+		const originalQID = q.questionID;
+		q = leadMetadataToQuestion(q);
+		q.questionTypeID = 3;
+		q.geoLocation = { longitude: 0, latitude: 0};
+		if (!q.mediaID) { q.mediaID = EMPTY_MEDIA_ID; }
+		delete q.questionID;
+		q.possibleAnswers.forEach((pa, idx) => {
+			Object.assign(pa, q.popupLocations[idx]);
+			pa.numericValue = idx;
+			let attributes = 0;
+			if (pa.randomLocation) { attributes |= 1; }
+			if (pa.multiBehavior === 'none') { attributes |= 2; }
+			if (pa.multiBehavior === 'all') { attributes |= 4; }
+			pa.attributes = attributes;
+			delete pa.possibleAnswerID;
+		});
+		return this.fetchEndpoint(`questions/add`, q)
+		.then(result => {
+			const newQuestionID = result.postID;
+			
+			// newQuestionIDs[originalQID] = newQuestionID;
+			// newPossibleAnswerIDs.set(newQuestionID, result.possibleAnswersID);
+
+			// questions[originalQID].questionID = newQuestionID;
+			// questions[originalQID].possibleAnswers.forEach((pa, idx) => {
+			// 	pa.possibleAnswerID = result.possibleAnswersID[idx];
+			// });
+
+			return {
+				originalQID,
+				newQuestionID,
+				newPossibleAnswerIDs: result.possibleAnswersID
+			}
+		});
+	}
+
 	createSurvey(questionsMetadata, questionsVariantsMetadata, leadID = '') {
 		//TODO: reverse, jumps
 		let questions = [...questionsMetadata];
-		questions.reverse();
 		let newQuestionIDs = questions.map(q => q.questionID);
 		let newPossibleAnswerIDs = new Map();
 		let newSurveyID;
-		const qPromises = questions.map(q => {
-			const originalQID = q.questionID;
-			q = leadMetadataToQuestion(q);
-			q.questionTypeID = 3;
-			q.geoLocation = { longitude: 0, latitude: 0};
-			if (!q.mediaID) { q.mediaID = EMPTY_MEDIA_ID; }
-			delete q.questionID;
-			q.possibleAnswers.forEach((pa, idx) => {
-				Object.assign(pa, q.popupLocations[idx]);
-				pa.numericValue = idx;
-				let attributes = 0;
-				if (pa.randomLocation) { attributes |= 1; }
-				if (pa.multiBehavior === 'none') { attributes |= 2; }
-				if (pa.multiBehavior === 'all') { attributes |= 4; }
-				pa.attributes = attributes;
-				delete pa.possibleAnswerID;
-			});
-			return this.fetchEndpoint(`questions/add`, q)
-			.then(result => {
-				const newQuestionID = result.postID;
-				newQuestionIDs[originalQID] = newQuestionID;
-				newPossibleAnswerIDs.set(newQuestionID, result.possibleAnswersID);
 
-				questions[originalQID].questionID = newQuestionID;
-				questions[originalQID].possibleAnswers.forEach((pa, idx) => {
-					pa.possibleAnswerID = result.possibleAnswersID[idx];
-				});
-			});
-		});
+		let idx = 0;
+		const numberOfQuestions = questions.length;
+		
+		const addQ = api => {
+			if (idx < numberOfQuestions) {
+				return api._addQuestion(questions[idx]).then(newQ => {
+					const { originalQID, newQuestionID } = newQ;
+					newQuestionIDs[originalQID] = newQuestionID;
+					newPossibleAnswerIDs.set(newQuestionID, newQ.possibleAnswersID);
+		
+					questions[originalQID].questionID = newQuestionID;
+					questions[originalQID].possibleAnswers.forEach((pa, idx) => {
+						pa.possibleAnswerID = newQ.newPossibleAnswerIDs[idx];
+					});
+					idx++;
+					return addQ(api);
+				});				
+			}
+			return Promise.resolve()
+		}
 
-		return Promise.all(qPromises)
-		.then(qResults => {
+		return addQ(this).then(() => {
+			//questions.reverse();
+
 			let questionsVariants;
 			if (questionsVariantsMetadata) {
 				questionsVariants = [...questionsVariantsMetadata];
@@ -423,7 +462,7 @@ class AskemAPI {
 			});
 			survey.connections.possibleAnswers = transformConnectionsDictionary(survey.connections.possibleAnswers);
 
-			return this.fetchEndpoint(`surveys/add`, survey)
+			return api.fetchEndpoint(`surveys/add`, survey)
 			.then(sResults => {
 				newSurveyID = sResults.surveyID;
 				return {
@@ -433,6 +472,29 @@ class AskemAPI {
 				};
 			})
 		});
+
+	}
+
+	setAudience(id, audience, sampleSize) {
+		const attributes = this._audienceToAttributePhraseUSA(audience);
+		const sample = [{
+			name : 'TEMP_Dummy_name',
+			sampleMixSource : null,	
+			population : {
+				ID : 0,
+				description : null,
+				attributes: attributes.attributes,
+				excludedAttributes:null
+			},
+			sampleSize,
+			dynamicDimension : null
+		}]
+
+		return this.fetchEndpoint(`samplings/${id}/samples`, sample);
+	}
+
+	getSamplePlan(sampleID, sampleAccounts) {
+		return this.fetchEndpoint(`samplings/${sampleID}/samplePlan?sampleAccounts=${sampleAccounts}`);
 	}
 
 

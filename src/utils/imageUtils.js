@@ -16,7 +16,7 @@ const getImageData = (metaData) => {
 		canvas.id = 'tempCanvas';
 	}
 
-	const { width , height, x, y, zoomRatio, questionID } = metaData;
+	const { width , height, x, y, zoomRatio, questionID, extraData = null } = metaData;
 	const context = canvas.getContext('2d');
 	context.clearRect(0, 0, width, height);
 	canvas.setAttribute('width', width);
@@ -42,7 +42,8 @@ const getImageData = (metaData) => {
 					dataURI : url,
 					width,
 					height,
-					questionID
+					questionID,
+					extraData
 				})
 			}
 			catch(e) {

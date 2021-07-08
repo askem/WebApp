@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import ManageQuote from 'components/Quote/Admin/ManageQuote';
 import * as quoteActions from 'actions/quoteActions';
+import * as campaignActions from 'actions/campaignActions';
 
 const ManageQuoteContainer = connect(
 	function mapStateToProps(state, ownProps) {
@@ -22,6 +23,16 @@ const ManageQuoteContainer = connect(
 		if (contact) { contact = contact.toJS(); }
 		let researchObjective = state.getIn(['data', 'quote', 'researchObjective']);
 		if (researchObjective) { researchObjective = researchObjective.toJS(); }
+		let researchCampaign = state.getIn(['data', 'quote', 'researchCampaign']);
+		if (researchCampaign) { researchCampaign = researchCampaign.toJS(); }
+		let surveyID = state.getIn(['data', 'quote', 'surveyID']);
+		let sampleID = state.getIn(['data', 'quote', 'sampleID']);
+		let enrichmentData = state.getIn(['data', 'quote', 'enrichmentData']);
+		if (enrichmentData)  { enrichmentData = enrichmentData.toJS() };
+		let samplePlan = state.getIn(['data', 'quote', 'samplePlan']);
+		if (samplePlan) { samplePlan = samplePlan.toJS(); }
+		let campaignStatus = state.getIn(['data', 'quote', 'campaignStatus']);
+		if (campaignStatus) { campaignStatus = campaignStatus.toJS()}
 
 		return {
 			lead,
@@ -32,7 +43,13 @@ const ManageQuoteContainer = connect(
 			reachEstimate,
 			costEstimate,
 			contact,
-			researchObjective
+			researchObjective,
+			researchCampaign,
+			surveyID,
+			sampleID,
+			enrichmentData,
+			samplePlan,
+			campaignStatus
 		};
 	},
 	function mapDispatchToProps(dispatch) {
@@ -65,6 +82,30 @@ const ManageQuoteContainer = connect(
 			closeSuccessSubmitLead: () => dispatch(quoteActions.closeSuccessSubmitLead()),
 			cancelFailedSubmitLead: () => dispatch(quoteActions.cancelFailedSubmitLead()),
 			quoteUIAction: (actionType, metadata) => dispatch(quoteActions.quoteUIAction(actionType, metadata)),
+			updateCreativeHeadline: (index, text) => dispatch(quoteActions.updateCreativeHeadline(index, text)),
+			addCreativeHeadline : () => dispatch(quoteActions.addCreativeHeadline()), 
+			deleteCreativeHeadline : (index) => dispatch(quoteActions.deleteCreativeHeadline(index)),
+			addCreativeText : () => dispatch(quoteActions.addCreativeText()), 
+			updateCreativeText: (index, text) => dispatch(quoteActions.updateCreativeText(index, text)),
+			deleteCreativeText : (index) => dispatch(quoteActions.deleteCreativeText(index)),
+			addCreativeDescription : () => dispatch(quoteActions.addCreativeDescription()), 
+			updateCreativeDescription: (index, text) => dispatch(quoteActions.updateCreativeDescription(index, text)),
+			deleteCreativeDescription : (index) => dispatch(quoteActions.deleteCreativeDescription(index)),
+			addCreativeImage : (index, metadata, croppedImage) => dispatch(quoteActions.addCreativeImage(index, metadata, croppedImage)),
+			deleteCreativeImage : (index, key) => dispatch(quoteActions.deleteCreativeImage(index, key)),
+			replaceImageCarouselInSet : (setIndex, imageIndex, metadata) => dispatch(quoteActions.replaceImageCarouselInSet(setIndex, imageIndex, metadata)),
+			addNewSet : (totalPossibleAnswers) => dispatch(quoteActions.addNewSet(totalPossibleAnswers)),
+			deleteCarousel : (setIndex) => dispatch(quoteActions.deleteCarousel(setIndex)),
+			addNewDescriptionInCarousels: () => dispatch(quoteActions.addNewDescriptionInCarousels()),
+			updateCarouselDescription : (index, text) => dispatch(quoteActions.updateCarouselDescription(index, text)),
+			deleteCarouselDescription : (index) => dispatch(quoteActions.deleteCarouselDescription(index)),
+			setResearchCampaignData : (researchCampaignID, campaignName, campaignDescription, sampleID, surveyID) => dispatch(quoteActions.setResearchCampaignData(researchCampaignID, campaignName, campaignDescription, sampleID, surveyID)),
+			setSurveyID : (surveyID) => dispatch(quoteActions.setSurveyID(surveyID)),
+			getEnrichmentData : (sampleID, type) => dispatch(quoteActions.getEnrichmentData(sampleID, type)),
+			getSamplePlan : (sampleID, sampleAccounts) => dispatch(quoteActions.getSamplePlan(sampleID, sampleAccounts)),
+			createCampaign: (caps, campaignDays, microCellMaxSize, microCellMaxImagesAds, microCellMaxCarouselAds, sampleID) => dispatch(campaignActions.createCampaign(caps, campaignDays, microCellMaxSize, microCellMaxImagesAds, microCellMaxCarouselAds, sampleID)),
+			getCreateCampaignStatus : (sampleID) => dispatch(campaignActions.getCreateCampaignStatus(sampleID)),
+			setCreateCampaignStatusFinished : () => dispatch(campaignActions.setCreateCampaignStatusFinished()),
 
 			/* Advanced */
 			addQuestionVariant: (questionID, duplicateVariantID) => dispatch(quoteActions.addQuestionVariant(questionID, duplicateVariantID)),

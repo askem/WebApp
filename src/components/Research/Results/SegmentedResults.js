@@ -73,12 +73,12 @@ class SegmentedResults extends React.Component {
 		}
 		const confidenceInterval = 4.0;
 		const kpis = [
-			{ kpiID: 'brandAwareness', title: 'Brand Awareness', exposed: 34.2, control: 31.6},
-			{ kpiID: 'brandPreference', title: 'Brand Preference', exposed: 74.2, control: 61.6},
-			{ kpiID: 'shoppingIntent', title: 'Shopping Intent', exposed: 40.8, control: 30},
-			{ kpiID: 'Message Recall', title: 'Message Recall', exposed: 24.2, control: 41.6},
-			{ kpiID: 'campaignRecall', title: 'Campaign Recall', exposed: 54.2, control: 55.6},
-			{ kpiID: 'brandRecall', title: 'Brand Recall', exposed: 64.2, control: 63.1}
+			{ kpiID: 'brandAwareness', title: 'Brand Awareness', exposed: 16, control: 8},
+			{ kpiID: 'brandPreference', title: 'Brand Preference', exposed: 9.13, control: 4.43},
+			{ kpiID: 'shoppingIntent', title: 'Purchase Intent', exposed: 14.42, control: 8.23},
+			{ kpiID: 'Message Recall', title: 'Message Recall', exposed: 83.52, control: 50},
+			{ kpiID: 'campaignRecall', title: 'Campaign Recall', exposed: 43.75, control: 3.8},
+			{ kpiID: 'brandRecall', title: 'Brand Recall', exposed: 53.85, control: 50}
 		]
 		return <div className="segmented-results">
 			<div className="kpis">
@@ -101,7 +101,6 @@ class SegmentedResults extends React.Component {
 					</div>
 				</div>
 				<div className="results-footer-download">
-					<FaFilePdfO size={40} color="#F15B40" />
 					<FaFileExcelO size={40} color="#3DBB95" />
 				</div>
 			</div>

@@ -48,7 +48,7 @@ const mockData = {
 					]
 				}
 			],
-			"requiredKPIs": ["exposure_targeting", "recall_campaign"],
+			"requiredKPIs": ["exposure_targeting", "recall_campaign", "recall_brand", "recall_message", "awareness_brand", "preference_brand", "intent_purchase"],
 
 			"survey": {
 
@@ -1007,9 +1007,9 @@ const mockData = {
           "qualifiedResponders": 162,
           "qualifyingResponders": 1,
           "sampleSize": 255,
-          "value": 0.54321
+          "value": 0.062
         },
-        {
+        /*{
           "ID": 83,
           "MoE": 0,
           "aggregatedAnswers": null,
@@ -1021,10 +1021,10 @@ const mockData = {
           "qualifyingResponders": 1,
           "sampleSize": 511,
           "value": 0.22017
-        },
+        },*/
         {
           "ID": 84,
-          "MoE": 0,
+          "MoE": 0.05,
           "aggregatedAnswers": null,
           "categoryName": "Uplift",
           "categoryType": "KpiValue",
@@ -1033,11 +1033,11 @@ const mockData = {
           "qualifiedResponders": 381,
           "qualifyingResponders": 1,
           "sampleSize": 511,
-          "value": 0.0761
+          "value": 0.08
         },
         {
           "ID": 85,
-          "MoE": 0,
+          "MoE": 0.05,
           "aggregatedAnswers": null,
           "categoryName": "Uplift",
           "categoryType": "KpiValue",
@@ -1046,11 +1046,11 @@ const mockData = {
           "qualifiedResponders": 381,
           "qualifyingResponders": 1,
           "sampleSize": 511,
-          "value": 0.05725
+          "value": 0.047
         },
         {
           "ID": 86,
-          "MoE": 0,
+          "MoE": 0.05,
           "aggregatedAnswers": null,
           "categoryName": "Uplift",
           "categoryType": "KpiValue",
@@ -1059,11 +1059,11 @@ const mockData = {
           "qualifiedResponders": 381,
           "qualifyingResponders": 1,
           "sampleSize": 511,
-          "value": 0.41502
+          "value": 0.40
         },
         {
           "ID": 87,
-          "MoE": 0,
+          "MoE": 0.05,
           "aggregatedAnswers": null,
           "categoryName": "Uplift",
           "categoryType": "KpiValue",
@@ -1072,11 +1072,11 @@ const mockData = {
           "qualifiedResponders": 105,
           "qualifyingResponders": 1,
           "sampleSize": 511,
-          "value": 0.05556
+          "value": 0.039
         },
         {
           "ID": 88,
-          "MoE": 0,
+          "MoE": 0.05,
           "aggregatedAnswers": null,
           "categoryName": "Uplift",
           "categoryType": "KpiValue",
@@ -1085,11 +1085,11 @@ const mockData = {
           "qualifiedResponders": 105,
           "qualifyingResponders": 1,
           "sampleSize": 511,
-          "value": 0.33838
+          "value": 0.335
         },
         {
           "ID": 89,
-          "MoE": 0,
+          "MoE": 0.05,
           "aggregatedAnswers": null,
           "categoryName": "Uplift",
           "categoryType": "KpiValue",
@@ -1098,11 +1098,11 @@ const mockData = {
           "qualifiedResponders": 381,
           "qualifyingResponders": 1,
           "sampleSize": 511,
-          "value": 0.1106
+          "value": 0.11
         },
         {
           "ID": 90,
-          "MoE": 0,
+          "MoE": 0.05,
           "aggregatedAnswers": null,
           "categoryName": "Uplift",
           "categoryType": "KpiValue",
@@ -1111,7 +1111,7 @@ const mockData = {
           "qualifiedResponders": 381,
           "qualifyingResponders": 1,
           "sampleSize": 511,
-          "value": 0.05496
+          "value": 0.062
         }
       ]
     }
